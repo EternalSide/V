@@ -1,7 +1,7 @@
 import PostCard from "@/components/cards/PostCard";
 
 export default function Home() {
-  const active = "Рекомендованное";
+  // const active = "Рекомендованное";
   return (
     <main className="pt-4">
       <div className="flex items-center gap-3">
