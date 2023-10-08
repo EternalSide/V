@@ -4,6 +4,7 @@ export interface IPost extends Document {
   title: string;
   text: string;
   views: number;
+  banner: string;
   createdAt: Date;
   tags: Schema.Types.ObjectId[];
   upvotes: Schema.Types.ObjectId[];
@@ -21,6 +22,9 @@ const PostSchema = new Schema<IPost>(
     text: {
       type: String,
       required: true,
+    },
+    banner: {
+      type: String,
     },
     tags: [
       {

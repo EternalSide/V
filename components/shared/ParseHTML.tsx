@@ -34,7 +34,7 @@ const options = {
   replace: (domNode) => {
     if (domNode.name === "p") {
       return (
-        <p className="text-red-500" style={{ fontSize: 42 }}>
+        <p className="mt-3 w-full max-w-2xl" style={{ fontSize: 18 }}>
           {domToReact(domNode.children, options)}
         </p>
       );
@@ -46,7 +46,10 @@ const ParseHTML = ({ data }: { data: string }) => {
   useEffect(() => {
     Prism.highlightAll();
   }, [data]);
+
   // @ts-ignore
-  return <div className="mt-10">{parse(data, options)}</div>;
+  return (
+    <div className="mt-4 px-14 py-8 max-md:px-6">{parse(data, options)}</div>
+  );
 };
 export default ParseHTML;

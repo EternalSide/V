@@ -21,43 +21,65 @@ import { Badge } from "@/components/ui/badge";
 
 import { Editor } from "@tinymce/tinymce-react";
 import { usePathname, useRouter } from "next/navigation";
-import { createPost } from "@/lib/actions/post.action";
+import { createPost, editPost } from "@/lib/actions/post.action";
 import { SingleImageDropzone } from "@/components/SingleImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
-
+import BarLoader from "react-spinners/BarLoader";
+import { useToast } from "../ui/use-toast";
 interface Props {
   mongoUserId: string;
+  type?: "Edit" | "Create";
+  postDetails?: string;
 }
 
-const CreatePostForm = ({ mongoUserId }: Props) => {
+const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
   const [file, setFile] = useState<File>();
-
+  const [isLoading, setIsLoading] = useState(false);
   const { edgestore } = useEdgeStore();
+
+  let parsedPostDetails: any;
+  if (type === "Edit") {
+    parsedPostDetails = JSON.parse(postDetails || "");
+  }
+  const groupedTags = parsedPostDetails?.tags.map((tag: any) => tag.name);
+
   const form = useForm<z.infer<typeof createPostSchema>>({
     resolver: zodResolver(createPostSchema),
     defaultValues: {
-      title: "",
-      tags: [],
-      banner: "",
-      text: "",
+      title: parsedPostDetails?.title || "",
+      tags: groupedTags || [],
+      banner: parsedPostDetails?.banner || "",
+      text: parsedPostDetails?.text || "",
     },
   });
+
   const editorRef = useRef(null);
   const path = usePathname();
   const router = useRouter();
   const { isSubmitting } = form.formState;
+  const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof createPostSchema>) => {
-    console.log(values);
-    // const postId = await createPost({
-    //   title: values.title,
-    //   text: values.text,
-    //   tags: values.tags,
-    //   author: mongoUserId,
-    //   path,
-    // });
-
-    // router.push(`/post/${postId}`);
+    if (type === "Edit") {
+      await editPost({
+        postId: parsedPostDetails._id,
+        text: values.text,
+        title: values.title,
+        banner: values.banner ? values.banner : "",
+        path,
+      });
+      router.push(`/post/${parsedPostDetails._id}`);
+    } else {
+      const postId = await createPost({
+        title: values.title,
+        text: values.text,
+        tags: values.tags,
+        author: mongoUserId,
+        banner: values.banner ? values.banner : "",
+        path,
+      });
+      router.push(`/post/${postId}`);
+    }
   };
 
   const handleInputKeyDown = (
@@ -112,14 +134,19 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex w-full max-w-7xl flex-col gap-10 pt-20 text-white max-[1280px]:px-4"
+        className="mx-auto flex w-full max-w-7xl  flex-col gap-9 py-8 text-white max-[1280px]:px-4"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") e?.preventDefault();
+        }}
       >
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem className="max-w-3xl">
-              <FormLabel className="text-xl">Заголовок</FormLabel>
+              <FormLabel className="text-xl">
+                Заголовок <span className="text-indigo-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Input
                   className="bg-main no-focus border-none focus:border-indigo-500"
@@ -127,8 +154,8 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
                   placeholder="Почему в Redux так много boilerplate?"
                 />
               </FormControl>
-              <FormDescription>
-                Ваш пост увидят на главной, будьте сообразительны!
+              <FormDescription className="pl-1 text-neutral-400">
+                Придумайте заголовок для вашего поста.
               </FormDescription>
               <FormMessage className="text-indigo-500" />
             </FormItem>
@@ -139,20 +166,32 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
           name="tags"
           render={({ field }) => (
             <FormItem className="max-w-3xl">
-              <FormLabel className="text-xl">Теги</FormLabel>
+              <FormLabel className="text-xl">
+                Теги <span className="text-indigo-500">*</span>
+              </FormLabel>
               <FormControl>
                 <>
                   <Input
+                    disabled={type === "Edit"}
                     className="bg-main no-focus border-none focus:border-indigo-500"
-                    placeholder="React.js"
-                    onKeyDown={(e) => handleInputKeyDown(e, field)}
+                    placeholder="Выберите подходящие теги"
+                    onKeyDown={(e) =>
+                      type !== "Edit" ? handleInputKeyDown(e, field) : () => {}
+                    }
                   />
                   {field.value.length > 0 && (
                     <div className="flex flex-wrap justify-start gap-2.5 pt-1">
                       {field.value.map((tag: any) => (
                         <Badge
-                          onClick={() => handleTagRemove(tag, field)}
-                          className="button-main cursor-pointer rounded-md px-4 py-2 capitalize hover:bg-transparent"
+                          onClick={() =>
+                            type !== "Edit"
+                              ? handleTagRemove(tag, field)
+                              : () => {}
+                          }
+                          className={`button-main cursor-pointer rounded-md px-4 py-2 capitalize hover:bg-transparent ${
+                            type === "Edit" &&
+                            "cursor-default hover:text-indigo-400"
+                          }`}
                           key={tag}
                         >
                           {tag}
@@ -162,11 +201,13 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
                   )}
                 </>
               </FormControl>
-              <FormDescription>Нажатие на Enter добавит Тег.</FormDescription>
+              <FormDescription className="pl-1 text-neutral-400">
+                Нажмите на Enter чтобы добавить Тег.
+              </FormDescription>
               <FormMessage className="text-indigo-500" />
             </FormItem>
           )}
-        />{" "}
+        />
         <FormField
           control={form.control}
           name="banner"
@@ -178,27 +219,37 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
                 <div className="w-full">
                   <SingleImageDropzone
                     height={400}
-                    value={file}
+                    value={type === "Edit" ? field?.value || file : file}
                     onChange={(file: any) => {
                       setFile(file);
+                      form.setValue("banner", "");
                     }}
                   />
-                  <FormDescription>Действие не обязательно. </FormDescription>
+                  {isLoading && (
+                    <BarLoader className="!w-full !bg-indigo-700" />
+                  )}
+
                   <button
-                    className="mt-2.5 flex justify-end rounded-md bg-indigo-600 px-3.5 py-2"
+                    type="button"
+                    className="button-main  mt-1.5 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90"
                     onClick={async (e) => {
-                      if (field.value.length >= 1) return;
+                      e.preventDefault();
+                      console.log(field.value);
+                      if (field?.value.length >= 1) return;
                       if (file) {
                         const res = await edgestore.publicFiles.upload({
                           file,
                           onProgressChange: (progress) => {
-                            form.setValue("banner", "");
+                            setIsLoading(true);
                           },
                         });
-                        // you can run some server action or api here
-                        // to add the necessary data to your database
                         form.setValue("banner", res.url);
-                        console.log(res);
+                        toast({
+                          title: "Баннер успешно загружен.",
+                          duration: 2000,
+                          className: "toast-black",
+                        });
+                        setIsLoading(false);
                       }
                     }}
                   >
@@ -216,11 +267,13 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
           name="text"
           render={({ field }) => (
             <FormItem className="max-w-3xl">
-              <FormLabel className="text-xl">Текст</FormLabel>
+              <FormLabel className="text-xl">
+                Текст <span className="text-indigo-500">*</span>
+              </FormLabel>
               <FormControl>
                 <Editor
                   apiKey={process.env.TINY_KEY}
-                  initialValue=""
+                  initialValue={field?.value || ""}
                   // @ts-ignore
                   onInit={(evt, editor) => (editorRef.current = editor)}
                   onBlur={field.onBlur}
@@ -262,7 +315,7 @@ const CreatePostForm = ({ mongoUserId }: Props) => {
         />
         <Button
           disabled={isSubmitting}
-          className="bg-main mt-0 w-fit bg-indigo-700 hover:bg-indigo-600"
+          className="bg-main -mt-8 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
           type="submit"
         >
           {isSubmitting ? "Публикация.." : " Опубликовать"}

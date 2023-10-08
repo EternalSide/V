@@ -1,4 +1,9 @@
 import * as z from "zod";
+const emptyStringToUndefined = z.literal("").transform(() => undefined);
+
+export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
+  return schema.optional().or(emptyStringToUndefined);
+}
 
 export const createPostSchema = z.object({
   title: z
@@ -9,7 +14,7 @@ export const createPostSchema = z.object({
     .string()
     .min(5, { message: "Поле не может быть меньше 5 символов." })
     .max(50000),
-  banner: z.string().url({ message: "URL не найден, загрузите изображение." }),
+  banner: asOptionalField(z.string().url({ message: "Введите валидный URL" })),
   tags: z
     .array(
       z

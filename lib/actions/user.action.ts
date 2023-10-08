@@ -36,7 +36,6 @@ export const updateUser = async (params: UpdateUserParams) => {
       new: true,
       upsert: true,
     });
-    console.log(user);
 
     revalidatePath(path);
   } catch (e) {
@@ -88,11 +87,14 @@ export async function getUserByUserName(params: getUserByUsername) {
       path: "posts",
       model: Post,
       options: {
-        populate: {
-          path: "tags",
-          model: Tag,
-          select: "name",
-        },
+        sort: { createdAt: -1 },
+        populate: [
+          {
+            path: "tags",
+            model: Tag,
+            select: "name",
+          },
+        ],
       },
     });
 

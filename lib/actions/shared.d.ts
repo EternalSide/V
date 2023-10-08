@@ -32,7 +32,21 @@ export interface CreatePostParams {
   tags: string[];
   author: string;
   path: string;
+  banner: string;
 }
 export interface GetPostByIdParams {
   id: string;
+}
+
+export interface DeletePostParams {
+  postId: string;
+  path: string;
+  authorId: string;
+}
+export interface EditPostParams {
+  postId: string;
+  title: string;
+  text: string;
+  banner: string;
+  path: string;
 }

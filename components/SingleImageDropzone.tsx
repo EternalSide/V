@@ -14,7 +14,7 @@ const variants = {
   reject: "border border-red-700 bg-red-700 bg-opacity-10",
 };
 type InputProps = {
-  width: number;
+  width?: number;
   height: number;
   className?: string;
   value?: File | string;
@@ -51,6 +51,7 @@ const SingleImageDropzone = React.forwardRef<HTMLInputElement, InputProps>(
       }
       return null;
     }, [value]);
+
     // dropzone configuration
     const {
       getRootProps,

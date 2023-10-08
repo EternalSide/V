@@ -1,90 +1,103 @@
 import { Eye, Heart, MessageCircle, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "../ui/button";
-
 import { cn, getTimestamp } from "@/lib/utils";
 import { UserAvatar } from "../shared/UserAvatar";
 import { Badge } from "../ui/badge";
-import { ITag, Tagtest } from "@/database/models/tag.model";
+import EditDeletePost from "../shared/EditDeletePost";
 
 interface PostCardProps {
-  firstPost?: boolean;
-  postId: string;
-  views: number;
-  comments: number;
-  likes: number;
-  title: string;
-  tags: any;
-
+  banner?: string;
+  i?: number;
+  isOwnProfile?: boolean;
+  page?: string;
+  titleClassnames?: string;
   author: {
     name: string;
     picture: string;
     username: string;
+    _id: string;
   };
-
-  createdAt: Date;
-  titleClassnames?: string;
+  post: {
+    title: string;
+    comments: number;
+    tags: {
+      _id: string;
+      name: string;
+    }[];
+    likes: number;
+    views: number;
+    createdAt: Date;
+    id: string;
+  };
 }
 
 const PostCard = ({
   author,
-  firstPost,
-  postId,
-  views,
-  comments,
-  likes,
-  tags,
-  title,
-  createdAt,
+  i,
+  isOwnProfile,
+  page,
+  post,
+  banner,
   titleClassnames,
 }: PostCardProps) => {
+  const firstPost = i === 0;
+
   return (
     <div className="bg-main flex w-full flex-col items-start rounded-md border border-neutral-800/40">
-      {firstPost && (
+      {firstPost && banner && (
         <div className="relative h-64 w-full">
           <Image
             fill
             className="aspect-auto object-cover object-top"
             alt="Test alt"
-            src="https://i.pinimg.com/736x/cf/e8/6a/cfe86a06289fece50de884fe8ac059c6.jpg"
+            src={banner}
           />
         </div>
       )}
 
       <div className="relative w-full py-4 pl-5 pr-7">
-        <div className="absolute right-7 top-4">
-          <Star className="h-5 w-5 text-neutral-300" />
+        <div className="absolute right-7 top-4 flex items-center gap-x-2">
+          <Star className="h-5 w-5 cursor-pointer text-neutral-300 transition hover:opacity-90" />
+          {isOwnProfile && page === "Profile" && (
+            <EditDeletePost
+              type="Post"
+              itemId={post.id}
+              authorId={author._id}
+            />
+          )}
         </div>
         <div className="flex gap-1.5">
-          <UserAvatar
-            imgUrl={author.picture}
-            alt={author.name}
-            classNames="h-10 w-10"
-          />
-          <div className="flex flex-col gap-3">
+          <Link href={`/${author.username}`}>
+            <UserAvatar
+              imgUrl={author.picture}
+              alt={author.name}
+              classNames="h-10 w-10"
+            />
+          </Link>
+          <div className="flex flex-col">
             <div>
-              <Link href={`/${author.username}`}>{author.name}</Link>
+              <Link href={`/${author.username}`}>{author.username}</Link>
               <p className="text-xs text-neutral-400">
-                {getTimestamp(createdAt)}
+                {getTimestamp(post.createdAt)}
               </p>
             </div>
 
             <Link
-              href={`/post/${postId}`}
+              href={`/post/${post.id}`}
               className={cn(
-                "font-bold transition hover:text-indigo-400",
+                "font-bold transition hover:text-indigo-400 mt-3",
                 titleClassnames ? `${titleClassnames}` : "text-3xl",
               )}
             >
-              {title}
+              {post.title}
             </Link>
 
             {/* Теги */}
-            <div className="flex items-center gap-3">
-              {tags.map((tag: Tagtest) => (
+            <div className="mt-1.5 flex items-center gap-0.5">
+              {post.tags.map((tag: any) => (
                 <Badge
-                  className="cursor-pointer border border-transparent bg-transparent !py-2 px-4 text-sm text-neutral-300 first-letter:uppercase hover:border hover:border-neutral-700 hover:bg-neutral-800"
+                  className="cursor-pointer !rounded-md border border-transparent bg-transparent !px-1.5 py-1  text-sm text-neutral-300 first-letter:uppercase hover:border hover:border-neutral-700 hover:bg-neutral-800"
                   key={tag._id}
                 >
                   #{tag.name}
@@ -92,15 +105,15 @@ const PostCard = ({
               ))}
             </div>
 
-            <div className="flex items-center justify-between gap-3">
+            <div className="mt-3 flex items-center gap-3">
               <div className="flex items-center gap-1">
                 <Link
                   className="flex items-center gap-1 rounded-md px-2.5 py-2 hover:bg-neutral-800"
                   href="/"
                 >
                   <Heart className="text-neutral-300" />
-                  <p className="text-sm text-neutral-300">
-                    Мне нравится: {likes}
+                  <p className="ml-0.5 text-sm text-neutral-300">
+                    {post.likes}
                   </p>
                 </Link>
                 <Link
@@ -108,14 +121,14 @@ const PostCard = ({
                   href="/"
                 >
                   <MessageCircle className="text-neutral-300" />
-                  <p className="text-sm text-neutral-300">
-                    Комментариев: {comments}
+                  <p className="ml-0.5 text-sm text-neutral-300">
+                    {post.comments}
                   </p>
                 </Link>
               </div>
               <div className="flex items-center gap-1">
                 <Eye className="text-neutral-300" />
-                <p className="text-sm text-neutral-300">Просмотров: {views}</p>
+                <p className="ml-0.5 text-sm text-neutral-300">{post.views}</p>
               </div>
             </div>
           </div>

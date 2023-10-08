@@ -2,7 +2,12 @@
 
 import User from "@/database/models/user.model";
 import { connectToDatabase } from "../mongoose";
-import { CreatePostParams, GetPostByIdParams } from "./shared";
+import {
+  CreatePostParams,
+  DeletePostParams,
+  EditPostParams,
+  GetPostByIdParams,
+} from "./shared";
 import Post from "@/database/models/post.model";
 import { revalidatePath } from "next/cache";
 import Tag from "@/database/models/tag.model";
@@ -11,7 +16,7 @@ export const createPost = async (params: CreatePostParams) => {
   try {
     connectToDatabase();
 
-    const { author, path, tags, text, title } = params;
+    const { author, path, tags, text, title, banner } = params;
     // Добавить Пост, Пост пользователю в коллекцию. Добавить теги если есть.
 
     // Создадим новый Пост.
@@ -19,6 +24,7 @@ export const createPost = async (params: CreatePostParams) => {
       title,
       text,
       author,
+      banner,
     });
 
     // * Массив тегов на добавление к посту.
@@ -76,7 +82,7 @@ export const getAllPosts = async () => {
 
     const posts = await Post.find({})
       .populate("author")
-      .populate({ path: "tags", model: Tag, select: "name" })
+      .populate({ path: "tags", model: Tag, select: "name _id" })
       .sort({ createdAt: -1 });
 
     return posts;
@@ -98,3 +104,46 @@ export const getPopularPosts = async () => {
     throw error;
   }
 };
+
+export async function deletePost(params: DeletePostParams) {
+  try {
+    connectToDatabase();
+    const { postId, path, authorId } = params;
+
+    await Post.findByIdAndDelete(postId);
+
+    await Tag.updateMany({ posts: postId }, { $pull: { posts: postId } });
+
+    await User.findByIdAndUpdate(
+      authorId,
+      { $pull: { posts: postId } },
+      { new: true },
+    );
+
+    revalidatePath(path);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+export async function editPost(params: EditPostParams) {
+  try {
+    connectToDatabase();
+    const { postId, title, text, path, banner } = params;
+
+    const post = await Post.findById(postId).populate("tags");
+    if (!post) {
+      throw new Error("post не найден.");
+    }
+    post.title = title;
+    post.text = text;
+    post.banner = banner;
+    await post.save();
+
+    revalidatePath(path);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}

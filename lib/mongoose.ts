@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DISABLED_NOTIFICATIONS = false;
+const DISABLED_NOTIFICATIONS = true;
 
 let isConnected: boolean = false;
 
