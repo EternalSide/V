@@ -1,3 +1,4 @@
+import { currentUser } from "@clerk/nextjs";
 import {
   Home,
   Tag,
@@ -9,8 +10,11 @@ import {
   Plus,
   Bell,
 } from "lucide-react";
+import Link from "next/link";
 
-const LeftSidebar = () => {
+const LeftSidebar = async () => {
+  const user = await currentUser();
+
   const sidebarLinks = [
     {
       label: "Главная",
@@ -68,6 +72,21 @@ const LeftSidebar = () => {
     <div className="sticky left-0 top-0 flex h-fit flex-col justify-between overflow-y-auto  text-white max-sm:hidden lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-1">
         {sidebarLinks.map((item) => {
+          if (item.label === "Профиль") {
+            return (
+              <Link
+                href={user ? user.username! : "/sign-in"}
+                key={item.route}
+                className="group flex cursor-pointer items-center
+                  gap-x-2 rounded-md px-3 py-2 hover:bg-indigo-900"
+              >
+                <item.icon className="h-5 w-5" />
+                <p className="text-[16px] text-neutral-200 group-hover:text-indigo-300 group-hover:underline max-lg:hidden">
+                  {item.label}
+                </p>
+              </Link>
+            );
+          }
           return (
             <div
               key={item.route}

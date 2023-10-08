@@ -1,9 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "../../button";
+import { Button } from "../../ui/button";
 import { Bell, Search } from "lucide-react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Input } from "../../input";
+import { Input } from "../../ui/input";
 
 const Navbar = () => {
   return (
@@ -17,7 +17,7 @@ const Navbar = () => {
             <Image
               alt="Лого Сайта"
               src="/favicon.png"
-              width={42}
+              width={40}
               height={45}
               className="object-cover"
             />
@@ -39,20 +39,16 @@ const Navbar = () => {
         <div className="flex items-center gap-x-3">
           <SignedOut>
             <Link href="/sign-in">
-              <Button className="border border-indigo-600 bg-transparent text-indigo-400 shadow-sm shadow-indigo-700 hover:bg-indigo-600 hover:text-white ">
-                Войти
-              </Button>
+              <Button className="button-main">Войти</Button>
             </Link>
             <Link href="/sign-up">
-              <Button className="border border-indigo-600 bg-transparent text-indigo-400 shadow-sm shadow-indigo-700 hover:bg-indigo-600 hover:text-white ">
-                Регистрация
-              </Button>
+              <Button className="button-main">Регистрация</Button>
             </Link>
           </SignedOut>
           <SignedIn>
-            <Button className="border border-indigo-600 bg-transparent text-indigo-400 shadow-sm shadow-indigo-700 hover:bg-indigo-600 hover:text-white ">
-              Опубликовать
-            </Button>
+            <Link href="/create">
+              <Button className="button-main">Опубликовать</Button>
+            </Link>
             <Button className="bg-transparent p-2 hover:bg-indigo-600">
               <Bell className="cursor-pointer transition hover:opacity-90" />
             </Button>

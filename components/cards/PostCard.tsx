@@ -1,9 +1,44 @@
-import { Eye, Heart, MessageCircle, Save } from "lucide-react";
+import { Eye, Heart, MessageCircle, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-const PostCard = ({ firstPost }: { firstPost?: boolean }) => {
+import { cn, getTimestamp } from "@/lib/utils";
+import { UserAvatar } from "../shared/UserAvatar";
+import { Badge } from "../ui/badge";
+import { ITag, Tagtest } from "@/database/models/tag.model";
+
+interface PostCardProps {
+  firstPost?: boolean;
+  postId: string;
+  views: number;
+  comments: number;
+  likes: number;
+  title: string;
+  tags: any;
+
+  author: {
+    name: string;
+    picture: string;
+    username: string;
+  };
+
+  createdAt: Date;
+  titleClassnames?: string;
+}
+
+const PostCard = ({
+  author,
+  firstPost,
+  postId,
+  views,
+  comments,
+  likes,
+  tags,
+  title,
+  createdAt,
+  titleClassnames,
+}: PostCardProps) => {
   return (
     <div className="bg-main flex w-full flex-col items-start rounded-md border border-neutral-800/40">
       {firstPost && (
@@ -16,35 +51,47 @@ const PostCard = ({ firstPost }: { firstPost?: boolean }) => {
           />
         </div>
       )}
-      <div className="relative py-4 pl-5 pr-7">
+
+      <div className="relative w-full py-4 pl-5 pr-7">
         <div className="absolute right-7 top-4">
-          <Save className="text-neutral-300" />
+          <Star className="h-5 w-5 text-neutral-300" />
         </div>
         <div className="flex gap-1.5">
-          <div className="relative h-8 w-12">
-            <Image
-              fill
-              className="rounded-full object-cover"
-              alt="Test alt"
-              src="https://i.pinimg.com/564x/5e/37/0c/5e370c648fe74d1504091a4267b82559.jpg"
-            />
-          </div>
+          <UserAvatar
+            imgUrl={author.picture}
+            alt={author.name}
+            classNames="h-10 w-10"
+          />
           <div className="flex flex-col gap-3">
             <div>
-              <h3>EternalSide</h3>
-              <p className="text-xs text-neutral-400">23 Октября 18:10</p>
+              <Link href={`/${author.username}`}>{author.name}</Link>
+              <p className="text-xs text-neutral-400">
+                {getTimestamp(createdAt)}
+              </p>
             </div>
+
             <Link
-              href="/"
-              className="text-3xl font-bold transition hover:text-indigo-400"
+              href={`/post/${postId}`}
+              className={cn(
+                "font-bold transition hover:text-indigo-400",
+                titleClassnames ? `${titleClassnames}` : "text-3xl",
+              )}
             >
-              Изучаем React и Next.Js на практике, делая крутые сайты!
+              {title}
             </Link>
+
+            {/* Теги */}
             <div className="flex items-center gap-3">
-              <Button className="border border-transparent bg-transparent !py-1 text-neutral-300 hover:border hover:border-neutral-700 hover:bg-neutral-800">
-                #React
-              </Button>
+              {tags.map((tag: Tagtest) => (
+                <Badge
+                  className="cursor-pointer border border-transparent bg-transparent !py-2 px-4 text-sm text-neutral-300 first-letter:uppercase hover:border hover:border-neutral-700 hover:bg-neutral-800"
+                  key={tag._id}
+                >
+                  #{tag.name}
+                </Badge>
+              ))}
             </div>
+
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-1">
                 <Link
@@ -52,19 +99,23 @@ const PostCard = ({ firstPost }: { firstPost?: boolean }) => {
                   href="/"
                 >
                   <Heart className="text-neutral-300" />
-                  <p className="text-sm text-neutral-300">Мне нравится: 25</p>
+                  <p className="text-sm text-neutral-300">
+                    Мне нравится: {likes}
+                  </p>
                 </Link>
                 <Link
                   className="flex items-center gap-1 rounded-md px-3.5 py-2 hover:bg-neutral-800"
                   href="/"
                 >
                   <MessageCircle className="text-neutral-300" />
-                  <p className="text-sm text-neutral-300">Комментариев: 30</p>
+                  <p className="text-sm text-neutral-300">
+                    Комментариев: {comments}
+                  </p>
                 </Link>
               </div>
               <div className="flex items-center gap-1">
                 <Eye className="text-neutral-300" />
-                <p className="text-sm text-neutral-300">0</p>
+                <p className="text-sm text-neutral-300">Просмотров: {views}</p>
               </div>
             </div>
           </div>

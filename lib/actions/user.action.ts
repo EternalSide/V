@@ -2,8 +2,16 @@
 
 import User from "@/database/models/user.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateUserParams, UpdateUserParams, deleteUserParams } from "./shared";
+import {
+  CreateUserParams,
+  UpdateUserParams,
+  deleteUserParams,
+  getUserByIdParams,
+  getUserByUsername,
+} from "./shared";
 import { revalidatePath } from "next/cache";
+import Post from "@/database/models/post.model";
+import Tag from "@/database/models/tag.model";
 
 export const createUser = async (userData: CreateUserParams) => {
   try {
@@ -55,3 +63,42 @@ export const deleteUser = async (params: deleteUserParams) => {
     throw e;
   }
 };
+
+export async function getUserById(params: getUserByIdParams) {
+  try {
+    connectToDatabase();
+
+    const { clerkId } = params;
+
+    const user = await User.findOne({ clerkId });
+
+    return user;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+export async function getUserByUserName(params: getUserByUsername) {
+  try {
+    connectToDatabase();
+
+    const { username } = params;
+
+    const user = await User.findOne({ username }).populate({
+      path: "posts",
+      model: Post,
+      options: {
+        populate: {
+          path: "tags",
+          model: Tag,
+          select: "name",
+        },
+      },
+    });
+
+    return user;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
