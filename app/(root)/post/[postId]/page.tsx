@@ -3,37 +3,29 @@ import { formatDate, getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Link from "next/link";
 import { UserAvatar } from "@/components/shared/UserAvatar";
-import { Heart, MessageCircle, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { auth } from "@clerk/nextjs";
+import PostActions from "@/components/shared/PostActions";
+import { getUserById } from "@/lib/actions/user.action";
 
 const PostPage = async ({ params }: { params: { postId: string } }) => {
   const post = await getPostById({ id: params.postId });
   const { userId } = auth();
+  let user;
+  if (userId) {
+    user = await getUserById({ clerkId: userId });
+  }
 
   const isOwnPost = post?.author.clerkId === userId;
 
   return (
     <div className="flex w-full items-start gap-3 max-md:px-3">
-      <div className="fixed flex flex-col items-center gap-7 pl-6 pt-24 text-center max-md:hidden">
-        <div>
-          <Heart />
-          <p className="mt-1.5 text-sm">0</p>
-        </div>
-        <div>
-          <MessageCircle />
-          <p className="mt-1.5 text-sm">0</p>
-        </div>
-        <div>
-          <Star />
-          <p className="mt-1.5 text-sm">0</p>
-        </div>
-      </div>
+      <PostActions userId={user._id.toString()} postId={post._id.toString()} />
 
       <div className="bg-main ml-20 flex flex-1 flex-col rounded-md max-md:ml-0 ">
-        {/* {post?.banner && (
-          <div className="relative h-[320px] w-32">
+        {post?.banner && (
+          <div className="relative h-[320px] w-full">
             <Image
               alt="Баннер"
               fill
@@ -41,7 +33,7 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
               className="rounded-t-md object-cover object-center"
             />
           </div>
-        )} */}
+        )}
 
         <div className="mt-6 flex items-start gap-1.5 px-14 max-md:px-6">
           <UserAvatar

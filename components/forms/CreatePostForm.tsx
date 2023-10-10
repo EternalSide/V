@@ -234,8 +234,8 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
                     className="button-main  mt-1.5 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90"
                     onClick={async (e) => {
                       e.preventDefault();
-                      console.log(field.value);
-                      if (field?.value.length >= 1) return;
+
+                      if (field?.value && field?.value.length >= 1) return;
                       if (file) {
                         const res = await edgestore.publicFiles.upload({
                           file,

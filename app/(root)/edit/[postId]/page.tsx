@@ -3,6 +3,13 @@ import { getPostById } from "@/lib/actions/post.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+
+export const metadata = {
+  title: {
+    absolute: "Редактировать пост / V",
+  },
+};
+
 const EditPostPage = async ({ params }: { params: { postId: string } }) => {
   const { userId } = auth();
   if (!userId) redirect("/sign-in");

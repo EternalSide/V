@@ -44,16 +44,19 @@ const PostCard = ({
   const firstPost = i === 0;
 
   return (
-    <div className="bg-main flex w-full flex-col items-start rounded-md border border-neutral-800/40">
+    <Link
+      href={`/post/${post.id}`}
+      className="cursor-pointer bg-main flex w-full flex-col items-start rounded-md border border-neutral-800/40 border border-transparent hover:border-indigo-700"
+    >
       {firstPost && banner && (
-        <div className="relative h-64 w-full">
+        <Link href={`/post/${post.id}`} className="relative h-64 w-full">
           <Image
             fill
             className="aspect-auto object-cover object-top"
             alt="Test alt"
             src={banner}
           />
-        </div>
+        </Link>
       )}
 
       <div className="relative w-full py-4 pl-5 pr-7">
@@ -134,7 +137,7 @@ const PostCard = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 export default PostCard;

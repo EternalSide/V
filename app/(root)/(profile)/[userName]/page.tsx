@@ -5,9 +5,24 @@ import { getUserByUserName } from "@/lib/actions/user.action";
 import { formatDate } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import { Cake, FileEdit, Locate, MessageCircle } from "lucide-react";
+import { ResolvingMetadata, Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+type Props = {
+  params: { userName: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  const user = await getUserByUserName({ username: params.userName });
+
+  return {
+    title: `${user.name} (@${user.username}) / V`,
+  };
+}
 const ProfilePage = async ({ params }: { params: { userName: string } }) => {
   const { userId } = auth();
   const user = await getUserByUserName({ username: params.userName });
@@ -24,10 +39,10 @@ const ProfilePage = async ({ params }: { params: { userName: string } }) => {
               </Button>
             </Link>
           )}
-          <div className="relative -mt-12 h-28 w-28">
+          <div className="relative -mt-12 h-32 w-32">
             <Image
               fill
-              className="aspect-auto rounded-full object-cover object-top"
+              className="aspect-auto rounded-full object-cover object-top border-[8px] border-black"
               alt="Test alt"
               src={user.picture}
             />

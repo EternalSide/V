@@ -76,14 +76,38 @@ export const getPostById = async (params: GetPostByIdParams) => {
   }
 };
 
-export const getAllPosts = async () => {
+interface getAllPostsParams {
+  searchValue: string;
+}
+
+export const getAllPosts = async (params: getAllPostsParams) => {
   try {
     connectToDatabase();
+    const { searchValue } = params;
+
+    let sortOptions = {};
+
+    switch (searchValue) {
+      case "new":
+        sortOptions = { createdAt: -1 };
+        break;
+
+      case "recommended":
+        sortOptions = { createdAt: -1 };
+        break;
+
+      case "popular":
+        sortOptions = { views: 1 };
+        break;
+
+      default:
+        break;
+    }
 
     const posts = await Post.find({})
       .populate("author")
       .populate({ path: "tags", model: Tag, select: "name _id" })
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
 
     return posts;
   } catch (error) {

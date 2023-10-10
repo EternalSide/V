@@ -39,6 +39,9 @@ const options = {
         </p>
       );
     }
+    if (domNode.name === "li") {
+      return <li>{domToReact(domNode.children, options)}</li>;
+    }
   },
 };
 

@@ -10,10 +10,7 @@ const Navbar = () => {
     <div className="bg-main fixed z-50 flex h-14 w-full border-b border-neutral-800 text-white shadow-xl max-[1280px]:px-4">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <div className="flex items-center gap-x-3">
-          <Link
-            className="border border-indigo-900 shadow-sm shadow-indigo-700"
-            href="/"
-          >
+          <Link className="border-2 border-indigo-800" href="/">
             <Image
               alt="Лого Сайта"
               src="/favicon.png"
