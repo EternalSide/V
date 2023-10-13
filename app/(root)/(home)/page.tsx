@@ -15,8 +15,8 @@ export default async function Home({ searchParams }: any) {
   return (
     <>
       <LeftSidebar />
-      <section className="flex flex-1 flex-col px-5 pb-6 max-md:pb-14 sm:px-4">
-        <div className="w-full max-w-3xl">
+      <section className="flex flex-1 w-full flex-col px-4 pb-6 max-md:pb-14 sm:px-4">
+        <div className="w-full">
           <div className="flex flex-col pt-3">
             <HomeFilters />
 

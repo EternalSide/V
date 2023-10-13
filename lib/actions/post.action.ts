@@ -7,6 +7,7 @@ import {
   DeletePostParams,
   EditPostParams,
   GetPostByIdParams,
+  setLikeParams,
 } from "./shared";
 import Post from "@/database/models/post.model";
 import { revalidatePath } from "next/cache";
@@ -97,7 +98,7 @@ export const getAllPosts = async (params: getAllPostsParams) => {
         break;
 
       case "popular":
-        sortOptions = { views: 1 };
+        sortOptions = { upvotes: -1, views: -1 };
         break;
 
       default:
@@ -120,7 +121,7 @@ export const getPopularPosts = async () => {
   try {
     connectToDatabase();
 
-    const posts = await Post.find({}).sort({ upvotes: 1, views: 1 }).limit(5);
+    const posts = await Post.find({}).sort({ upvotes: -1, views: -1 }).limit(5);
 
     return posts;
   } catch (error) {
@@ -164,6 +165,33 @@ export async function editPost(params: EditPostParams) {
     post.text = text;
     post.banner = banner;
     await post.save();
+
+    revalidatePath(path);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+export async function setLike(params: setLikeParams) {
+  try {
+    connectToDatabase();
+    const { postId, userId, path, hasUpVoted } = params;
+
+    let updateQuery = {};
+
+    if (hasUpVoted) {
+      updateQuery = { $pull: { upvotes: userId } };
+    } else {
+      updateQuery = { $addToSet: { upvotes: userId } };
+    }
+
+    const post = await Post.findByIdAndUpdate(postId, updateQuery, {
+      new: true,
+    });
+    if (!post) {
+      throw new Error("post не найден.");
+    }
 
     revalidatePath(path);
   } catch (e) {

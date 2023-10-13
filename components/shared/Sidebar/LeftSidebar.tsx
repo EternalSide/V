@@ -21,7 +21,7 @@ const LeftSidebar = async () => {
     },
   ];
   return (
-    <div className="sticky left-0 top-0 mt-1.5 flex h-fit flex-col justify-between gap-8  overflow-y-auto text-white max-sm:hidden lg:w-[266px]">
+    <div className="sticky left-0 top-0 max-lg:pl-4 mt-1.5 flex h-fit flex-col justify-between gap-8  overflow-y-auto text-white max-sm:hidden lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-3">
         {sidebarLinks.map((item) => {
           if (item.label === "Профиль") {

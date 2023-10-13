@@ -15,7 +15,7 @@ const HomeFilters = () => {
     },
     {
       value: "new",
-      label: "Недавние",
+      label: "Новые",
     },
     {
       value: "popular",

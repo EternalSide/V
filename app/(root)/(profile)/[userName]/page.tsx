@@ -4,36 +4,44 @@ import { Button } from "@/components/ui/button";
 import { getUserByUserName } from "@/lib/actions/user.action";
 import { formatDate } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
-import { Cake, FileEdit, Locate, MessageCircle } from "lucide-react";
-import { ResolvingMetadata, Metadata } from "next";
+import {
+  Cake,
+  FileEdit,
+  Locate,
+  LucideLink,
+  MessageCircle,
+} from "lucide-react";
+import { Metadata } from "next";
+
 import Image from "next/image";
 import Link from "next/link";
-type Props = {
+
+type ProfilePageProps = {
   params: { userName: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  // searchParams: { [key: string]: string | string[] | undefined };
 };
 
-export async function generateMetadata(
-  { params, searchParams }: Props,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ProfilePageProps): Promise<Metadata> {
   const user = await getUserByUserName({ username: params.userName });
 
   return {
     title: `${user.name} (@${user.username}) / V`,
   };
 }
-const ProfilePage = async ({ params }: { params: { userName: string } }) => {
+
+const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { userId } = auth();
   const user = await getUserByUserName({ username: params.userName });
   const isOwnProfile = user?.clerkId === userId;
 
   return (
-    <div className="mx-auto w-full max-w-5xl  max-md:px-3">
+    <div className="mx-auto w-full max-w-5xl max-md:px-3">
       <div className="bg-main mt-12 w-full rounded-md border-neutral-900 pb-8">
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           {isOwnProfile && (
-            <Link href={`/`}>
+            <Link href="/settings">
               <Button className="button-main absolute right-7 top-4">
                 Редактировать
               </Button>
@@ -58,10 +66,12 @@ const ProfilePage = async ({ params }: { params: { userName: string } }) => {
                 : "Пользователь не оставил информации о себе."}
             </p>
 
-            <div className="mt-4 flex gap-6">
+            <div className="mt-4 flex gap-6 max-md:flex-col max-md:gap-4">
               <div className="flex items-center gap-2">
                 <Locate color="#969696" className="h-5 w-5" />
-                <p className="pt-1 text-sm text-neutral-400">Tokyo, Japan</p>
+                <p className="pt-1 text-sm text-neutral-400">
+                  {user?.location ? user.location : "Не Известно"}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <Cake color="#969696" className="h-5 w-5" />
@@ -69,6 +79,21 @@ const ProfilePage = async ({ params }: { params: { userName: string } }) => {
                   Регистрация: {formatDate(user.joinedAt)}{" "}
                 </p>
               </div>
+              {user?.portfolioWebsite && (
+                <Link
+                  target="_blank"
+                  href={user.portfolioWebsite}
+                  className="flex items-center gap-2 group"
+                >
+                  <LucideLink
+                    color="#969696"
+                    className="h-5 w-5 !group-hover:text-indigo-500 transition"
+                  />
+                  <p className="pt-1 text-sm text-neutral-400 group-hover:text-indigo-500 transition">
+                    {user.portfolioWebsite}
+                  </p>
+                </Link>
+              )}
             </div>
           </div>
         </div>

@@ -32,27 +32,30 @@ const options = {
   // @ts-ignore
   // Перебить стили
   replace: (domNode) => {
-    if (domNode.name === "p") {
-      return (
-        <p className="mt-3 w-full max-w-2xl" style={{ fontSize: 18 }}>
-          {domToReact(domNode.children, options)}
-        </p>
-      );
-    }
-    if (domNode.name === "li") {
-      return <li>{domToReact(domNode.children, options)}</li>;
-    }
+    // if (domNode.name === "p") {
+    //   return (
+    //     <p className="mt-3 w-full max-w-2xl" style={{ fontSize: 18 }}>
+    //       {domToReact(domNode.children, options)}
+    //     </p>
+    //   );
+    // }
+    // if (domNode.name === "li") {
+    //   return <li>{domToReact(domNode.children, options)}</li>;
+    // }
   },
 };
 
-const ParseHTML = ({ data }: { data: string }) => {
+const ParseHTML = ({ data, post }: { data: string; post?: boolean }) => {
   useEffect(() => {
     Prism.highlightAll();
   }, [data]);
 
   // @ts-ignore
+  // mt-4 px-14 py-8 max-md:px-6
   return (
-    <div className="mt-4 px-14 py-8 max-md:px-6">{parse(data, options)}</div>
+    <div className={`${post && "mt-4 px-14 py-8 max-md:px-6"}`}>
+      {parse(data, options)}
+    </div>
   );
 };
 export default ParseHTML;

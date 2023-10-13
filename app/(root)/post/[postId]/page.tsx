@@ -8,8 +8,25 @@ import Image from "next/image";
 import { auth } from "@clerk/nextjs";
 import PostActions from "@/components/shared/PostActions";
 import { getUserById } from "@/lib/actions/user.action";
+import CreateCommentForm from "@/components/forms/CreateCommentForm";
+import AllComents from "@/components/shared/AllComents";
+import { Metadata } from "next";
 
-const PostPage = async ({ params }: { params: { postId: string } }) => {
+interface ProfilePageProps {
+  params: { postId: string };
+}
+
+export async function generateMetadata({
+  params,
+}: ProfilePageProps): Promise<Metadata> {
+  const post = await getPostById({ id: params.postId });
+
+  return {
+    title: `${post.title} / V`,
+  };
+}
+
+const PostPage = async ({ params }: ProfilePageProps) => {
   const post = await getPostById({ id: params.postId });
   const { userId } = auth();
   let user;
@@ -21,7 +38,13 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
 
   return (
     <div className="flex w-full items-start gap-3 max-md:px-3">
-      <PostActions userId={user._id.toString()} postId={post._id.toString()} />
+      <PostActions
+        isLiked={post.upvotes.includes(user?._id.toString())}
+        userId={user?._id.toString()}
+        postId={post._id.toString()}
+        likesNumber={post.upvotes.length}
+        authorName={post.author.name}
+      />
 
       <div className="bg-main ml-20 flex flex-1 flex-col rounded-md max-md:ml-0 ">
         {post?.banner && (
@@ -34,7 +57,6 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
             />
           </div>
         )}
-
         <div className="mt-6 flex items-start gap-1.5 px-14 max-md:px-6">
           <UserAvatar
             alt={post.author.name}
@@ -42,16 +64,16 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
             imgUrl={post.author.picture}
           />
 
-          <div className="flex w-full items-center justify-between ">
+          <div className="flex w-full items-start justify-between ">
             <div>
               <Link href={`/${post.author.username}`}>
                 <p className="font-semibold first-letter:uppercase">
-                  {post.author.username}
+                  {post.author.name}
+                </p>
+                <p className="text-sm text-neutral-400">
+                  @{post.author.username}
                 </p>
               </Link>
-              <p className="mt-0.5 text-xs text-neutral-400">
-                {getTimestamp(post.createdAt)}
-              </p>
             </div>
             {isOwnPost && (
               <Link href={`/edit/${post._id}`}>
@@ -60,62 +82,90 @@ const PostPage = async ({ params }: { params: { postId: string } }) => {
             )}
           </div>
         </div>
-
+        <div className="mt-2.5 px-14 max-md:px-6">
+          <p className="text-xs text-neutral-400">
+            {getTimestamp(post.createdAt)}
+          </p>
+        </div>
         <div className="mt-4 flex items-center gap-3 px-14 max-md:px-6">
           <p className="text-sm text-neutral-400">Просмотров: {post.views}</p>
-          <p className="text-sm text-neutral-400">В Избранном: 0</p>
+          <p className="text-sm text-neutral-400">
+            Комментариев: {post.comments.length}
+          </p>
         </div>
-
         <h1 className="mt-10 px-14 text-5xl font-bold max-md:px-6">
           {post.title}
         </h1>
+        <ParseHTML data={post.text} post={true} />
 
-        <ParseHTML data={post.text} />
+        {/* <PostComments /> */}
+        <div className="w-full p-12  border-t border-neutral-800">
+          <h1 className="text-3xl font-semibold">
+            Все Комментарии ({post.comments.length})
+          </h1>
+
+          <AllComents postId={params.postId} />
+
+          <CreateCommentForm
+            authorId={user?._id.toString()}
+            postId={params.postId}
+          />
+        </div>
       </div>
 
       {/* Часть справа */}
       <div className="bg-main  relative h-fit w-[320px] rounded-md border border-neutral-800 max-lg:hidden">
-        {/* <div className="absolute left-0 top-0 h-32 w-full">
-          <div className="relative h-32 w-full">
-            <Image
-              src="/test-gif.gif"
-              fill
-              alt={`gif`}
-              className="object-center"
-            />
-          </div>
-        </div> */}
+        <div className="w-full h-16 bg-indigo-700"> </div>
         <div className="p-5">
-          <div className="flex items-center gap-2">
+          <div className="flex items-start gap-2">
             <UserAvatar
               alt={post.author.name}
               classNames="h-10 w-10"
               imgUrl={post.author.picture}
             />
-            <h3 className="text-xl font-semibold first-letter:uppercase">
-              {post.author.username}
-            </h3>
+            <div>
+              <h3 className="text-xl font-semibold first-letter:uppercase">
+                {post.author.name}
+              </h3>
+              <p className="text-sm text-neutral-400">
+                @{post.author.username}
+              </p>
+            </div>
           </div>
-          <Link href={`/${post.author.username}`}>
-            <Button className="mt-4 w-full bg-indigo-600 text-white">
-              Профиль
-            </Button>
-          </Link>
-          <p className="mt-6 text-base text-neutral-400">
-            {post.author?.bio ? post.author?.bio : "Информация отсутствует."}
-          </p>
 
-          <div className="mt-6">
-            <h3 className="text-base font-semibold text-neutral-400">
-              Постов:
-            </h3>
-            <p className="text-neutral-300">{post.author.posts.length}</p>
+          <div className="mt-4 flex flex-col gap-4">
+            <div>
+              <h3 className="text-base font-semibold text-neutral-400">
+                О себе:
+              </h3>
+              <p className="text-white">
+                {post.author?.bio
+                  ? post.author?.bio
+                  : "Информация отсутствует."}
+              </p>
+            </div>
 
-            <h3 className="mt-4 text-base font-semibold text-neutral-400">
-              Регистрация:
-            </h3>
+            <div>
+              <h3 className="text-base font-semibold text-neutral-400">
+                Постов:
+              </h3>
+              <p className="text-neutral-300">{post.author.posts.length}</p>
+            </div>
+
+            <div>
+              <h3 className="text-base font-semibold text-neutral-400">
+                Регистрация:
+              </h3>
+              <p className="text-neutral-300">
+                {formatDate(post.author.joinedAt)}
+              </p>
+            </div>
+            <Link href={`/${post.author.username}`}>
+              <Button className="w-full bg-indigo-600 text-white">
+                Профиль
+              </Button>
+            </Link>
           </div>
-          <p className="text-neutral-300">{formatDate(post.author.joinedAt)}</p>
         </div>
       </div>
     </div>

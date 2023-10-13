@@ -6,9 +6,9 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password?: string;
+  role?: string;
   picture: string;
   joinedAt: Date;
-  role: string;
   location?: string;
   bio?: string;
   portfolioWebsite?: string;

@@ -25,9 +25,9 @@ const RightSidebar = async () => {
           <Link
             href={`/post/${post._id.toString()}`}
             key={post._id}
-            className="border-b border-black px-5 py-4"
+            className="group border-b border-black px-5 py-4 border border-transparent hover:border-indigo-700"
           >
-            <p className="text-neutral-200 transition hover:text-indigo-500">
+            <p className="text-neutral-200 transition group-hover:text-indigo-500">
               {post.title}
             </p>
             <p className="mt-2 text-sm text-neutral-400">
@@ -43,9 +43,9 @@ const RightSidebar = async () => {
           <Link
             href={`/tag/${tag.name}`}
             key={tag._id}
-            className="border-b border-black px-5 py-4"
+            className="group border border-transparent hover:border-indigo-700 px-5 py-4"
           >
-            <p className="font-semibold text-neutral-200 transition hover:text-indigo-500">
+            <p className="group-hover:text-indigo-500 font-semibold text-neutral-200 transition hover:text-indigo-500">
               {tag.name}
             </p>
             <p className="mt-2 text-sm text-neutral-400">

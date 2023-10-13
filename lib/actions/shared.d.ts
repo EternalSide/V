@@ -34,6 +34,13 @@ export interface CreatePostParams {
   path: string;
   banner: string;
 }
+
+export interface CreateCommentParams {
+  text: string;
+  author: string;
+  post: string;
+  path: string;
+}
 export interface GetPostByIdParams {
   id: string;
 }
@@ -49,4 +56,11 @@ export interface EditPostParams {
   text: string;
   banner: string;
   path: string;
+}
+
+export interface setLikeParams {
+  postId: string;
+  userId: string;
+  path: string;
+  hasUpVoted: boolean;
 }
