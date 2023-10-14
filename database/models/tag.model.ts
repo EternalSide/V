@@ -1,8 +1,4 @@
-import { Schema, models, model, Document, InferSchemaType } from "mongoose";
-
-interface documentId {
-  _id: Schema.Types.ObjectId;
-}
+import { Schema, models, model, Document } from "mongoose";
 
 export interface ITag extends Document {
   name: string;
@@ -43,5 +39,3 @@ const TagSchema = new Schema<ITag>(
 const Tag = models.Tag || model("Tag", TagSchema);
 
 export default Tag;
-
-export type Tagtest = InferSchemaType<typeof TagSchema>;

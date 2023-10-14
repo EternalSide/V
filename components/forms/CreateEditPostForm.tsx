@@ -32,7 +32,7 @@ interface Props {
   postDetails?: string;
 }
 
-const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
+const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
   const [file, setFile] = useState<File>();
   const [isLoading, setIsLoading] = useState(false);
   const { edgestore } = useEdgeStore();
@@ -134,7 +134,7 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="pt-[100px] mx-auto flex w-full max-w-7xl  flex-col gap-9 py-8 text-white max-[1280px]:px-4"
+        className="mt-6 mx-auto flex w-full max-w-7xl  flex-col gap-9 pb-8"
         onKeyDown={(e) => {
           if (e.key === "Enter") e?.preventDefault();
         }}
@@ -329,4 +329,4 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
     </Form>
   );
 };
-export default CreatePostForm;
+export default CreateEditPostForm;

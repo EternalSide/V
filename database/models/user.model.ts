@@ -15,6 +15,7 @@ export interface IUser extends Document {
   reputation?: number;
   posts: Schema.Types.ObjectId[];
   savedPosts: Schema.Types.ObjectId[];
+  followingTags: Schema.Types.ObjectId[];
 }
 
 const UserSchema = new Schema<IUser>(
@@ -31,6 +32,7 @@ const UserSchema = new Schema<IUser>(
     reputation: { type: Number, default: 0 },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
     savedPosts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+    followingTags: [{ type: Schema.Types.ObjectId, ref: "Tag", default: [] }],
     joinedAt: { type: Date, default: Date.now },
     role: { type: String, default: "user" },
   },

@@ -1,4 +1,4 @@
-import CreatePostForm from "@/components/forms/CreatePostForm";
+import CreateEditPostForm from "@/components/forms/CreateEditPostForm";
 import { getPostById } from "@/lib/actions/post.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
@@ -6,28 +6,29 @@ import { redirect } from "next/navigation";
 
 export const metadata = {
   title: {
-    absolute: "Редактировать пост / V",
+    absolute: "Редактировать / V",
   },
 };
 
 const EditPostPage = async ({ params }: { params: { postId: string } }) => {
-  const { userId } = auth();
-  if (!userId) redirect("/sign-in");
-  const mongoUser = await getUserById({ clerkId: userId });
+  const { userId: clerkId } = auth();
+  if (!clerkId) redirect("/sign-in");
 
+  const mongoUser = await getUserById({ clerkId });
   const post = await getPostById({ id: params.postId });
 
-  const isOwnPost = post?.author.clerkId === userId;
+  const isOwnPost = post?.author.clerkId === clerkId;
   if (!isOwnPost) redirect("/");
 
   return (
-    <>
-      <CreatePostForm
+    <div className="pt-[85px] w-full max-[1280px]:px-4">
+      <h1 className="font-bold text-3xl ">Редактировать</h1>
+      <CreateEditPostForm
         type="Edit"
         postDetails={JSON.stringify(post)}
         mongoUserId={mongoUser._id.toString()}
       />
-    </>
+    </div>
   );
 };
 export default EditPostPage;

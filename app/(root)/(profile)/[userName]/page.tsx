@@ -11,6 +11,7 @@ import {
   FileEdit,
   MapPin,
   MessageCircle,
+  Verified,
 } from "lucide-react";
 import { Metadata } from "next";
 
@@ -78,7 +79,12 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           </div>
           <div className="mt-6 flex flex-col items-center gap-3 text-center max-md:items-start max-md:px-3 max-md:text-left">
             <div>
-              <h1 className="text-3xl font-bold">{user.name}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-3xl font-bold">{user.name}</h1>
+                {user?.role === "admin" && (
+                  <Verified color="#6366f1" className="mt-1" />
+                )}
+              </div>
               <p className="text-neutral-400">@{user.username}</p>
             </div>
             <p className="max-w-2xl">
