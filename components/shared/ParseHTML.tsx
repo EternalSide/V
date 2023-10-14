@@ -34,16 +34,16 @@ const options = {
   replace: (domNode) => {
     if (domNode.name === "p") {
       return (
-        <p className="mt-3 w-full text-lg" style={{ fontSize: 18 }}>
+        <p className="mb-3 w-full text-lg" style={{ fontSize: 18 }}>
           {domToReact(domNode.children, options)}
         </p>
       );
     }
-    if (domNode.name === "h2") {
+    if (domNode.name === "h2" || domNode.name === "h3") {
       return (
-        <h2 className="mt-10 mb-3 font-bold text-3xl">
+        <h3 className="mt-8 mb-3 font-bold text-3xl">
           {domToReact(domNode.children, options)}
-        </h2>
+        </h3>
       );
     }
   },
@@ -54,6 +54,8 @@ const ParseHTML = ({ data, post }: { data: string; post?: boolean }) => {
     Prism.highlightAll();
   }, [data]);
 
-  return <div className={`${post && "mt-8 mb-6"}`}>{parse(data, options)}</div>;
+  return (
+    <div className={`${post && "mt-10 mb-6"}`}>{parse(data, options)}</div>
+  );
 };
 export default ParseHTML;

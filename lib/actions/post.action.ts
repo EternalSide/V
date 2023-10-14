@@ -12,6 +12,7 @@ import {
 import Post from "@/database/models/post.model";
 import { revalidatePath } from "next/cache";
 import Tag from "@/database/models/tag.model";
+import Comment from "@/database/models/comment.model";
 
 export const createPost = async (params: CreatePostParams) => {
   try {
@@ -122,7 +123,38 @@ export const getPopularPosts = async () => {
   try {
     connectToDatabase();
 
-    const posts = await Post.find({}).sort({ upvotes: -1, views: -1 }).limit(4);
+    const posts = await Post.aggregate([
+      {
+        $match: {
+          createdAt: {
+            // @ts-ignore
+            $gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000), // Выбираем документы, созданные в последние две недели
+          },
+          // $or: [
+          //   { views: { $gte: 1000 } }, // Минимум 1000 просмотров
+          //   { upvotes: { $gte: 100 } }, // Минимум 100 голосов "вверх"
+          // ],
+        },
+      },
+      {
+        $project: {
+          title: true,
+          numberOfComments: {
+            $size: "$comments",
+          },
+          views: "$views",
+          upvotes: "$upvotes",
+        },
+      },
+      {
+        $sort: {
+          numberOfComments: -1,
+          views: -1,
+          upvotes: -1,
+        },
+      },
+      { $limit: 4 },
+    ]);
 
     return posts;
   } catch (error) {
@@ -137,14 +169,13 @@ export async function deletePost(params: DeletePostParams) {
     const { postId, path, authorId } = params;
 
     await Post.findByIdAndDelete(postId);
-
     await Tag.updateMany({ posts: postId }, { $pull: { posts: postId } });
-
     await User.findByIdAndUpdate(
       authorId,
       { $pull: { posts: postId } },
       { new: true },
     );
+    await Comment.deleteMany({ post: postId });
 
     revalidatePath(path);
   } catch (e) {
@@ -156,12 +187,15 @@ export async function deletePost(params: DeletePostParams) {
 export async function editPost(params: EditPostParams) {
   try {
     connectToDatabase();
+
     const { postId, title, text, path, banner } = params;
 
-    const post = await Post.findById(postId).populate("tags");
+    const post = await Post.findById(postId);
+
     if (!post) {
       throw new Error("post не найден.");
     }
+
     post.title = title;
     post.text = text;
     post.banner = banner;
@@ -190,6 +224,7 @@ export async function setLike(params: setLikeParams) {
     const post = await Post.findByIdAndUpdate(postId, updateQuery, {
       new: true,
     });
+
     if (!post) {
       throw new Error("post не найден.");
     }

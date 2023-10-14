@@ -4,6 +4,7 @@ import User from "@/database/models/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
+  SavePostParams,
   UpdateUserParams,
   deleteUserParams,
   getUserByIdParams,
@@ -12,6 +13,8 @@ import {
 import { revalidatePath } from "next/cache";
 import Post from "@/database/models/post.model";
 import Tag from "@/database/models/tag.model";
+import Interaction from "@/database/models/interaction.model";
+import Comment from "@/database/models/comment.model";
 
 export const createUser = async (userData: CreateUserParams) => {
   try {
@@ -43,6 +46,7 @@ export const updateUser = async (params: UpdateUserParams) => {
     throw e;
   }
 };
+
 export const deleteUser = async (params: deleteUserParams) => {
   try {
     connectToDatabase();
@@ -55,6 +59,9 @@ export const deleteUser = async (params: deleteUserParams) => {
     }
 
     const deletedUser = await User.findByIdAndDelete(user._id);
+    // await Post.deleteMany({});
+    // await Interaction.deleteMany({});
+    // await Comment.deleteMany({});
 
     return deletedUser;
   } catch (e) {
@@ -105,7 +112,7 @@ export async function getUserByUserName(params: getUserByUsername) {
   }
 }
 
-export async function savePost(params: any) {
+export async function savePost(params: SavePostParams) {
   try {
     connectToDatabase();
     const { postId, userId, path, isPostSaved } = params;
@@ -121,6 +128,7 @@ export async function savePost(params: any) {
     const user = await User.findByIdAndUpdate(userId, updateQuery, {
       new: true,
     });
+
     if (!user) {
       throw new Error("user не найден.");
     }

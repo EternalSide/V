@@ -244,7 +244,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                         });
                         form.setValue("banner", res.url);
                         toast({
-                          title: "Баннер успешно загружен.",
+                          title: "Баннер успешно загружен ✅",
                           duration: 2000,
                           className: "toast-black",
                         });

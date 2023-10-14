@@ -9,7 +9,7 @@ interface AllComentsProps {
 }
 
 const AllComents = async ({ postId }: AllComentsProps) => {
-  const { comments } = await getComments({ post: postId });
+  const { comments } = await getComments({ postId });
 
   return (
     <div className="flex flex-col gap-10 mt-7">

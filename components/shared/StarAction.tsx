@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 import { toast } from "../ui/use-toast";
 import { savePost } from "@/lib/actions/user.action";
 import { usePathname } from "next/navigation";
-
+import { experimental_useOptimistic as useOptimistic, useState } from "react";
 interface StarActionProps {
   isPostSaved: boolean;
   userId: string;
@@ -19,8 +19,17 @@ const StarAction = ({
   authorName,
 }: StarActionProps) => {
   const path = usePathname();
+
+  const [test, testQ] = useState(isPostSaved || false);
+
+  const [isSavedOptimistic, setIsSavedOptimistic] = useOptimistic(
+    isPostSaved || false,
+    (state) => (isPostSaved = state),
+  );
+
   const handleAddPostToFavourites = async (e: any) => {
     e.preventDefault();
+
     if (!userId)
       return toast({
         duration: 2000,
@@ -28,18 +37,25 @@ const StarAction = ({
         description: `Войдите в аккаунт, чтобы добавить пост в избранное.`,
       });
     try {
-      if (!isPostSaved) {
+      if (!test) {
+        testQ(true);
+        // setIsSavedOptimistic(true);
         toast({
-          duration: 2000,
+          duration: 1000,
           title: `Пост добавлен в избранное ⭐`,
           description: `Вы добавили пост пользователя ${authorName} в избранное.`,
         });
+        console.log("ok");
       } else {
+        testQ(false);
+        // console.log("o2k");
+        // setIsSavedOptimistic(false);
         toast({
-          duration: 2000,
+          duration: 1000,
           title: `Пост удален из избранного ❌`,
           description: `Вы удалили пост пользователя ${authorName} из избранного.`,
         });
+        console.log("ok");
       }
       await savePost({
         userId,
@@ -56,10 +72,10 @@ const StarAction = ({
   return (
     <Star
       onClick={handleAddPostToFavourites}
-      fill={isPostSaved ? "#6366f1" : ""}
+      fill={test ? "#6366f1" : ""}
       className={cn(
         baseStyles,
-        isPostSaved && "text-[#6366f1] hover:opacity-90 transition",
+        test && "text-[#6366f1] hover:opacity-90 transition",
       )}
     />
   );

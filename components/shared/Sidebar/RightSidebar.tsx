@@ -31,7 +31,7 @@ const RightSidebar = async () => {
               {post.title}
             </p>
             <p className="mt-2 text-sm text-neutral-400">
-              Комментариев: {post.comments.length}
+              Комментариев: {post.numberOfComments}
             </p>
           </Link>
         ))}
@@ -41,11 +41,11 @@ const RightSidebar = async () => {
         <BlockTitle name="Теги" />
         {popularTags.map((tag: any) => (
           <Link
-            href={`/tag/${tag.name}`}
+            href={`/tags/${tag.name}`}
             key={tag._id}
             className="group border border-transparent hover:border-indigo-700 px-5 py-4"
           >
-            <p className="group-hover:text-indigo-500 font-semibold text-neutral-200 transition hover:text-indigo-500">
+            <p className="group-hover:text-indigo-500 font-semibold text-neutral-200 transition hover:text-indigo-500 first-letter:uppercase">
               {tag.name}
             </p>
             <p className="mt-2 text-sm text-neutral-400">

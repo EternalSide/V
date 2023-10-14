@@ -2,7 +2,7 @@
 
 import Comment from "@/database/models/comment.model";
 import { connectToDatabase } from "../mongoose";
-import { CreateCommentParams } from "./shared";
+import { CreateCommentParams, GetCommentsParams } from "./shared";
 import { revalidatePath } from "next/cache";
 import Post from "@/database/models/post.model";
 import User from "@/database/models/user.model";
@@ -28,13 +28,13 @@ export const createComment = async (params: CreateCommentParams) => {
   }
 };
 
-export const getComments = async (params: any) => {
+export const getComments = async (params: GetCommentsParams) => {
   try {
     connectToDatabase();
 
-    const { post } = params;
+    const { postId } = params;
 
-    const qpost = await Post.findById(post).populate({
+    const post = await Post.findById(postId).populate({
       path: "comments",
       model: Comment,
       options: {
@@ -47,7 +47,7 @@ export const getComments = async (params: any) => {
       },
     });
 
-    return { comments: qpost.comments };
+    return { comments: post.comments };
   } catch (e) {
     console.log(e);
     throw e;

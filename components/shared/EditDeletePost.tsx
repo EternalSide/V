@@ -25,6 +25,7 @@ const EditDeletePost = ({ type, itemId, authorId }: Props) => {
   const path = usePathname();
   const router = useRouter();
   const { toast } = useToast();
+
   async function handleDeletePost() {
     if (type === "Post") {
       await deletePost({ postId: itemId, authorId: authorId!, path });

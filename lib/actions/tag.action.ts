@@ -1,10 +1,10 @@
 "use server";
-
 import Tag from "@/database/models/tag.model";
 import { connectToDatabase } from "../mongoose";
 import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
 import Post from "@/database/models/post.model";
+import { FollowTagParams, GetTagInfoParams } from "./shared";
 
 export const getPopularTags = async () => {
   try {
@@ -32,7 +32,7 @@ export const getAllTags = async () => {
   }
 };
 
-export const followTag = async (params: any) => {
+export const followTag = async (params: FollowTagParams) => {
   try {
     connectToDatabase();
 
@@ -59,7 +59,7 @@ export const followTag = async (params: any) => {
   }
 };
 
-export const getTagInfo = async (params: any) => {
+export const getTagInfo = async (params: GetTagInfoParams) => {
   try {
     connectToDatabase();
 

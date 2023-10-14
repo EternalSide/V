@@ -7,7 +7,7 @@ const UserCard = ({ author }: any) => {
   const userButtonInfo = [
     {
       label: "О себе:",
-      text: author?.bio ? author?.bio : "Информация отсутствует.",
+      text: author?.bio ? author.bio : "Информация отсутствует.",
     },
     {
       label: "Постов:",
@@ -19,9 +19,9 @@ const UserCard = ({ author }: any) => {
     },
   ];
   return (
-    <div className="bg-main  relative h-fit w-[320px] rounded-md border border-neutral-800 max-lg:hidden">
+    <div className="bg-main relative h-fit w-[320px] rounded-md border border-neutral-800 max-lg:hidden">
       <div className="w-full h-16 bg-indigo-700" />
-      <div className="p-5">
+      <div className="p-5 ">
         <Link className="flex items-start gap-2" href={`/${author.username}`}>
           <UserAvatar
             alt={author.name}

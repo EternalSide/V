@@ -64,3 +64,24 @@ export interface setLikeParams {
   path: string;
   hasUpVoted: boolean;
 }
+
+export interface GetCommentsParams {
+  postId: string;
+}
+
+export interface SavePostParams {
+  postId: string;
+  userId: string;
+  path: string;
+  isPostSaved: boolean;
+}
+
+export interface GetTagInfoParams {
+  tagName: string;
+}
+export interface FollowTagParams {
+  path: string;
+  tagId: string;
+  userId: string;
+  isFollowing: boolean;
+}
