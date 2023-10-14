@@ -134,7 +134,7 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex w-full max-w-7xl  flex-col gap-9 py-8 text-white max-[1280px]:px-4"
+        className="pt-[100px] mx-auto flex w-full max-w-7xl  flex-col gap-9 py-8 text-white max-[1280px]:px-4"
         onKeyDown={(e) => {
           if (e.key === "Enter") e?.preventDefault();
         }}

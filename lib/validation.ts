@@ -9,7 +9,7 @@ export const createPostSchema = z.object({
   title: z
     .string()
     .min(5, { message: "Поле не может быть меньше 5 символов." })
-    .max(50),
+    .max(75),
   text: z
     .string()
     .min(5, { message: "Поле не может быть меньше 5 символов." })

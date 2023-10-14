@@ -26,7 +26,7 @@ export default async function SettingsPage() {
   ];
 
   return (
-    <section className="mx-auto w-full max-w-2xl max-md:px-3 mt-12 flex gap-3">
+    <section className="pt-[75px] pb-4 mx-auto w-full max-w-2xl max-md:px-3  flex gap-3">
       {/* <aside className="max-w-[250px] w-full">
         {profileSettingsLinks.map((item: any) => {
           return (

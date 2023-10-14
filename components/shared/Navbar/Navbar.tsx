@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "../../ui/button";
-import { Bell, Search } from "lucide-react";
+import { Bell, FilePlus, Search } from "lucide-react";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Input } from "../../ui/input";
 
@@ -45,7 +45,10 @@ const Navbar = () => {
           </SignedOut>
           <SignedIn>
             <Link href="/create">
-              <Button className="button-main">Опубликовать</Button>
+              <Button className="button-main flex items-center gap-1.5">
+                <FilePlus className="h-4 w-4" />
+                Опубликовать
+              </Button>
             </Link>
             <Button className="bg-transparent p-2 hover:bg-indigo-600">
               <Bell className="cursor-pointer transition hover:opacity-90" />

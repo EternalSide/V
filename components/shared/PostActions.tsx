@@ -6,11 +6,13 @@ import { Heart, MessageCircle, Star } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "../ui/use-toast";
+import StarAction from "./StarAction";
 
 interface PostActionsProps {
   userId: string | null;
   postId: string;
   isLiked: boolean;
+  isPostSaved: boolean;
   likesNumber: number;
   authorName: string;
 }
@@ -21,17 +23,18 @@ const PostActions = ({
   isLiked,
   likesNumber,
   authorName,
+  isPostSaved,
 }: PostActionsProps) => {
   const path = usePathname();
   useEffect(() => {
     viewQuestion({
       postId: postId!,
-      userId: userId ? userId : undefined,
+      userId: userId || undefined,
       path,
     });
   }, [postId, path, userId]);
 
-  const baseStyles = `hover:text-indigo-500 text-white transition cursor-pointer`;
+  const baseStyles = `hover:text-indigo-500 text-white transition cursor-pointer h-6 w-6`;
 
   const handleLike = async () => {
     if (!userId)
@@ -45,7 +48,7 @@ const PostActions = ({
       toast({
         duration: 2000,
         title: "Оценка удалена ❌",
-        description: `Вы удалили оценку для поста пользователя ${authorName}`,
+        description: `Вы отменили оценку поста пользователя ${authorName}`,
       });
     } else {
       toast({
@@ -62,20 +65,6 @@ const PostActions = ({
       hasUpVoted: isLiked,
     });
   };
-  const addToFav = async () => {
-    if (!userId)
-      return toast({
-        duration: 2000,
-        title: "Вы не авторизованы ❌",
-        description: `Войдите в аккаунт, чтобы добавить пост в избранное.`,
-      });
-
-    return toast({
-      duration: 2000,
-      title: `Пост добавлен в избранное ⭐`,
-      description: `Вы добавили пост пользователя ${authorName} в избранное.`,
-    });
-  };
 
   return (
     <div className="fixed flex flex-col items-center gap-7 pl-6 pt-24 text-center max-md:hidden">
@@ -90,20 +79,13 @@ const PostActions = ({
         />
         <p className="mt-1.5 text-sm ">{likesNumber}</p>
       </div>
-      {/* <div>
-        <MessageCircle className={baseStyles} />
-        <p className="mt-1.5 text-sm">0</p>
-      </div> */}
       <div>
-        <Star
-          fill={false ? "#6366f1" : ""}
-          onClick={addToFav}
-          className={cn(
-            baseStyles,
-            false && "text-[#6366f1] hover:opacity-90 transition",
-          )}
+        <StarAction
+          authorName={authorName}
+          userId={userId!}
+          postId={postId}
+          isPostSaved={isPostSaved}
         />
-        <p className="mt-1.5 text-sm">0</p>
       </div>
     </div>
   );

@@ -15,3 +15,16 @@ export const getPopularTags = async () => {
     throw e;
   }
 };
+
+export const getAllTags = async () => {
+  try {
+    connectToDatabase();
+
+    const tags = await Tag.find({}).limit(16);
+
+    return tags;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};

@@ -32,16 +32,20 @@ const options = {
   // @ts-ignore
   // Перебить стили
   replace: (domNode) => {
-    // if (domNode.name === "p") {
-    //   return (
-    //     <p className="mt-3 w-full max-w-2xl" style={{ fontSize: 18 }}>
-    //       {domToReact(domNode.children, options)}
-    //     </p>
-    //   );
-    // }
-    // if (domNode.name === "li") {
-    //   return <li>{domToReact(domNode.children, options)}</li>;
-    // }
+    if (domNode.name === "p") {
+      return (
+        <p className="mt-3 w-full text-lg" style={{ fontSize: 18 }}>
+          {domToReact(domNode.children, options)}
+        </p>
+      );
+    }
+    if (domNode.name === "h2") {
+      return (
+        <h2 className="mt-10 mb-3 font-bold text-3xl">
+          {domToReact(domNode.children, options)}
+        </h2>
+      );
+    }
   },
 };
 

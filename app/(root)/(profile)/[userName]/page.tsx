@@ -58,7 +58,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   ];
 
   return (
-    <div className="pt-[75px] mx-auto w-full max-w-6xl max-md:px-3 px-4">
+    <div className="pt-[75px] mx-auto w-full max-w-6xl max-md:px-0 px-4 ">
       <div className="bg-main mt-12 w-full rounded-md border-neutral-900 pb-8">
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           {isOwnProfile && (

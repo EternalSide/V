@@ -1,5 +1,5 @@
 import { formatDate } from "@/lib/utils";
-import { UserAvatar } from "./UserAvatar";
+import { UserAvatar } from "../shared/UserAvatar";
 import Link from "next/link";
 import { Button } from "../ui/button";
 

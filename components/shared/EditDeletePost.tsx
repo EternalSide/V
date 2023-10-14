@@ -28,7 +28,7 @@ const EditDeletePost = ({ type, itemId, authorId }: Props) => {
   async function handleDeletePost() {
     if (type === "Post") {
       await deletePost({ postId: itemId, authorId: authorId!, path });
-      toast({
+      return toast({
         title: "Пост удален.",
         duration: 2000,
         className: "toast-black",

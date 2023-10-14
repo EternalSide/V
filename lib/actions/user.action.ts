@@ -104,3 +104,30 @@ export async function getUserByUserName(params: getUserByUsername) {
     throw e;
   }
 }
+
+export async function savePost(params: any) {
+  try {
+    connectToDatabase();
+    const { postId, userId, path, isPostSaved } = params;
+
+    let updateQuery = {};
+
+    if (isPostSaved) {
+      updateQuery = { $pull: { savedPosts: postId } };
+    } else {
+      updateQuery = { $addToSet: { savedPosts: postId } };
+    }
+
+    const user = await User.findByIdAndUpdate(userId, updateQuery, {
+      new: true,
+    });
+    if (!user) {
+      throw new Error("user не найден.");
+    }
+
+    revalidatePath(path);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}

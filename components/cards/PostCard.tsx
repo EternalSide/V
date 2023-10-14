@@ -5,13 +5,16 @@ import { cn, getTimestamp } from "@/lib/utils";
 import { UserAvatar } from "../shared/UserAvatar";
 import { Badge } from "../ui/badge";
 import EditDeletePost from "../shared/EditDeletePost";
+import StarAction from "../shared/StarAction";
 
 interface PostCardProps {
   banner?: string;
-  i?: number;
+  index?: number;
   isOwnProfile?: any;
   page?: string;
+  userId: string;
   titleClassnames?: string;
+  isPostSaved: boolean;
   author: {
     name: string;
     picture: string;
@@ -34,14 +37,16 @@ interface PostCardProps {
 
 const PostCard = ({
   author,
-  i,
+  userId,
+  index,
   isOwnProfile,
+  isPostSaved,
   page,
   post,
   banner,
   titleClassnames,
 }: PostCardProps) => {
-  const firstPost = i === 0;
+  const firstPost = index === 0;
 
   return (
     <Link
@@ -60,7 +65,15 @@ const PostCard = ({
       )}
       <div className="relative w-full py-4 pl-5 pr-7">
         <div className="absolute right-7 top-4 flex items-center gap-x-2">
-          <Star className="h-5 w-5 cursor-pointer text-neutral-300 transition hover:opacity-90" />
+          {page !== "Profile" && (
+            <StarAction
+              authorName={author.name}
+              userId={userId}
+              postId={post.id}
+              isPostSaved={isPostSaved}
+            />
+          )}
+
           {isOwnProfile && page === "Profile" && (
             <EditDeletePost
               type="Post"

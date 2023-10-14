@@ -11,7 +11,7 @@ import { getUserById } from "@/lib/actions/user.action";
 import CreateCommentForm from "@/components/forms/CreateCommentForm";
 import AllComents from "@/components/shared/AllComents";
 import { Metadata } from "next";
-import UserCard from "@/components/shared/UserCard";
+import UserCard from "@/components/cards/UserCard";
 
 interface ProfilePageProps {
   params: { postId: string };
@@ -37,9 +37,10 @@ const PostPage = async ({ params }: ProfilePageProps) => {
   const isOwnPost = post?.author.clerkId === userId;
 
   return (
-    <div className="pt-[75px] flex w-full items-start gap-3 max-md:px-3">
+    <div className="pt-[75px] flex w-full items-start gap-3 max-md:px-0 max-md:pt-[55px]">
       <PostActions
         isLiked={post.upvotes.includes(user?._id.toString())}
+        isPostSaved={user?.savedPosts.includes(post._id)}
         userId={user?._id.toString()}
         postId={post._id.toString()}
         likesNumber={post.upvotes.length}
@@ -104,7 +105,7 @@ const PostPage = async ({ params }: ProfilePageProps) => {
           <ParseHTML data={post.text} post={true} />
         </div>
 
-        <div className="w-full p-12 pt-8  border-t border-neutral-800">
+        <div className="w-full p-12 pt-8 border-t border-neutral-800 max-md:p-6">
           <h1 className="text-3xl font-semibold">
             Все Комментарии ({post.comments.length})
           </h1>

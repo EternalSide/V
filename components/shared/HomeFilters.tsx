@@ -1,5 +1,6 @@
 "use client";
 
+import { homeFilters } from "@/constants";
 import { formUrlQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -8,20 +9,6 @@ const HomeFilters = () => {
   const searchParams = useSearchParams();
   const value = searchParams.get("q");
   const router = useRouter();
-  const filters = [
-    {
-      value: "recommended",
-      label: "Рекомендованное",
-    },
-    {
-      value: "new",
-      label: "Новые",
-    },
-    {
-      value: "popular",
-      label: "Популярные",
-    },
-  ];
 
   const handleSearch = (value: string) => {
     setActive(value);
@@ -37,12 +24,12 @@ const HomeFilters = () => {
   const [active, setActive] = useState(value || "recommended");
 
   return (
-    <div className="flex items-center gap-3">
-      {filters.map((item) => (
+    <div className="flex items-center gap-3 max-sm:hidden">
+      {homeFilters.map((item: any) => (
         <h3
           onClick={() => handleSearch(item.value)}
           key={item.value}
-          className={`text-lg text-white cursor-pointer hover:opacity-90 ${
+          className={`text-lg text-white cursor-pointer hover:text-indigo-500 transition  ${
             active === item.value && "font-bold"
           }`}
         >

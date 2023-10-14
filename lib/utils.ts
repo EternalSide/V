@@ -55,10 +55,11 @@ export function formatDate(inputDate: string): string {
 }
 
 export const formUrlQuery = ({ params, key, value }: any) => {
+  // Разобрать фул строку со всеми параметрами.
   const currentUrl = qs.parse(params);
-
+  // Поменять значение, которое фильтруем
   currentUrl[key] = value;
-
+  // Склеить обратно.
   return qs.stringifyUrl(
     {
       url: window.location.pathname,

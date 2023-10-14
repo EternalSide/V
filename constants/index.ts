@@ -1,4 +1,4 @@
-import { Home, Tag, PlusSquare, Cat, Star } from "lucide-react";
+import { Home, Tag, PlusSquare, Star, Smile } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -10,12 +10,12 @@ export const sidebarLinks = [
   {
     label: "Профиль",
     route: "/",
-    icon: Cat,
+    icon: Smile,
     auth: true,
   },
   {
     label: "Избранное",
-    route: "/",
+    route: "/favourites",
     icon: Star,
     auth: true,
   },
@@ -31,5 +31,20 @@ export const sidebarLinks = [
     route: "/tags",
     icon: Tag,
     auth: false,
+  },
+];
+
+export const homeFilters = [
+  {
+    value: "recommended",
+    label: "Рекомендованное",
+  },
+  {
+    value: "new",
+    label: "Новые",
+  },
+  {
+    value: "popular",
+    label: "Популярные",
   },
 ];
