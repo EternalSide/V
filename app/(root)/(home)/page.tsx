@@ -19,7 +19,10 @@ export default async function Home({ searchParams }: any) {
   const user = await getUserById({ clerkId: userId! });
   return (
     <>
-      <LeftSidebar />
+      <LeftSidebar
+        username={user?.username}
+        followingTags={user?.followingTags}
+      />
       <section className="pt-[75px] flex flex-1 w-full flex-col px-4 pb-6 max-md:pb-14 sm:px-4">
         <div className="flex flex-col pt-3">
           <HomeFilters />

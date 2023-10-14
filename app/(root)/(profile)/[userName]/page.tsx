@@ -2,7 +2,7 @@ import PostCard from "@/components/cards/PostCard";
 import NoProfile from "@/components/shared/NoProfile";
 import { Button } from "@/components/ui/button";
 
-import { getUserByUserName } from "@/lib/actions/user.action";
+import { getUserById, getUserByUserName } from "@/lib/actions/user.action";
 import { formatDate, formatedLink } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import {
@@ -41,6 +41,7 @@ export async function generateMetadata({
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { userId } = auth();
   const user = await getUserByUserName({ username: params.userName });
+  const mongoUser = await getUserById({ clerkId: userId! });
   const isOwnProfile = userId && user?.clerkId === userId;
 
   if (!user) {
@@ -133,6 +134,8 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         <div className="flex w-full flex-col gap-1.5">
           {user.posts.map((post: any) => (
             <PostCard
+              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
+              userId={mongoUser?._id.toString()}
               key={post._id}
               page="Profile"
               isOwnProfile={isOwnProfile}

@@ -4,6 +4,7 @@ import Tag from "@/database/models/tag.model";
 import { connectToDatabase } from "../mongoose";
 import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
+import Post from "@/database/models/post.model";
 
 export const getPopularTags = async () => {
   try {
@@ -65,7 +66,16 @@ export const getTagInfo = async (params: any) => {
     const { tagName } = params;
 
     const tag = await Tag.findOne({ name: tagName })
-      .populate("posts")
+      .populate({
+        path: "posts",
+        model: Post,
+        options: {
+          populate: {
+            path: "author",
+            model: User,
+          },
+        },
+      })
       .populate("followers");
 
     return tag;

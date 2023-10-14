@@ -1,29 +1,15 @@
 import { sidebarLinks } from "@/constants";
-import { getUserById } from "@/lib/actions/user.action";
-import { auth } from "@clerk/nextjs";
 
 import { Bell, Send, Hash } from "lucide-react";
+import { Schema } from "mongoose";
 import Link from "next/link";
 
-const LeftSidebar = async () => {
-  const { userId } = auth();
-  const user = await getUserById({ clerkId: userId! });
-  // User Tags subcriptions.
-  const tags = [
-    {
-      label: "React",
-      route: "/",
-    },
-    {
-      label: "Javascript",
-      route: "/",
-    },
-    {
-      label: "Next",
-      route: "/",
-    },
-  ];
+interface Props {
+  username: string;
+  followingTags: Schema.Types.ObjectId[];
+}
 
+const LeftSidebar = async ({ username, followingTags }: Props) => {
   const moreLinks = [
     {
       label: "Уведомления",
@@ -44,7 +30,7 @@ const LeftSidebar = async () => {
           if (item.label === "Профиль") {
             return (
               <Link
-                href={`${user ? user.username : "/sign-in"}`}
+                href={`/${!username ? "sign-in" : username}`}
                 key={item.route}
                 className="flex items-center
                       gap-x-4 rounded-md px-3 py-2 hover:bg-indigo-900"
@@ -75,22 +61,32 @@ const LeftSidebar = async () => {
       <div>
         <h3 className="px-3 text-xl font-bold max-lg:hidden">Подписки</h3>
         <div className="mt-3 flex flex-col gap-2">
-          {tags.map((tag) => {
+          {followingTags.map((tag: any) => {
             return (
               <Link
-                key={tag.label}
-                href="/tag"
+                key={tag._id}
+                href={`/tags/${tag.name}`}
                 className="flex items-center
                     gap-x-2 rounded-md px-3 py-2 hover:bg-indigo-900"
               >
                 <Hash className="h-6 w-6" />
                 <p className="text-[18px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden">
-                  {tag.label}
+                  {tag.name}
                 </p>
               </Link>
             );
           })}
         </div>
+        {!username && (
+          <div
+            className="flex items-center
+                    gap-x-2 rounded-md px-3 py-2"
+          >
+            <p className="text-[18px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden">
+              Не найдено.
+            </p>
+          </div>
+        )}
       </div>
 
       <div>

@@ -24,8 +24,8 @@ const TagsPage = async () => {
             tagId={JSON.stringify(tag._id)}
             tagPostsNumber={tag.posts.length}
             tagTitle={tag.name}
-            isFollowing={tag.followers.includes(user._id)}
-            userId={JSON.stringify(user._id)}
+            isFollowing={tag.followers.includes(user?._id)}
+            userId={JSON.stringify(user?._id)}
           />
         ))}
       </div>

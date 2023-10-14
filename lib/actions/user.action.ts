@@ -69,7 +69,7 @@ export async function getUserById(params: getUserByIdParams) {
 
     const { clerkId } = params;
 
-    const user = await User.findOne({ clerkId });
+    const user = await User.findOne({ clerkId }).populate("followingTags");
 
     return user;
   } catch (e) {
