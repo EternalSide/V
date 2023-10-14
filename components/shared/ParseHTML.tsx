@@ -50,12 +50,6 @@ const ParseHTML = ({ data, post }: { data: string; post?: boolean }) => {
     Prism.highlightAll();
   }, [data]);
 
-  // @ts-ignore
-  // mt-4 px-14 py-8 max-md:px-6
-  return (
-    <div className={`${post && "mt-4 px-14 py-8 max-md:px-6"}`}>
-      {parse(data, options)}
-    </div>
-  );
+  return <div className={`${post && "mt-8 mb-6"}`}>{parse(data, options)}</div>;
 };
 export default ParseHTML;

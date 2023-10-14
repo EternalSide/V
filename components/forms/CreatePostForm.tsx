@@ -225,16 +225,15 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
                       form.setValue("banner", "");
                     }}
                   />
-                  {isLoading && (
-                    <BarLoader className="!w-full !bg-indigo-700" />
-                  )}
 
-                  <button
+                  <Button
+                    disabled={isLoading || field?.value!.length >= 1}
                     type="button"
-                    className="button-main  mt-1.5 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90"
+                    className={`relative button-main  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
+                      isLoading && "border-b-[0px] "
+                    }`}
                     onClick={async (e) => {
                       e.preventDefault();
-
                       if (field?.value && field?.value.length >= 1) return;
                       if (file) {
                         const res = await edgestore.publicFiles.upload({
@@ -253,8 +252,14 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
                       }
                     }}
                   >
-                    Загрузить
-                  </button>
+                    {isLoading ? "Загружается..." : "Загрузить"}
+                    {isLoading && (
+                      <BarLoader
+                        height={"1px"}
+                        className="!absolute bottom-0 left-0 !w-full !bg-indigo-700"
+                      />
+                    )}
+                  </Button>
                 </div>
               </FormControl>
 
@@ -315,7 +320,7 @@ const CreatePostForm = ({ type, postDetails, mongoUserId }: Props) => {
         />
         <Button
           disabled={isSubmitting}
-          className="bg-main -mt-8 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
+          className="bg-main -mt-5 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
           type="submit"
         >
           {isSubmitting ? "Публикация.." : " Опубликовать"}

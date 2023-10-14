@@ -2,7 +2,7 @@ import PostCard from "@/components/cards/PostCard";
 import { Button } from "@/components/ui/button";
 
 import { getUserByUserName } from "@/lib/actions/user.action";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatedLink } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import {
   Cake,
@@ -18,7 +18,6 @@ import Link from "next/link";
 
 type ProfilePageProps = {
   params: { userName: string };
-  // searchParams: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateMetadata({
@@ -61,9 +60,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
               <p className="text-neutral-400">@{user.username}</p>
             </div>
             <p className="max-w-2xl">
-              {user.bio
-                ? user.bio
-                : "Пользователь не оставил информации о себе."}
+              {user.bio ? user.bio : "Информация отсутствует."}
             </p>
 
             <div className="mt-4 flex gap-6 max-md:flex-col max-md:gap-4">
@@ -90,7 +87,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
                     className="h-5 w-5 !group-hover:text-indigo-500 transition"
                   />
                   <p className="pt-1 text-sm text-neutral-400 group-hover:text-indigo-500 transition">
-                    {user.portfolioWebsite}
+                    {formatedLink(user.portfolioWebsite)}
                   </p>
                 </Link>
               )}
@@ -100,7 +97,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
       </div>
 
       <div className="mt-1.5 flex items-start gap-3 pb-4">
-        <div className="bg-main flex w-[330px] flex-col gap-5 p-5  max-md:hidden">
+        <div className="bg-main flex w-[330px] flex-col gap-5 p-5 max-md:hidden">
           <div className="flex items-center gap-2.5">
             <FileEdit color="#969696" />
             <p className="text-neutral-200">Публикаций: {user.posts.length}</p>

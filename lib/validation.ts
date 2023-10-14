@@ -25,3 +25,28 @@ export const createPostSchema = z.object({
     .min(1, { message: "Минимальное количество Тегов: 1" })
     .max(3, { message: "Максимальное количество Тегов: 3" }),
 });
+
+export const editProfileSchema = z.object({
+  portfolioWebsite: z
+    .string()
+    .min(4, {
+      message: "Не меньше 4 ",
+    })
+    .url({
+      message: "Введите валидный URL",
+    })
+    .max(50),
+  location: z
+    .string()
+    .min(2, {
+      message: "Username must be at least 2 characters.",
+    })
+    .max(20),
+  bio: z
+    .string()
+    .min(1, {
+      message: "Username must be at least 2 characters.",
+    })
+    .max(50),
+  theme_color: z.string(),
+});

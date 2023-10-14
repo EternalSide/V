@@ -70,7 +70,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
           render={({ field }) => (
             <FormItem className="max-w-3xl">
               <FormLabel className="text-xl">
-                Текст <span className="text-indigo-500">*</span>
+                Оставьте комментарий <span className="text-indigo-500">*</span>
               </FormLabel>
               <FormControl>
                 <Editor

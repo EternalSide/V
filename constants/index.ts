@@ -1,4 +1,4 @@
-import { Home, Tag, Heart, PlusSquare, Cat } from "lucide-react";
+import { Home, Tag, PlusSquare, Cat, Star } from "lucide-react";
 
 export const sidebarLinks = [
   {
@@ -14,7 +14,7 @@ export const sidebarLinks = [
   {
     label: "Избранное",
     route: "/",
-    icon: Heart,
+    icon: Star,
   },
   {
     label: "Новый пост",

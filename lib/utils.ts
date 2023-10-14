@@ -69,3 +69,15 @@ export const formUrlQuery = ({ params, key, value }: any) => {
     },
   );
 };
+
+export const formatedLink = (link: string) => {
+  if (link.includes("https://")) {
+    return link.replace("https://", "");
+  }
+  if (link.includes("http://")) {
+    return link.replace("http://", "");
+  }
+  if (!link.includes("http://") || !link.includes("https://")) {
+    return link;
+  }
+};
