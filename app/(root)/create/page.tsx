@@ -1,6 +1,7 @@
 import CreatePostForm from "@/components/forms/CreatePostForm";
 import { auth } from "@clerk/nextjs";
 import { getUserById } from "@/lib/actions/user.action";
+import { redirect } from "next/navigation";
 export const metadata = {
   title: {
     absolute: "Новый пост / V",
@@ -8,7 +9,7 @@ export const metadata = {
 };
 const CreatePage = async () => {
   const { userId: clerkId } = auth();
-  if (!clerkId) return null;
+  if (!clerkId) return redirect("/sign-in");
 
   const mongoUser = await getUserById({ clerkId });
 

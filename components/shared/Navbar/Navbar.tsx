@@ -10,6 +10,7 @@ const Navbar = () => {
     <div className="bg-main fixed z-50 flex h-14 w-full border-b border-neutral-800 text-white shadow-xl max-[1280px]:px-4">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <div className="flex items-center gap-x-3">
+          {/* <h1 className="text-4xl font-bold text-indigo-500">V</h1> */}
           <Link className="border-2 border-indigo-800" href="/">
             <Image
               alt="Лого Сайта"

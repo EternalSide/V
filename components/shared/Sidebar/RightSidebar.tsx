@@ -16,7 +16,7 @@ const RightSidebar = async () => {
 
   return (
     <div
-      className="sticky right-0 top-0 mt-1.5 flex 
+      className="pt-[75px] sticky right-0 top-0 flex max-[1330px]:pr-4
     h-fit w-[330px] flex-col  overflow-y-auto text-white dark:shadow-none max-xl:hidden"
     >
       <div className="bg-main flex w-full flex-col rounded-md border border-neutral-800">

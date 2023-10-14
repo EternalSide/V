@@ -50,7 +50,7 @@ const EditDeletePost = ({ type, itemId, authorId }: Props) => {
         <AlertDialogTrigger>
           <Trash className="h-5 w-5 cursor-pointer text-red-500 transition hover:opacity-90" />
         </AlertDialogTrigger>
-        <AlertDialogContent className="border-neutral-800 bg-black text-white">
+        <AlertDialogContent className="border-neutral-800 bg-[#0a0a0a] text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
             <AlertDialogDescription>

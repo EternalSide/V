@@ -1,4 +1,5 @@
 import PostCard from "@/components/cards/PostCard";
+import NoProfile from "@/components/shared/NoProfile";
 import { Button } from "@/components/ui/button";
 
 import { getUserByUserName } from "@/lib/actions/user.action";
@@ -6,9 +7,9 @@ import { formatDate, formatedLink } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import {
   Cake,
+  ExternalLink,
   FileEdit,
-  Locate,
-  LucideLink,
+  MapPin,
   MessageCircle,
 } from "lucide-react";
 import { Metadata } from "next";
@@ -25,6 +26,12 @@ export async function generateMetadata({
 }: ProfilePageProps): Promise<Metadata> {
   const user = await getUserByUserName({ username: params.userName });
 
+  if (!user) {
+    return {
+      title: `Пользователь не найден / V`,
+    };
+  }
+
   return {
     title: `${user.name} (@${user.username}) / V`,
   };
@@ -33,10 +40,25 @@ export async function generateMetadata({
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { userId } = auth();
   const user = await getUserByUserName({ username: params.userName });
-  const isOwnProfile = user?.clerkId === userId;
+  const isOwnProfile = userId && user?.clerkId === userId;
+
+  if (!user) {
+    return <NoProfile />;
+  }
+
+  const userInfo = [
+    {
+      icon: MapPin,
+      text: user?.location ? user.location : "Не Известно",
+    },
+    {
+      icon: Cake,
+      text: `Регистрация: ${formatDate(user.joinedAt)}`,
+    },
+  ];
 
   return (
-    <div className="mx-auto w-full max-w-5xl max-md:px-3">
+    <div className="pt-[75px] mx-auto w-full max-w-6xl max-md:px-3 px-4">
       <div className="bg-main mt-12 w-full rounded-md border-neutral-900 pb-8">
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           {isOwnProfile && (
@@ -64,25 +86,19 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
             </p>
 
             <div className="mt-4 flex gap-6 max-md:flex-col max-md:gap-4">
-              <div className="flex items-center gap-2">
-                <Locate color="#969696" className="h-5 w-5" />
-                <p className="pt-1 text-sm text-neutral-400">
-                  {user?.location ? user.location : "Не Известно"}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Cake color="#969696" className="h-5 w-5" />
-                <p className="pt-1 text-sm text-neutral-400">
-                  Регистрация: {formatDate(user.joinedAt)}{" "}
-                </p>
-              </div>
+              {userInfo?.map((item: any) => (
+                <div key={item.label} className="flex items-center gap-2">
+                  <item.icon color="#969696" className="h-5 w-5" />
+                  <p className="pt-1 text-sm text-neutral-400">{item.text}</p>
+                </div>
+              ))}
               {user?.portfolioWebsite && (
                 <Link
                   target="_blank"
                   href={user.portfolioWebsite}
                   className="flex items-center gap-2 group"
                 >
-                  <LucideLink
+                  <ExternalLink
                     color="#969696"
                     className="h-5 w-5 !group-hover:text-indigo-500 transition"
                   />
@@ -99,11 +115,11 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
       <div className="mt-1.5 flex items-start gap-3 pb-4">
         <div className="bg-main flex w-[330px] flex-col gap-5 p-5 max-md:hidden">
           <div className="flex items-center gap-2.5">
-            <FileEdit color="#969696" />
+            <FileEdit color="#969696" className="h-5 w-5" />
             <p className="text-neutral-200">Публикаций: {user.posts.length}</p>
           </div>
           <div className="flex items-center gap-2.5">
-            <MessageCircle color="#969696" />
+            <MessageCircle color="#969696" className="h-5 w-5" />
             <p className="text-neutral-200">Комментариев: 0</p>
           </div>
         </div>

@@ -9,7 +9,7 @@ import EditDeletePost from "../shared/EditDeletePost";
 interface PostCardProps {
   banner?: string;
   i?: number;
-  isOwnProfile?: boolean;
+  isOwnProfile?: any;
   page?: string;
   titleClassnames?: string;
   author: {
@@ -44,99 +44,92 @@ const PostCard = ({
   const firstPost = i === 0;
 
   return (
-    <div>
-      <div>
-        <div className="cursor-pointer bg-main flex w-full flex-col items-start rounded-md border-neutral-800/40 border border-transparent hover:border-indigo-700">
-          {firstPost && banner && (
-            <Link href={`/post/${post.id}`} className="relative h-64 w-full">
-              <Image
-                fill
-                className="aspect-auto object-cover object-top"
-                alt="Test alt"
-                src={banner}
-              />
-            </Link>
+    <Link
+      href={`/post/${post.id}`}
+      className="cursor-pointer bg-main flex w-full flex-col items-start rounded-md border-neutral-800/40 border  hover:border-indigo-700"
+    >
+      {firstPost && banner && (
+        <div className="relative h-64 w-full">
+          <Image
+            fill
+            className="aspect-auto object-cover object-top"
+            alt="Test alt"
+            src={banner}
+          />
+        </div>
+      )}
+      <div className="relative w-full py-4 pl-5 pr-7">
+        <div className="absolute right-7 top-4 flex items-center gap-x-2">
+          <Star className="h-5 w-5 cursor-pointer text-neutral-300 transition hover:opacity-90" />
+          {isOwnProfile && page === "Profile" && (
+            <EditDeletePost
+              type="Post"
+              itemId={post.id}
+              authorId={author._id}
+            />
           )}
-          <div className="relative w-full py-4 pl-5 pr-7">
-            <div className="absolute right-7 top-4 flex items-center gap-x-2">
-              <Star className="h-5 w-5 cursor-pointer text-neutral-300 transition hover:opacity-90" />
-              {isOwnProfile && page === "Profile" && (
-                <EditDeletePost
-                  type="Post"
-                  itemId={post.id}
-                  authorId={author._id}
-                />
-              )}
+        </div>
+
+        <div className="flex gap-2">
+          <UserAvatar
+            imgUrl={author.picture}
+            alt={author.name}
+            classNames="h-10 w-10"
+          />
+          <div className="flex flex-col">
+            <div>
+              <h3 className="first-letter:uppercase">{author.username}</h3>
+              <p className="text-xs text-neutral-400">
+                {getTimestamp(post.createdAt)}
+              </p>
             </div>
 
-            <div className="flex gap-1.5">
-              <Link href={`/${author.username}`}>
-                <UserAvatar
-                  imgUrl={author.picture}
-                  alt={author.name}
-                  classNames="h-10 w-10"
-                />
-              </Link>
+            <h3
+              className={cn(
+                "font-bold transition hover:text-indigo-400 mt-3",
+                titleClassnames ? `${titleClassnames}` : "text-3xl",
+              )}
+            >
+              {post.title}
+            </h3>
 
-              <div className="flex flex-col">
-                <Link href={`/${author.username}`}>
-                  <p>{author.username}</p>
-                  <p className="text-xs text-neutral-400">
-                    {getTimestamp(post.createdAt)}
-                  </p>
-                </Link>
-
-                <Link
-                  href={`/post/${post.id}`}
-                  className={cn(
-                    "font-bold transition hover:text-indigo-400 mt-3",
-                    titleClassnames ? `${titleClassnames}` : "text-3xl",
-                  )}
+            {/* Теги */}
+            <div className="mt-1.5 flex items-center gap-0.5">
+              {post.tags.map((tag: any) => (
+                <Badge
+                  className="cursor-pointer !rounded-md border border-transparent bg-transparent !px-1.5 py-1  text-sm text-neutral-300 first-letter:uppercase hover:border hover:border-neutral-700 hover:bg-neutral-800"
+                  key={tag._id}
                 >
-                  {post.title}
-                </Link>
+                  #{tag.name}
+                </Badge>
+              ))}
+            </div>
 
-                {/* Теги */}
-                <div className="mt-1.5 flex items-center gap-0.5">
-                  {post.tags.map((tag: any) => (
-                    <Badge
-                      className="cursor-pointer !rounded-md border border-transparent bg-transparent !px-1.5 py-1  text-sm text-neutral-300 first-letter:uppercase hover:border hover:border-neutral-700 hover:bg-neutral-800"
-                      key={tag._id}
-                    >
-                      #{tag.name}
-                    </Badge>
-                  ))}
+            <div className="mt-3 flex items-center gap-6">
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-1 rounded-md">
+                  <Heart className="text-neutral-300" />
+                  <p className="ml-0.5 text-sm text-neutral-300">
+                    {post.likes}
+                  </p>
                 </div>
-
-                <div className="mt-3 flex items-center gap-3">
-                  <div className="flex items-center gap-1">
-                    <div className="flex items-center gap-1 rounded-md px-2.5 py-2 hover:bg-neutral-800">
-                      <Heart className="text-neutral-300" />
-                      <p className="ml-0.5 text-sm text-neutral-300">
-                        {post.likes}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-1 rounded-md px-3.5 py-2 hover:bg-neutral-800">
-                      <MessageCircle className="text-neutral-300" />
-                      <p className="ml-0.5 text-sm text-neutral-300">
-                        {post.comments}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-1">
-                    <Eye className="text-neutral-300" />
-                    <p className="ml-0.5 text-sm text-neutral-300">
-                      {post.views}
-                    </p>
-                  </div>
+                <div className="flex items-center gap-1 rounded-md">
+                  <MessageCircle className="text-neutral-300" />
+                  <p className="ml-0.5 text-sm text-neutral-300">
+                    {post.comments}
+                  </p>
                 </div>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <Eye className="text-neutral-300" />
+                <p className="ml-0.5 text-sm text-neutral-300">{post.views}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 export default PostCard;

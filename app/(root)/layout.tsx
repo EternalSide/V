@@ -8,7 +8,7 @@ const RootLayout = ({ children }: ChildrenProps) => {
   return (
     <main className="relative">
       <Navbar />
-      <div className="relative mx-auto flex w-full max-w-7xl pt-[75px] text-white">
+      <div className="relative mx-auto flex w-full max-w-7xl text-white">
         {children}
         <Toaster />
         <ModalProvider />

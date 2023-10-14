@@ -108,7 +108,8 @@ export const getAllPosts = async (params: getAllPostsParams) => {
     const posts = await Post.find({})
       .populate("author")
       .populate({ path: "tags", model: Tag, select: "name _id" })
-      .sort(sortOptions);
+      .sort(sortOptions)
+      .limit(25);
 
     return posts;
   } catch (error) {
@@ -121,7 +122,7 @@ export const getPopularPosts = async () => {
   try {
     connectToDatabase();
 
-    const posts = await Post.find({}).sort({ upvotes: -1, views: -1 }).limit(5);
+    const posts = await Post.find({}).sort({ upvotes: -1, views: -1 }).limit(4);
 
     return posts;
   } catch (error) {
