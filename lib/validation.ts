@@ -5,15 +5,12 @@ export function asOptionalField<T extends z.ZodTypeAny>(schema: T) {
   return schema.optional().or(emptyStringToUndefined);
 }
 
+const MIN_ERROR = "Поле не может быть меньше 5 символов.";
+const VALID_URL = "Введите валидный URL";
+
 export const createPostSchema = z.object({
-  title: z
-    .string()
-    .min(5, { message: "Поле не может быть меньше 5 символов." })
-    .max(75),
-  text: z
-    .string()
-    .min(5, { message: "Поле не может быть меньше 5 символов." })
-    .max(50000),
+  title: z.string().min(5, { message: MIN_ERROR }).max(75),
+  text: z.string().min(5, { message: MIN_ERROR }).max(50000),
   banner: asOptionalField(z.string().url({ message: "Введите валидный URL" })),
   tags: z
     .array(
@@ -30,24 +27,24 @@ export const editProfileSchema = z.object({
   portfolioWebsite: z
     .string()
     .min(4, {
-      message: "Не меньше 4 ",
+      message: VALID_URL,
     })
     .url({
-      message: "Введите валидный URL",
+      message: VALID_URL,
     })
-    .max(50),
+    .max(50, { message: "Максимальное количество символов: 50" }),
   location: z
     .string()
     .min(2, {
-      message: "Username must be at least 2 characters.",
+      message: "Минимальное количество символов: 2",
     })
-    .max(20),
+    .max(30, { message: "Максимальное количество символов: 30" }),
   bio: z
     .string()
-    .min(1, {
-      message: "Username must be at least 2 characters.",
+    .min(5, {
+      message: "Минимальное количество символов: 5",
     })
-    .max(50),
+    .max(50, { message: "Максимальное количество символов: 50" }),
   theme_color: z.string(),
 });
 
@@ -55,20 +52,30 @@ export const tagSchema = z.object({
   name: z
     .string()
     .min(4, {
-      message: "Не меньше 4 ",
+      message: "Минимальное количество символов: 4",
     })
-    .max(30),
+    .max(30, { message: "Максимальное количество символов: 30" }),
+
   description: z
     .string()
     .min(10, {
-      message: "Username must be at least 2 characters.",
+      message: "Минимальное количество символов: 10",
     })
-    .max(150),
+    .max(150, { message: "Максимальное количество символов: 150" }),
+
   info: z
     .string()
     .min(10, {
-      message: "Username must be at least 2 characters.",
+      message: "Минимальное количество символов: 10",
     })
-    .max(1000),
-  picture: z.string().url(),
+    .max(1000, { message: "Максимальное количество символов: 1000" }),
+
+  picture: z.string().url({ message: VALID_URL }),
+});
+
+export const commentSchema = z.object({
+  text: z
+    .string()
+    .min(5, { message: MIN_ERROR })
+    .max(2000, { message: "Максимальное количество символов: 2000" }),
 });

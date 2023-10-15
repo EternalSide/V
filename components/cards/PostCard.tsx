@@ -8,12 +8,11 @@ import StarAction from "../shared/StarAction";
 import TagLink from "../shared/TagLink";
 import Metric from "../shared/Metric";
 
-interface PostCardProps {
+export interface PostCardProps {
   userId: string;
   isPostSaved: boolean;
 
   banner?: string;
-  index?: number;
   isOwnProfile?: any;
   page?: string;
   firstPost?: boolean;
@@ -37,12 +36,12 @@ interface PostCardProps {
 
 const PostCard = ({
   author,
+  post,
   userId,
   firstPost,
   isOwnProfile,
   isPostSaved,
   page,
-  post,
   banner,
   titleClassnames,
 }: PostCardProps) => {

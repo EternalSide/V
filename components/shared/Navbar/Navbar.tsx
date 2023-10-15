@@ -20,7 +20,10 @@ const Navbar = () => {
               className="object-cover"
             />
           </Link>
-          <MobileNavbar />
+
+          <div className="sm:hidden">
+            <MobileNavbar />
+          </div>
 
           <div className="relative w-[425px]  max-lg:hidden">
             <div className="z-50 flex min-h-[40px] items-center gap-1 rounded-sm border border-neutral-700 bg-black  shadow-md focus-within:border-indigo-500 ">

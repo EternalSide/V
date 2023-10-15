@@ -22,4 +22,12 @@ body {
   .no-focus {
     @apply focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
   }
+
+  .h1-bold {
+    @apply text-3xl font-bold;
+  }
+
+  .create-edit_form {
+    @apply mx-auto mt-6 flex w-full max-w-7xl flex-col gap-9 pb-8;
+  }
 }

@@ -3,14 +3,9 @@ import mongoose from "mongoose";
 let isConnected: boolean = false;
 
 export async function connectToDatabase() {
-  const DISABLED_NOTIFICATIONS = true;
-  if (!process.env.DB_URL) {
-    if (!DISABLED_NOTIFICATIONS) return console.log("URL не найден.");
-  }
-  if (isConnected) {
-    if (DISABLED_NOTIFICATIONS) return;
-    return console.log("🚀 Соединение с БД уже установлено.");
-  }
+  if (!process.env.DB_URL) return console.log("URL не найден.");
+
+  if (isConnected) return;
 
   mongoose.set("strictQuery", true);
 
@@ -20,9 +15,6 @@ export async function connectToDatabase() {
     });
 
     isConnected = true;
-
-    if (!DISABLED_NOTIFICATIONS)
-      return console.log("🚀 Соединение с БД установлено.");
   } catch (e) {
     console.log(e, "Ошибка - Проблемы с подключением к БД - Фул Инфо:", e);
   }

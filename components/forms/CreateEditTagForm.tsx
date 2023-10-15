@@ -17,12 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Editor } from "@tinymce/tinymce-react";
 import { usePathname, useRouter } from "next/navigation";
-import { SingleImageDropzone } from "@/components/SingleImageDropzone";
+import { SingleImageDropzone } from "@/components/shared/SingleImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import BarLoader from "react-spinners/BarLoader";
 import { useToast } from "@/components/ui/use-toast";
 import { editTag } from "@/lib/actions/tag.action";
 import { Textarea } from "@/components//ui/textarea";
+import { editorPlugins } from "@/constants/editor";
 
 interface Props {
   mongoUserId: string;
@@ -80,14 +81,40 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
     }
   };
 
+  const handleUploadPicture = async (e: any, field: any) => {
+    try {
+      e.preventDefault();
+      if (field?.value && field?.value.length >= 1) return;
+
+      if (file) {
+        const res = await edgestore.publicFiles.upload({
+          file,
+          onProgressChange: (progress) => {
+            setIsLoading(true);
+          },
+        });
+
+        form.setValue("picture", res.url);
+
+        toast({
+          title: "Лого успешно загружено ✅",
+          duration: 2000,
+          className: "toast-black",
+        });
+
+        setIsLoading(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto mt-6 flex w-full max-w-7xl  flex-col gap-9 pb-8"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e?.preventDefault();
-        }}
+        className="create-edit_form"
+        onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
       >
         <FormField
           control={form.control}
@@ -140,7 +167,6 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
           render={({ field }) => (
             <FormItem className="max-w-3xl">
               <FormLabel className="text-xl">Лого</FormLabel>
-
               <FormControl>
                 <div className="w-full">
                   <SingleImageDropzone
@@ -152,34 +178,15 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                       form.setValue("picture", "");
                     }}
                   />
-
                   <Button
                     disabled={isLoading || field?.value!.length >= 1}
                     type="button"
                     className={`button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
                       isLoading && "border-b-[0px] "
                     }`}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      if (field?.value && field?.value.length >= 1) return;
-                      if (file) {
-                        const res = await edgestore.publicFiles.upload({
-                          file,
-                          onProgressChange: (progress) => {
-                            setIsLoading(true);
-                          },
-                        });
-                        form.setValue("picture", res.url);
-                        toast({
-                          title: "Лого успешно загружено ✅",
-                          duration: 2000,
-                          className: "toast-black",
-                        });
-                        setIsLoading(false);
-                      }
-                    }}
+                    onClick={(e) => handleUploadPicture(e, field)}
                   >
-                    {isLoading ? "Загружается..." : "Загрузить"}
+                    {isLoading ? "Загрузка..." : "Загрузить"}
                     {isLoading && (
                       <BarLoader
                         height={"1px"}
@@ -189,7 +196,6 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                   </Button>
                 </div>
               </FormControl>
-
               <FormMessage className="text-indigo-500" />
             </FormItem>
           )}
@@ -213,23 +219,7 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                   init={{
                     height: 450,
                     menubar: false,
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "codesample",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                    ],
+                    plugins: editorPlugins,
                     toolbar:
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +

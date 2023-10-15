@@ -1,5 +1,4 @@
 "use server";
-
 import User from "@/database/models/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -60,6 +59,7 @@ export const createPost = async (params: CreatePostParams) => {
     });
 
     revalidatePath(path);
+
     return id;
   } catch (error) {
     console.log(error);
@@ -87,11 +87,11 @@ export const getPostById = async (params: GetPostByIdParams) => {
 export const getAllPosts = async (params: GetAllPostsParams) => {
   try {
     connectToDatabase();
-    const { searchValue } = params;
+    const { filterValue } = params;
 
     let sortOptions = {};
 
-    switch (searchValue) {
+    switch (filterValue) {
       case "new":
         sortOptions = { createdAt: -1 };
         break;
@@ -105,9 +105,13 @@ export const getAllPosts = async (params: GetAllPostsParams) => {
         break;
     }
 
-    const posts = await Post.find({})
-      .populate("author")
-      .populate({ path: "tags", model: Tag, select: "name _id" })
+    const posts = await Post.find()
+      .select(["-text"])
+      .populate({
+        path: "author",
+        select: "name _id picture username",
+      })
+      .populate({ path: "tags", select: "name _id" })
       .sort(sortOptions)
       .limit(25);
 
@@ -214,6 +218,7 @@ export async function editPost(params: EditPostParams) {
 export async function setLike(params: setLikeParams) {
   try {
     connectToDatabase();
+
     const { postId, userId, path, hasUpVoted } = params;
 
     let updateQuery = {};
@@ -296,7 +301,11 @@ export async function getRecommendedPosts(params: { userId?: string }) {
       };
 
       recommendedPosts = await Post.find(query)
-        .populate("author")
+        .select(["-text"])
+        .populate({
+          path: "author",
+          select: "name _id picture username",
+        })
         .populate({ path: "tags", model: Tag, select: "name _id" });
 
       return recommendedPosts;

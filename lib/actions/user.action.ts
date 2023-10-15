@@ -1,5 +1,4 @@
 "use server";
-
 import User from "@/database/models/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
@@ -95,6 +94,7 @@ export async function getUserByUserName(params: getUserByUsername) {
       model: Post,
       options: {
         sort: { createdAt: -1 },
+        select: ["-text"],
         populate: [
           {
             path: "tags",

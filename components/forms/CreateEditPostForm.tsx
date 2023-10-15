@@ -1,7 +1,5 @@
 "use client";
-
 import React, { useRef, useState } from "react";
-
 import { createPostSchema } from "@/lib/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,18 +16,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-
 import { Editor } from "@tinymce/tinymce-react";
 import { usePathname, useRouter } from "next/navigation";
 import { createPost, editPost } from "@/lib/actions/post.action";
-import { SingleImageDropzone } from "@/components/SingleImageDropzone";
+import { SingleImageDropzone } from "@/components/shared/SingleImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import BarLoader from "react-spinners/BarLoader";
 import { useToast } from "../ui/use-toast";
+import { editorPlugins } from "@/constants/editor";
+
 interface Props {
   mongoUserId: string;
-  type?: "Edit" | "Create";
   postDetails?: string;
+  type?: "Edit" | "Create";
 }
 
 const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
@@ -38,9 +37,11 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
   const { edgestore } = useEdgeStore();
 
   let parsedPostDetails: any;
+
   if (type === "Edit") {
     parsedPostDetails = JSON.parse(postDetails || "");
   }
+
   const groupedTags = parsedPostDetails?.tags.map((tag: any) => tag.name);
 
   const form = useForm<z.infer<typeof createPostSchema>>({
@@ -65,9 +66,10 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
         postId: parsedPostDetails._id,
         text: values.text,
         title: values.title,
-        banner: values.banner ? values.banner : "",
+        banner: values?.banner ? values.banner : "",
         path,
       });
+
       router.push(`/post/${parsedPostDetails._id}`);
     } else {
       const postId = await createPost({
@@ -75,9 +77,10 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
         text: values.text,
         tags: values.tags,
         author: mongoUserId,
-        banner: values.banner ? values.banner : "",
+        banner: values?.banner ? values.banner : "",
         path,
       });
+
       router.push(`/post/${postId}`);
     }
   };
@@ -117,7 +120,6 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
           tagInput.value = "";
           form.clearErrors("tags");
         }
-        console.log(field.value);
       } else {
         form.trigger();
       }
@@ -130,14 +132,36 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
     form.setValue("tags", newTags);
   };
 
+  const handleUploadPicture = async (e: any, field: any) => {
+    try {
+      e.preventDefault();
+      if (field?.value && field?.value.length >= 1) return;
+      if (file) {
+        const res = await edgestore.publicFiles.upload({
+          file,
+          onProgressChange: (progress) => {
+            setIsLoading(true);
+          },
+        });
+        form.setValue("banner", res.url);
+        toast({
+          title: "Баннер успешно загружен ✅",
+          duration: 2000,
+          className: "toast-black",
+        });
+        setIsLoading(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto mt-6 flex w-full max-w-7xl  flex-col gap-9 pb-8"
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e?.preventDefault();
-        }}
+        className="create-edit_form"
+        onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
       >
         <FormField
           control={form.control}
@@ -232,25 +256,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                     className={`button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
                       isLoading && "border-b-[0px] "
                     }`}
-                    onClick={async (e) => {
-                      e.preventDefault();
-                      if (field?.value && field?.value.length >= 1) return;
-                      if (file) {
-                        const res = await edgestore.publicFiles.upload({
-                          file,
-                          onProgressChange: (progress) => {
-                            setIsLoading(true);
-                          },
-                        });
-                        form.setValue("banner", res.url);
-                        toast({
-                          title: "Баннер успешно загружен ✅",
-                          duration: 2000,
-                          className: "toast-black",
-                        });
-                        setIsLoading(false);
-                      }
-                    }}
+                    onClick={(e) => handleUploadPicture(e, field)}
                   >
                     {isLoading ? "Загружается..." : "Загрузить"}
                     {isLoading && (
@@ -262,7 +268,6 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                   </Button>
                 </div>
               </FormControl>
-
               <FormMessage className="text-indigo-500" />
             </FormItem>
           )}
@@ -286,23 +291,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                   init={{
                     height: 450,
                     menubar: false,
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "codesample",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                    ],
+                    plugins: editorPlugins,
                     toolbar:
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +
@@ -313,7 +302,6 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                   }}
                 />
               </FormControl>
-
               <FormMessage className="text-indigo-500" />
             </FormItem>
           )}

@@ -53,7 +53,7 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
   const isCreator = tag.author?.toString() === user?._id.toString();
 
   return (
-    <div className="h-[2000px] w-full pt-[85px] max-[1280px]:px-4">
+    <div className="w-full pb-6 pt-[85px] max-[1280px]:px-4">
       <h1 className="text-4xl font-bold first-letter:uppercase">{tag.name}</h1>
       <TagHeader
         tagId={JSON.stringify(tag._id)}

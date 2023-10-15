@@ -1,5 +1,4 @@
 "use client";
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,22 +13,15 @@ import {
 } from "@/components/ui/form";
 import { Editor } from "@tinymce/tinymce-react";
 import { usePathname } from "next/navigation";
-
 import { useToast } from "../ui/use-toast";
 import { createComment } from "@/lib/actions/comment.action";
 import { useRef } from "react";
+import { commentSchema } from "@/lib/validation";
 
 interface Props {
   authorId: string;
   postId: string;
 }
-
-export const commentSchema = z.object({
-  text: z
-    .string()
-    .min(5, { message: "Поле не может быть меньше 5 символов." })
-    .max(50000),
-});
 
 const CreateCommentForm = ({ postId, authorId }: Props) => {
   const form = useForm<z.infer<typeof commentSchema>>({
@@ -46,15 +38,15 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
 
   const onSubmit = async (values: z.infer<typeof commentSchema>) => {
     await createComment({
-      path,
       author: authorId,
       post: postId,
       text: values.text,
+      path,
     });
 
     return toast({
       duration: 2000,
-      title: "Комментарий опубликован ✅",
+      title: "Комментарий добавлен ✅",
     });
   };
 
@@ -62,7 +54,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto flex w-full max-w-7xl flex-col gap-9 py-8 text-white max-[1280px]:px-4 mt-7 max-md:px-0"
+        className="mx-auto mt-7 flex w-full max-w-7xl flex-col gap-9 py-8 text-white max-[1280px]:px-4 max-md:px-0"
       >
         <FormField
           control={form.control}
@@ -112,7 +104,6 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
                   }}
                 />
               </FormControl>
-
               <FormMessage className="text-indigo-500" />
             </FormItem>
           )}

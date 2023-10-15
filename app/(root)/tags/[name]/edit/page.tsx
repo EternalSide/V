@@ -21,7 +21,7 @@ const EdiTagPage = async ({ params }: EditTagPageProps) => {
   if (!isCreator) redirect("/");
 
   return (
-    <div className="w-full pt-[85px] max-[1280px]:px-4">
+    <div className="w-full pb-8 pt-[85px] max-[1280px]:px-4">
       <h1 className="text-4xl font-bold first-letter:uppercase">
         Изменить - {params.name}
       </h1>

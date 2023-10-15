@@ -134,13 +134,11 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         <div className="flex w-full flex-col gap-1.5">
           {user.posts.map((post: any, index: number) => (
             <PostCard
-              firstPost={index === 0}
-              banner={post?.banner}
-              userId={mongoUser?._id.toString()}
               key={post._id}
-              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
+              firstPost={index === 0}
+              userId={mongoUser?._id.toString()}
+              banner={post?.banner}
               page="Profile"
-              isOwnProfile={isOwnProfile}
               titleClassnames="text-2xl"
               author={{
                 name: user.name,
@@ -148,6 +146,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
                 username: user.username,
                 _id: user._id.toString(),
               }}
+              isOwnProfile={isOwnProfile}
               post={{
                 title: post.title,
                 comments: post.comments.length,
@@ -157,6 +156,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
                 createdAt: post.createdAt,
                 id: post._id.toString(),
               }}
+              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
             />
           ))}
         </div>

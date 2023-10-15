@@ -1,5 +1,4 @@
 import { IUser } from "@/database/models/user.model";
-import { Schema } from "mongoose";
 
 export interface CreateUserParams {
   clerkId: string;
@@ -88,8 +87,9 @@ export interface FollowTagParams {
 }
 
 export interface GetAllPostsParams {
-  searchValue?: string;
+  filterValue?: string;
 }
+
 export interface EditTagParams {
   path: string;
   tagId: string;

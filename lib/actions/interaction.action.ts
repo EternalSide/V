@@ -1,5 +1,4 @@
 "use server";
-
 import Post from "@/database/models/post.model";
 import { connectToDatabase } from "../mongoose";
 import Interaction from "@/database/models/interaction.model";

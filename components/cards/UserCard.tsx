@@ -20,7 +20,7 @@ const UserCard = ({ author }: any) => {
   ];
   return (
     <div className="bg-main relative h-fit w-[320px] rounded-md border border-neutral-800 max-lg:hidden">
-      <div className="w-full h-16 bg-indigo-700" />
+      <div className="h-16 w-full bg-indigo-700" />
       <div className="p-5 ">
         <Link className="flex items-start gap-2" href={`/${author.username}`}>
           <UserAvatar

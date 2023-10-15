@@ -1,5 +1,4 @@
 "use server";
-
 import Comment from "@/database/models/comment.model";
 import { connectToDatabase } from "../mongoose";
 import { CreateCommentParams, GetCommentsParams } from "./shared";
