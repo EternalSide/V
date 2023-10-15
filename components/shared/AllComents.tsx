@@ -23,14 +23,18 @@ const AllComents = async ({ postId }: AllComentsProps) => {
           </Link>
           <div className="flex-1 rounded-lg border border-neutral-800 p-5">
             <div className="mb-5 flex items-center gap-3">
-              <Link href={`/${item.author.username}`} className="font-semibold">
-                {item.author.name}
-                <span className="text-xs text-neutral-500">•</span>
+              <Link
+                href={`/${item.author.username}`}
+                className="flex items-center gap-1 font-semibold"
+              >
+                <p>{item.author.name}</p>
+                <p className="text-sm text-zinc-400">@{item.author.username}</p>
               </Link>
               <p className="text-sm text-neutral-400">
                 {formatDate(item.createdAt)}
               </p>
             </div>
+
             <ParseHTML data={item.text} />
           </div>
         </article>

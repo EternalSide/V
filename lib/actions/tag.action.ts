@@ -4,7 +4,7 @@ import { connectToDatabase } from "../mongoose";
 import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
 import Post from "@/database/models/post.model";
-import { FollowTagParams, GetTagInfoParams } from "./shared";
+import { EditTagParams, FollowTagParams, GetTagInfoParams } from "./shared";
 
 export const getPopularTags = async () => {
   try {
@@ -98,6 +98,7 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
         break;
 
       default:
+        sortQuery = { createdAt: -1, views: -1, upvotes: -1 };
         break;
     }
 
@@ -124,6 +125,27 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
       .populate("followers");
 
     return tag;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+export const editTag = async (params: EditTagParams) => {
+  try {
+    connectToDatabase();
+
+    const { path, tagId, userId, authorId, updatedData } = params;
+
+    const user = await User.findById(userId);
+
+    if (user._id.toString() !== authorId) {
+      throw new Error("Отказано.");
+    }
+
+    await Tag.findByIdAndUpdate(tagId, updatedData);
+
+    revalidatePath(path);
   } catch (e) {
     console.log(e);
     throw e;

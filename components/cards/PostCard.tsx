@@ -47,7 +47,7 @@ const PostCard = ({
   titleClassnames,
 }: PostCardProps) => {
   return (
-    <Link href={`/post/${post.id}`} className="card">
+    <Link href={`/post/${post.id}`} className="card-main">
       {firstPost && banner && (
         <div className="relative h-64 w-full">
           <Image
@@ -83,9 +83,11 @@ const PostCard = ({
             alt={author.name}
             classNames="h-10 w-10"
           />
+
           <div className="flex flex-col">
-            <h3 className="first-letter:uppercase">{author.username}</h3>
-            <p className="text-xs text-neutral-400">
+            <h3 className="first-letter:uppercase">{author.name}</h3>
+            <p className="-mt-1 text-sm text-neutral-400">@{author.username}</p>
+            <p className="mt-1 text-xs text-neutral-400">
               {getTimestamp(post.createdAt)}
             </p>
             <h3

@@ -25,31 +25,44 @@ import "prismjs/components/prism-mongodb";
 import "prismjs/plugins/line-numbers/prism-line-numbers.js";
 import "prismjs/plugins/line-numbers/prism-line-numbers.css";
 
-const options = {
-  // @ts-ignore
-  // Перебить стили
-  replace: (domNode) => {
-    if (domNode.name === "p") {
-      return (
-        <p className="mb-3 w-full text-lg" style={{ fontSize: 18 }}>
-          {domToReact(domNode.children, options)}
-        </p>
-      );
-    }
-    if (domNode.name === "h2" || domNode.name === "h3") {
-      return (
-        <h3 className="mb-3 mt-8 text-3xl font-bold">
-          {domToReact(domNode.children, options)}
-        </h3>
-      );
-    }
-  },
-};
-
-const ParseHTML = ({ data, post }: { data: string; post?: boolean }) => {
+const ParseHTML = ({
+  data,
+  post,
+  info,
+}: {
+  data: string;
+  post?: boolean;
+  info?: boolean;
+}) => {
   useEffect(() => {
     Prism.highlightAll();
   }, [data]);
+
+  const options = {
+    // @ts-ignore
+    // Перебить стили
+    replace: (domNode) => {
+      if (domNode.name === "p") {
+        return (
+          <p
+            className={`mb-3 w-full text-lg ${
+              info && "mt-4 !text-sm text-zinc-300"
+            }`}
+            style={{ fontSize: 18 }}
+          >
+            {domToReact(domNode.children, options)}
+          </p>
+        );
+      }
+      if (domNode.name === "h2" || domNode.name === "h3") {
+        return (
+          <h3 className="mb-3 mt-8 text-3xl font-bold">
+            {domToReact(domNode.children, options)}
+          </h3>
+        );
+      }
+    },
+  };
 
   return (
     <div className={`${post && "mb-6 mt-10"}`}>{parse(data, options)}</div>

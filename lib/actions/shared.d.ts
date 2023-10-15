@@ -90,3 +90,15 @@ export interface FollowTagParams {
 export interface GetAllPostsParams {
   searchValue?: string;
 }
+export interface EditTagParams {
+  path: string;
+  tagId: string;
+  userId: string;
+  authorId: string;
+  updatedData: {
+    name: string;
+    info: string;
+    description: string;
+    picture: string;
+  };
+}

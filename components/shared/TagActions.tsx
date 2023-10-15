@@ -63,7 +63,7 @@ const TagActions = ({ tagId, isFollowing, userId, tagTitle, page }: Props) => {
           "border-2 border-neutral-600 !bg-transparent !text-neutral-300"
         }`}
       >
-        {isTagOptimistic ? "В читаемых ✓" : "Подписаться"}
+        {isTagOptimistic ? "Отписаться" : "Подписаться"}
       </Button>
       {page !== "tagPage" && (
         <Link href={`/tags/${tagTitle}`}>

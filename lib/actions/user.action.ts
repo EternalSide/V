@@ -88,7 +88,9 @@ export async function getUserByUserName(params: getUserByUsername) {
 
     const { username } = params;
 
-    const user = await User.findOne({ username }).populate({
+    const user = await User.findOne({
+      username: username.toLowerCase(),
+    }).populate({
       path: "posts",
       model: Post,
       options: {

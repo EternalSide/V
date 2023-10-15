@@ -11,18 +11,15 @@ body {
     @apply bg-[#171717];
   }
 
-  .card {
-    @apply bg-main flex w-full flex-col items-start rounded-md border-neutral-800/40 border  hover:border-indigo-700;
-  }
-
   .button-main {
     @apply border border-indigo-600 bg-transparent text-indigo-400 shadow-sm shadow-indigo-700 hover:bg-indigo-600 hover:text-white;
   }
 
+  .card-main {
+    @apply bg-main flex w-full flex-col items-start rounded-md border border-neutral-800/40  hover:border-indigo-700;
+  }
+
   .no-focus {
     @apply focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
-  }
-  .toast-black {
-    @apply bg-black text-white border-neutral-800;
   }
 }

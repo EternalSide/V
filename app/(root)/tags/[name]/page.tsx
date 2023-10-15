@@ -2,6 +2,7 @@ import PostCard from "@/components/cards/PostCard";
 import FilterComponents from "@/components/shared/FilterComponents";
 import HomeFilters from "@/components/shared/HomeFilters";
 import MobileTagLeft from "@/components/shared/MobileTagLeft";
+import ParseHTML from "@/components/shared/ParseHTML";
 import TagHeader from "@/components/shared/TagHeader";
 import { UserAvatar } from "@/components/shared/UserAvatar";
 import { Button } from "@/components/ui/button";
@@ -56,20 +57,22 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
       <h1 className="text-4xl font-bold first-letter:uppercase">{tag.name}</h1>
       <TagHeader
         tagId={JSON.stringify(tag._id)}
-        isFollowing={isFollowing}
-        userId={JSON.stringify(user?._id)}
         tagTitle={tag.name}
+        tagDescription={tag?.description}
+        tagPicture={tag?.picture}
+        isFollowing={isFollowing}
         isCreator={isCreator}
+        userId={JSON.stringify(user?._id)}
       />
-      <section className="mt-10 flex w-full justify-start gap-10 px-4">
+      <section className="mt-10 flex w-full justify-start gap-10">
         <div className="w-[285px] max-lg:hidden">
-          <Link href={"/create"}>
+          <Link href="/create">
             <Button className="bg-indigo-600 text-white">Новый пост</Button>
           </Link>
           <div className="mt-4 border-y border-neutral-800 p-5">
             <h3 className="font-semibold">Информация</h3>
             {tag?.info ? (
-              tag.info
+              <ParseHTML data={tag?.info} info={true} />
             ) : (
               <p className="mt-4 text-sm text-zinc-300">
                 Автор не указал информацию.

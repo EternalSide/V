@@ -134,7 +134,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="mt-6 mx-auto flex w-full max-w-7xl  flex-col gap-9 pb-8"
+        className="mx-auto mt-6 flex w-full max-w-7xl  flex-col gap-9 pb-8"
         onKeyDown={(e) => {
           if (e.key === "Enter") e?.preventDefault();
         }}
@@ -229,7 +229,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                   <Button
                     disabled={isLoading || field?.value!.length >= 1}
                     type="button"
-                    className={`relative button-main  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
+                    className={`button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
                       isLoading && "border-b-[0px] "
                     }`}
                     onClick={async (e) => {

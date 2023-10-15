@@ -61,8 +61,8 @@ const EditProfileForm = ({ user }: any) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="min-w-full bg-main rounded-md p-6 space-y-10">
-          <h1 className="font-bold text-2xl">Дополнительно</h1>
+        <div className="bg-main min-w-full space-y-10 rounded-md p-6">
+          <h1 className="text-2xl font-bold">Дополнительно</h1>
           <FormField
             control={form.control}
             name="portfolioWebsite"
@@ -71,7 +71,7 @@ const EditProfileForm = ({ user }: any) => {
                 <FormLabel>Портфолио</FormLabel>
                 <FormControl>
                   <Input
-                    className="bg-black no-focus border border-neutral-800 "
+                    className="no-focus border border-neutral-800 bg-black "
                     placeholder="https://v.com"
                     {...field}
                   />
@@ -89,7 +89,7 @@ const EditProfileForm = ({ user }: any) => {
                 <FormLabel>Локация</FormLabel>
                 <FormControl>
                   <Input
-                    className="bg-black !no-focus border !focus:border-indigo-700 border-neutral-800 "
+                    className="!no-focus !focus:border-indigo-700 border border-neutral-800 bg-black "
                     placeholder="Токио, Япония"
                     {...field}
                   />
@@ -107,7 +107,7 @@ const EditProfileForm = ({ user }: any) => {
                 <FormLabel>О себе</FormLabel>
                 <FormControl>
                   <Textarea
-                    className="bg-black no-focus focus:border-indigo-700 border border-neutral-800 "
+                    className="no-focus border border-neutral-800 bg-black focus:border-indigo-700 "
                     placeholder="Программист из Токио, 24 года."
                     {...field}
                   />
@@ -119,9 +119,11 @@ const EditProfileForm = ({ user }: any) => {
           />
         </div>
 
-        <div className="min-w-full bg-main rounded-md p-6 space-y-10">
-          <h1 className="font-bold text-2xl">Оформление</h1>
-
+        <div className="bg-main min-w-full space-y-10 rounded-md p-6">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold">Оформление</h1>
+            <p className="text-sm text-indigo-600">* Пока не доступно.</p>
+          </div>
           <FormField
             control={form.control}
             name="theme_color"
@@ -154,10 +156,10 @@ const EditProfileForm = ({ user }: any) => {
           />
         </div>
 
-        <div className="min-w-full bg-main rounded-md p-6 space-y-10">
+        <div className="bg-main min-w-full space-y-10 rounded-md p-6">
           <Button
             disabled={isLoading || !isDirty}
-            className="bg-indigo-600 w-full hover:bg-indigo-700 transition"
+            className="w-full bg-indigo-600 transition hover:bg-indigo-700"
             type="submit"
           >
             {isLoading ? "Сохранение.." : "Сохранить"}

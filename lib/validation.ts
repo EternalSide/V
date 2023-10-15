@@ -50,3 +50,25 @@ export const editProfileSchema = z.object({
     .max(50),
   theme_color: z.string(),
 });
+
+export const tagSchema = z.object({
+  name: z
+    .string()
+    .min(4, {
+      message: "Не меньше 4 ",
+    })
+    .max(30),
+  description: z
+    .string()
+    .min(10, {
+      message: "Username must be at least 2 characters.",
+    })
+    .max(150),
+  info: z
+    .string()
+    .min(10, {
+      message: "Username must be at least 2 characters.",
+    })
+    .max(1000),
+  picture: z.string().url(),
+});

@@ -132,8 +132,10 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         </div>
 
         <div className="flex w-full flex-col gap-1.5">
-          {user.posts.map((post: any) => (
+          {user.posts.map((post: any, index: number) => (
             <PostCard
+              firstPost={index === 0}
+              banner={post?.banner}
               userId={mongoUser?._id.toString()}
               key={post._id}
               isPostSaved={mongoUser?.savedPosts.includes(post._id)}
