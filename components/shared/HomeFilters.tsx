@@ -21,7 +21,7 @@ const HomeFilters = () => {
 
     router.push(newUrl, { scroll: false });
   };
-  const [active, setActive] = useState(value || "recommended");
+  const [active, setActive] = useState(value || "new");
 
   return (
     <div className="flex items-center gap-3 max-sm:hidden">

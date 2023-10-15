@@ -15,15 +15,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
 import { Editor } from "@tinymce/tinymce-react";
 import { usePathname, useRouter } from "next/navigation";
-
 import { SingleImageDropzone } from "@/components/SingleImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
 import BarLoader from "react-spinners/BarLoader";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { editTag } from "@/lib/actions/tag.action";
+import { Textarea } from "@/components//ui/textarea";
 
 interface Props {
   mongoUserId: string;
@@ -122,7 +121,7 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                 Описание <span className="text-indigo-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input
+                <Textarea
                   className="bg-main no-focus border-none focus:border-indigo-500"
                   placeholder="Обсуждаем программирование и все что с ним связано!"
                   {...field}

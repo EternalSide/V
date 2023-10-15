@@ -14,6 +14,8 @@ import Post from "@/database/models/post.model";
 import { revalidatePath } from "next/cache";
 import Tag from "@/database/models/tag.model";
 import Comment from "@/database/models/comment.model";
+import Interaction from "@/database/models/interaction.model";
+import { FilterQuery } from "mongoose";
 
 export const createPost = async (params: CreatePostParams) => {
   try {
@@ -88,15 +90,12 @@ export const getAllPosts = async (params: GetAllPostsParams) => {
         sortOptions = { createdAt: -1 };
         break;
 
-      case "recommended":
-        sortOptions = { createdAt: -1 };
-        break;
-
       case "popular":
         sortOptions = { upvotes: -1, views: -1 };
         break;
 
       default:
+        sortOptions = { createdAt: -1 };
         break;
     }
 
@@ -228,6 +227,57 @@ export async function setLike(params: setLikeParams) {
     }
 
     revalidatePath(path);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+export async function getRecommendedPosts(params: { userId?: string }) {
+  try {
+    connectToDatabase();
+
+    const { userId } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+
+    let recommendedPosts;
+
+    if (!user) {
+      recommendedPosts = await Post.find({})
+        .populate("author")
+        .populate({ path: "tags", model: Tag, select: "name _id" })
+        .sort({ createdAt: -1, upvotes: -1, views: -1 });
+
+      return recommendedPosts;
+    } else {
+      const userInteractions = await Interaction.find({ user: user._id })
+        .populate("tags")
+        .exec();
+
+      const userTags = userInteractions.reduce((tags, interaction) => {
+        if (interaction.tags) {
+          tags = tags.concat(interaction.tags);
+        }
+        return tags;
+      }, []);
+
+      // Теги, к которым пользователь заходил.
+      const distinctUserTagIds = [
+        // @ts-ignore
+        ...new Set(userTags.map((item) => item._id)),
+      ];
+
+      const query: FilterQuery<typeof Post> = {
+        $and: [{ tags: { $in: distinctUserTagIds } }],
+      };
+
+      recommendedPosts = await Post.find(query)
+        .populate("author")
+        .populate({ path: "tags", model: Tag, select: "name _id" });
+
+      return recommendedPosts;
+    }
   } catch (e) {
     console.log(e);
     throw e;

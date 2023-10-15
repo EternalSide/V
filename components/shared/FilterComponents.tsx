@@ -43,7 +43,7 @@ const FilterComponents = ({
     <div className={`${containerClasses}`}>
       <Select onValueChange={handleFiltering}>
         <SelectTrigger className="bg-main w-full border-neutral-800">
-          <SelectValue placeholder="Рекомендованное" />
+          <SelectValue placeholder="Новое" />
         </SelectTrigger>
         <SelectContent className="border-neutral-800 bg-black text-white">
           {filters.map((item: any) => (

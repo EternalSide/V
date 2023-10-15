@@ -1,5 +1,5 @@
 import { HomeFiltersTypes, SideBarLinksType } from "@/types";
-import { Home, Tag, PlusSquare, Star, Smile } from "lucide-react";
+import { Home, Tag, PlusSquare, Star, Smile, Bell, Send } from "lucide-react";
 
 export const sidebarLinks: SideBarLinksType[] = [
   {
@@ -37,15 +37,28 @@ export const sidebarLinks: SideBarLinksType[] = [
 
 export const homeFilters: HomeFiltersTypes[] = [
   {
+    value: "new",
+    label: "Новое",
+  },
+  {
     value: "recommended",
     label: "Рекомендованное",
   },
   {
-    value: "new",
-    label: "Новые",
+    value: "popular",
+    label: "Популярное",
+  },
+];
+
+export const moreLinks = [
+  {
+    label: "Уведомления",
+    href: "/",
+    icon: Bell,
   },
   {
-    value: "popular",
-    label: "Популярные",
+    label: "Telegram",
+    href: "https://t.me/j_eternal",
+    icon: Send,
   },
 ];

@@ -36,7 +36,7 @@ const TagHeader = ({
                   fill
                   src={tagPicture}
                   alt="Лого Тега"
-                  className="-mt-2 rounded-full object-cover"
+                  className="-mt-2 rounded-full object-cover max-md:mt-0"
                 />
               </div>
             ) : (

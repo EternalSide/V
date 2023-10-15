@@ -1,6 +1,6 @@
-import { sidebarLinks } from "@/constants";
+import { moreLinks, sidebarLinks } from "@/constants";
 
-import { Bell, Send, Hash } from "lucide-react";
+import { Hash } from "lucide-react";
 import { Schema } from "mongoose";
 import Link from "next/link";
 
@@ -10,21 +10,8 @@ interface Props {
 }
 
 const LeftSidebar = async ({ username, followingTags }: Props) => {
-  const moreLinks = [
-    {
-      label: "Уведомления",
-      href: "/",
-      icon: Bell,
-    },
-    {
-      label: "Telegram",
-      href: "https://t.me/j_eternal",
-      icon: Send,
-    },
-  ];
-
   return (
-    <div className="pl-4 pt-[75px] sticky left-0 top-0 max-lg:pl-4 flex h-fit flex-col justify-between gap-8  overflow-y-auto text-white max-sm:hidden lg:w-[266px]">
+    <div className="sticky left-0 top-0 flex h-fit flex-col justify-between gap-8 overflow-y-auto pl-4 pt-[75px]  text-white max-lg:px-3 max-sm:hidden lg:w-[266px]">
       <div className="flex flex-1 flex-col gap-3">
         {sidebarLinks.map((item) => {
           if (item.label === "Профиль") {
@@ -67,7 +54,7 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
                 key={tag._id}
                 href={`/tags/${tag.name}`}
                 className="flex items-center
-                    gap-x-2 rounded-md px-3 py-2 hover:bg-indigo-900"
+                    gap-x-2 rounded-md px-3 py-2 hover:bg-indigo-900 "
               >
                 <Hash className="h-6 w-6" />
                 <p className="text-[18px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden">

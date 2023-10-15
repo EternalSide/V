@@ -64,7 +64,7 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
         isCreator={isCreator}
         userId={JSON.stringify(user?._id)}
       />
-      <section className="mt-10 flex w-full justify-start gap-10">
+      <section className="mt-8 flex w-full justify-start gap-10 max-lg:mt-6">
         <div className="w-[285px] max-lg:hidden">
           <Link href="/create">
             <Button className="bg-indigo-600 text-white">Новый пост</Button>
@@ -113,7 +113,11 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
 
         <div className="flex flex-1 flex-col pt-3">
           <div className="flex items-center gap-3">
-            <MobileTagLeft />
+            <MobileTagLeft
+              info={tag?.info ? tag.info : null}
+              followers={tag?.followers}
+              postCount={tag.posts.length}
+            />
             <HomeFilters />
             <FilterComponents
               containerClasses="sm:hidden flex-1"
