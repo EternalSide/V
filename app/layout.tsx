@@ -16,7 +16,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "V",
   openGraph: {
-    images: "./favicon.ico",
+    images: "/favicon.png",
   },
   description:
     "V — платформа, где пользователи могут находить интересующие их статьи по выбранным темам, общаться с единомышленниками, делиться статьями с друзьями или подписчиками.",
