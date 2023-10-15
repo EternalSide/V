@@ -11,7 +11,7 @@ export interface HomeFiltersTypes {
 export interface SideBarLinksType {
   label: string;
   route: string;
-  icon: React.JSXE;
+  icon: React.JSX;
   auth: boolean;
 }
 
