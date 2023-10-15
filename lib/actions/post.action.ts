@@ -53,6 +53,12 @@ export const createPost = async (params: CreatePostParams) => {
 
     await User.findByIdAndUpdate(author, { $push: { posts: id } });
 
+    await Interaction.create({
+      action: "create_post",
+      user: author,
+      tags: tagDocuments,
+    });
+
     revalidatePath(path);
     return id;
   } catch (error) {
@@ -263,13 +269,30 @@ export async function getRecommendedPosts(params: { userId?: string }) {
       }, []);
 
       // Теги, к которым пользователь заходил.
-      const distinctUserTagIds = [
-        // @ts-ignore
-        ...new Set(userTags.map((item) => item._id)),
-      ];
+      const distinctUserTagIds = userTags.map((item: any) => item._id);
+
+      // Самые часто посещаемые теги пользователя
+      const tagCounts = distinctUserTagIds.reduce((acc: any, tag: any) => {
+        const existingTag = acc.find((obj: any) => obj.tag === tag);
+        if (existingTag) {
+          existingTag.count++;
+        } else {
+          acc.push({ tag, count: 1 });
+        }
+        return acc;
+      }, []);
+
+      const sortedTagCounts = tagCounts.sort(
+        (a: any, b: any) => b.count - a.count,
+      );
+      const tagIds = sortedTagCounts.map((item: any) => item.tag);
+
+      // Показываем только посты, из самых $TAG_COUNT популярных тегов пользователей
+      const TAG_COUNT = 10;
+      const recTags = tagIds.slice(0, TAG_COUNT);
 
       const query: FilterQuery<typeof Post> = {
-        $and: [{ tags: { $in: distinctUserTagIds } }],
+        $and: [{ tags: { $in: recTags } }],
       };
 
       recommendedPosts = await Post.find(query)

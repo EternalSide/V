@@ -6,6 +6,7 @@ import { CreateCommentParams, GetCommentsParams } from "./shared";
 import { revalidatePath } from "next/cache";
 import Post from "@/database/models/post.model";
 import User from "@/database/models/user.model";
+import Interaction from "@/database/models/interaction.model";
 
 export const createComment = async (params: CreateCommentParams) => {
   try {
@@ -19,7 +20,15 @@ export const createComment = async (params: CreateCommentParams) => {
       text,
     });
 
-    await Post.findByIdAndUpdate(post, { $push: { comments: newComment._id } });
+    const updatedPost = await Post.findByIdAndUpdate(post, {
+      $push: { comments: newComment._id },
+    });
+
+    await Interaction.create({
+      action: "comment_post",
+      user: author,
+      tags: updatedPost.tags,
+    });
 
     revalidatePath(path);
   } catch (e) {
