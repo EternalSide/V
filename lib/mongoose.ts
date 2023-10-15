@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 
-const DISABLED_NOTIFICATIONS = true;
-
 let isConnected: boolean = false;
 
 export async function connectToDatabase() {
+  const DISABLED_NOTIFICATIONS = true;
   if (!process.env.DB_URL) {
     if (!DISABLED_NOTIFICATIONS) return console.log("URL не найден.");
   }

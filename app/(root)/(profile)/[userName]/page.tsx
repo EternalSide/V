@@ -1,7 +1,6 @@
 import PostCard from "@/components/cards/PostCard";
 import NoProfile from "@/components/shared/NoProfile";
 import { Button } from "@/components/ui/button";
-
 import { getUserById, getUserByUserName } from "@/lib/actions/user.action";
 import { formatDate, formatedLink } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
@@ -41,6 +40,7 @@ export async function generateMetadata({
 const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { userId } = auth();
   const user = await getUserByUserName({ username: params.userName });
+
   const mongoUser = await getUserById({ clerkId: userId! });
   const isOwnProfile = userId && user?.clerkId === userId;
 
@@ -60,7 +60,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   ];
 
   return (
-    <div className="pt-[75px] mx-auto w-full max-w-6xl max-md:px-0 px-4 ">
+    <div className="mx-auto w-full max-w-6xl px-4 pt-[75px] max-md:px-0 ">
       <div className="bg-main mt-12 w-full rounded-md border-neutral-900 pb-8">
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           {isOwnProfile && (
@@ -73,7 +73,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           <div className="relative -mt-12 h-32 w-32">
             <Image
               fill
-              className="aspect-auto rounded-full object-cover object-top border-[8px] border-black"
+              className="aspect-auto rounded-full border-[8px] border-black object-cover object-top"
               alt="Test alt"
               src={user.picture}
             />
@@ -103,13 +103,13 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
                 <Link
                   target="_blank"
                   href={user.portfolioWebsite}
-                  className="flex items-center gap-2 group"
+                  className="group flex items-center gap-2"
                 >
                   <ExternalLink
                     color="#969696"
-                    className="h-5 w-5 !group-hover:text-indigo-500 transition"
+                    className="!group-hover:text-indigo-500 h-5 w-5 transition"
                   />
-                  <p className="pt-1 text-sm text-neutral-400 group-hover:text-indigo-500 transition">
+                  <p className="pt-1 text-sm text-neutral-400 transition group-hover:text-indigo-500">
                     {formatedLink(user.portfolioWebsite)}
                   </p>
                 </Link>
@@ -134,9 +134,9 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         <div className="flex w-full flex-col gap-1.5">
           {user.posts.map((post: any) => (
             <PostCard
-              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
               userId={mongoUser?._id.toString()}
               key={post._id}
+              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
               page="Profile"
               isOwnProfile={isOwnProfile}
               titleClassnames="text-2xl"

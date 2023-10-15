@@ -12,17 +12,17 @@ const AllComents = async ({ postId }: AllComentsProps) => {
   const { comments } = await getComments({ postId });
 
   return (
-    <div className="flex flex-col gap-10 mt-7">
+    <div className="mt-7 flex flex-col gap-10">
       {comments.map((item: any) => (
-        <article className="flex items-start gap-3 w-full" key={item._id}>
+        <article className="flex w-full items-start gap-3" key={item._id}>
           <Link href={`/${item.author.username}`}>
             <UserAvatar
               imgUrl={item.author.picture}
               classNames="h-10 w-10 mt-3"
             />
           </Link>
-          <div className="border border-neutral-800 rounded-lg flex-1 p-5">
-            <div className="flex items-center gap-3 mb-5">
+          <div className="flex-1 rounded-lg border border-neutral-800 p-5">
+            <div className="mb-5 flex items-center gap-3">
               <Link href={`/${item.author.username}`} className="font-semibold">
                 {item.author.name}
                 <span className="text-xs text-neutral-500">•</span>

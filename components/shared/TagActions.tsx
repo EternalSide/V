@@ -55,12 +55,12 @@ const TagActions = ({ tagId, isFollowing, userId, tagTitle, page }: Props) => {
   };
 
   return (
-    <div className="flex gap-3 items-center">
+    <div className="flex items-center gap-3">
       <Button
         onClick={handleFollowTag}
         className={`!bg-indigo-600 !text-white ${
           isTagOptimistic &&
-          "!bg-transparent border-2 border-neutral-600 !text-neutral-300"
+          "border-2 border-neutral-600 !bg-transparent !text-neutral-300"
         }`}
       >
         {isTagOptimistic ? "В читаемых ✓" : "Подписаться"}

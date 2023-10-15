@@ -20,8 +20,8 @@ const TagHeader = ({
   isCreator,
 }: TagHeaderProps) => {
   return (
-    <div className="mt-3 w-full bg-main p-2 rounded-md">
-      <div className="px-6 py-5  flex justify-between items-start max-md:flex-col max-md:gap-2">
+    <div className="bg-main mt-3 w-full rounded-md p-2">
+      <div className="flex items-start  justify-between px-6 py-5 max-md:flex-col max-md:gap-2">
         <div className="flex items-center gap-4">
           <div>
             {true && (
@@ -37,7 +37,7 @@ const TagHeader = ({
           </div>
 
           <div>
-            <h3 className="font-semibold text-3xl first-letter:uppercase">
+            <h3 className="text-3xl font-semibold first-letter:uppercase">
               {tagTitle}
             </h3>
             {true && <p className="mt-3">Описание к тегу отсутствует.</p>}

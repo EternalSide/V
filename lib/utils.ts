@@ -30,7 +30,8 @@ export function getTimestamp(createdAt: Date): string {
 
   return `${day} ${month}, ${hours}:${minutes}`;
 }
-// Регистрация - profile
+
+// Дата регистрации профиля
 export function formatDate(inputDate: string): string {
   const date = new Date(inputDate);
   const monthNames = [

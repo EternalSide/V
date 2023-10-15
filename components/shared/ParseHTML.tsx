@@ -1,10 +1,7 @@
 "use client";
-
 import { useEffect } from "react";
-
 import Prism from "prismjs";
 import parse, { domToReact } from "html-react-parser";
-
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 import "prismjs/components/prism-c";
@@ -41,7 +38,7 @@ const options = {
     }
     if (domNode.name === "h2" || domNode.name === "h3") {
       return (
-        <h3 className="mt-8 mb-3 font-bold text-3xl">
+        <h3 className="mb-3 mt-8 text-3xl font-bold">
           {domToReact(domNode.children, options)}
         </h3>
       );
@@ -55,7 +52,7 @@ const ParseHTML = ({ data, post }: { data: string; post?: boolean }) => {
   }, [data]);
 
   return (
-    <div className={`${post && "mt-10 mb-6"}`}>{parse(data, options)}</div>
+    <div className={`${post && "mb-6 mt-10"}`}>{parse(data, options)}</div>
   );
 };
 export default ParseHTML;

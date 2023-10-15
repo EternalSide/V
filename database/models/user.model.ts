@@ -5,10 +5,9 @@ export interface IUser extends Document {
   name: string;
   username: string;
   email: string;
+  picture: string;
   password?: string;
   role?: string;
-  picture: string;
-  joinedAt: Date;
   location?: string;
   bio?: string;
   portfolioWebsite?: string;
@@ -16,6 +15,7 @@ export interface IUser extends Document {
   posts: Schema.Types.ObjectId[];
   savedPosts: Schema.Types.ObjectId[];
   followingTags: Schema.Types.ObjectId[];
+  joinedAt: Date;
 }
 
 const UserSchema = new Schema<IUser>(

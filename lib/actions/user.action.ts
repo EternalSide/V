@@ -13,8 +13,6 @@ import {
 import { revalidatePath } from "next/cache";
 import Post from "@/database/models/post.model";
 import Tag from "@/database/models/tag.model";
-import Interaction from "@/database/models/interaction.model";
-import Comment from "@/database/models/comment.model";
 
 export const createUser = async (userData: CreateUserParams) => {
   try {
@@ -35,7 +33,7 @@ export const updateUser = async (params: UpdateUserParams) => {
 
     const { clerkId, updatedData, path } = params;
 
-    const user = await User.findOneAndUpdate({ clerkId }, updatedData, {
+    await User.findOneAndUpdate({ clerkId }, updatedData, {
       new: true,
       upsert: true,
     });

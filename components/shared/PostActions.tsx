@@ -89,14 +89,14 @@ const PostActions = ({
   };
 
   return (
-    <div className="fixed flex flex-col items-center justify-center gap-7 pt-24 pl-9 max-lg:pl-7 text-center max-md:hidden">
+    <div className="fixed flex flex-col items-center justify-center gap-7 pl-9 pt-24 text-center max-lg:pl-7 max-md:hidden">
       <div>
         <Button className="p-0" onClick={handleLike}>
           <Heart
             fill={isLikedOptimistic ? "#6366f1" : ""}
             className={cn(
               baseStyles,
-              isLikedOptimistic && "text-[#6366f1] hover:opacity-90 transition",
+              isLikedOptimistic && "text-[#6366f1] transition hover:opacity-90",
             )}
           />
         </Button>

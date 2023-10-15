@@ -3,8 +3,8 @@ import { Schema, models, model, Document } from "mongoose";
 export interface IPost extends Document {
   title: string;
   text: string;
-  views: number;
   banner: string;
+  views: number;
   createdAt: Date;
   tags: Schema.Types.ObjectId[];
   upvotes: Schema.Types.ObjectId[];

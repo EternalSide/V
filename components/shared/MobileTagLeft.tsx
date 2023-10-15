@@ -19,20 +19,20 @@ const MobileTagLeft = () => {
         </SheetTrigger>
         <SheetContent
           side="left"
-          className="bg-main text-white w-64 overflow-y-auto  border-r-black "
+          className="bg-main w-64 overflow-y-auto border-r-black  text-white "
         >
           <SheetHeader>
             <SheetTitle>
-              <Link className="!p-5 !mt-5" href={"/create"}>
-                <Button className="text-white bg-indigo-600 !p-5">
+              <Link className="!mt-5 !p-5" href={"/create"}>
+                <Button className="bg-indigo-600 !p-5 text-white">
                   Новый пост
                 </Button>
               </Link>
             </SheetTitle>
             <SheetDescription>
-              <div className="border-t  py-5 mt-4 border-b border-neutral-800 ">
+              <div className="mt-4  border-y border-neutral-800 py-5 ">
                 <h3 className="font-semibold">Информация</h3>
-                <p className="text-sm text-zinc-300 mt-4">
+                <p className="mt-4 text-sm text-zinc-300">
                   1️⃣ Post Facebooks React ⚛ related posts/questions/discussion
                   topics here~ <br /> <br />
                   2️⃣ There are no silly posts or questions as we all learn from

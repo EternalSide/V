@@ -35,7 +35,6 @@ const CommentSchema = new Schema<IComment>(
       type: Schema.Types.ObjectId,
       ref: "Post",
     },
-
     createdAt: {
       type: Date,
       default: Date.now,

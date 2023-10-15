@@ -6,6 +6,7 @@ import RightSidebar from "@/components/shared/Sidebar/RightSidebar";
 import { homeFilters } from "@/constants";
 import { getAllPosts } from "@/lib/actions/post.action";
 import { getUserById } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 
 export const metadata = {
@@ -13,17 +14,20 @@ export const metadata = {
     absolute: "Главная / V",
   },
 };
-export default async function Home({ searchParams }: any) {
-  const posts = await getAllPosts({ searchValue: searchParams.q });
+
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const posts = await getAllPosts({ searchValue: searchParams?.q });
+
   const { userId } = auth();
   const user = await getUserById({ clerkId: userId! });
+
   return (
     <>
       <LeftSidebar
         username={user?.username}
         followingTags={user?.followingTags}
       />
-      <section className="pt-[75px] flex flex-1 w-full flex-col px-4 pb-6 max-md:pb-14 sm:px-4">
+      <section className="flex w-full flex-1 flex-col px-4 pb-6 pt-[75px] max-md:pb-14 sm:px-4">
         <div className="flex flex-col pt-3">
           <HomeFilters />
           <FilterComponents

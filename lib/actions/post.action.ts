@@ -6,6 +6,7 @@ import {
   CreatePostParams,
   DeletePostParams,
   EditPostParams,
+  GetAllPostsParams,
   GetPostByIdParams,
   setLikeParams,
 } from "./shared";
@@ -69,17 +70,13 @@ export const getPostById = async (params: GetPostByIdParams) => {
       .populate({ path: "tags", model: Tag, select: "_id name" });
 
     return post;
-  } catch (error) {
-    console.log(error);
-    throw error;
+  } catch (e) {
+    console.log(e);
+    throw e;
   }
 };
 
-interface getAllPostsParams {
-  searchValue: string;
-}
-
-export const getAllPosts = async (params: getAllPostsParams) => {
+export const getAllPosts = async (params: GetAllPostsParams) => {
   try {
     connectToDatabase();
     const { searchValue } = params;
@@ -121,10 +118,10 @@ export const getPopularPosts = async () => {
     connectToDatabase();
 
     // Минимальные критерии для попадания в топ
-    let minimalCriterias = [
-      { views: { $gte: 1000 } }, // Минимум 1000 просмотров
-      { upvotes: { $gte: 100 } }, // Минимум 100 голосов "вверх"
-    ];
+    // let minimalCriterias = [
+    //   { views: { $gte: 1000 } }, // Минимум 1000 просмотров
+    //   { upvotes: { $gte: 100 } }, // Минимум 100 голосов "вверх"
+    // ];
 
     const posts = await Post.aggregate([
       {
@@ -193,12 +190,13 @@ export async function editPost(params: EditPostParams) {
     const post = await Post.findById(postId);
 
     if (!post) {
-      throw new Error("post не найден.");
+      throw new Error("Пост не найден.");
     }
 
     post.title = title;
     post.text = text;
     post.banner = banner;
+
     await post.save();
 
     revalidatePath(path);
@@ -226,7 +224,7 @@ export async function setLike(params: setLikeParams) {
     });
 
     if (!post) {
-      throw new Error("post не найден.");
+      throw new Error("Пост не найден.");
     }
 
     revalidatePath(path);

@@ -21,8 +21,8 @@ const EditPostPage = async ({ params }: { params: { postId: string } }) => {
   if (!isOwnPost) redirect("/");
 
   return (
-    <div className="pt-[85px] w-full max-[1280px]:px-4">
-      <h1 className="font-bold text-3xl ">Редактировать</h1>
+    <div className="w-full pt-[85px] max-[1280px]:px-4">
+      <h1 className="text-3xl font-bold">Редактировать</h1>
       <CreateEditPostForm
         type="Edit"
         postDetails={JSON.stringify(post)}

@@ -8,8 +8,8 @@ interface EditTagPageProps {
 
 const EdiTagPage = ({ params }: EditTagPageProps) => {
   return (
-    <div className="pt-[85px] w-full max-[1280px]:px-4">
-      <h1 className="font-bold text-4xl first-letter:uppercase">
+    <div className="w-full pt-[85px] max-[1280px]:px-4">
+      <h1 className="text-4xl font-bold first-letter:uppercase">
         Изменить - {params.name}
       </h1>
       <CreateEditTagForm />

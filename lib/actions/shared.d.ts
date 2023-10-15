@@ -86,3 +86,7 @@ export interface FollowTagParams {
   userId: string;
   isFollowing: boolean;
 }
+
+export interface GetAllPostsParams {
+  searchValue?: string;
+}

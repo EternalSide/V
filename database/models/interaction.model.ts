@@ -1,5 +1,9 @@
 import { Schema, models, model, Document } from "mongoose";
 
+/* Модель interaction записывает совершенные 
+пользователем действия (action) в БД
+для системы рекомендаций
+*/
 interface IInteraction extends Document {
   action: string;
   user: Schema.Types.ObjectId;

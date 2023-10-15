@@ -21,13 +21,13 @@ const NoProfile = () => {
     },
   ];
   return (
-    <div className="pt-[75px] mx-auto w-full max-w-6xl max-md:px-3 px-4">
+    <div className="mx-auto w-full max-w-6xl px-4 pt-[75px] max-md:px-3">
       <div className="bg-main mt-12 w-full rounded-md border-neutral-900 pb-8">
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           <div className="relative -mt-12 h-32 w-32">
             <Image
               fill
-              className="aspect-auto rounded-full object-cover object-top border-[8px] border-black"
+              className="aspect-auto rounded-full border-[8px] border-black object-cover object-top"
               alt="Test alt"
               src="/nouser.jfif"
             />
@@ -49,13 +49,13 @@ const NoProfile = () => {
               <Link
                 target="_blank"
                 href="https://v-hazel-beta.vercel.app/"
-                className="flex items-center gap-2 group"
+                className="group flex items-center gap-2"
               >
                 <ExternalLink
                   color="#969696"
-                  className="h-5 w-5 !group-hover:text-indigo-500 transition"
+                  className="!group-hover:text-indigo-500 h-5 w-5 transition"
                 />
-                <p className="pt-1 text-sm text-neutral-400 group-hover:text-indigo-500 transition">
+                <p className="pt-1 text-sm text-neutral-400 transition group-hover:text-indigo-500">
                   v-hazel-beta.vercel.app
                 </p>
               </Link>
@@ -76,7 +76,7 @@ const NoProfile = () => {
           </div>
         </div>
 
-        <div className="w-full flex-col gap-1.5 bg-main h-[400px] flex justify-center items-center">
+        <div className="bg-main flex h-[400px] w-full flex-col items-center justify-center gap-1.5">
           <div className="relative h-52 w-52">
             <Image
               fill

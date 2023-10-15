@@ -15,8 +15,8 @@ const CreatePage = async () => {
   const mongoUser = await getUserById({ clerkId });
 
   return (
-    <div className="pt-[85px] w-full max-[1280px]:px-4">
-      <h1 className="font-bold text-3xl">Опубликовать</h1>
+    <div className="w-full pt-[85px] max-[1280px]:px-4">
+      <h1 className="text-3xl font-bold">Опубликовать</h1>
       <CreateEditPostForm mongoUserId={mongoUser._id.toString()} />
     </div>
   );

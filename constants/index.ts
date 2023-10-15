@@ -1,6 +1,7 @@
+import { HomeFiltersTypes, SideBarLinksType } from "@/types";
 import { Home, Tag, PlusSquare, Star, Smile } from "lucide-react";
 
-export const sidebarLinks = [
+export const sidebarLinks: SideBarLinksType[] = [
   {
     label: "Главная",
     route: "/",
@@ -34,7 +35,7 @@ export const sidebarLinks = [
   },
 ];
 
-export const homeFilters = [
+export const homeFilters: HomeFiltersTypes[] = [
   {
     value: "recommended",
     label: "Рекомендованное",

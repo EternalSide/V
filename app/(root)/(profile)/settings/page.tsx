@@ -1,7 +1,6 @@
 import EditProfileForm from "@/components/forms/EditProfileForm";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth, redirectToSignIn } from "@clerk/nextjs";
-import { UserCheck } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -17,34 +16,12 @@ export default async function SettingsPage() {
 
   const user = await getUserById({ clerkId: userId });
 
-  const profileSettingsLinks = [
-    {
-      label: "Профиль",
-      href: "/settings",
-      icon: UserCheck,
-    },
-  ];
-
   return (
-    <section className="pt-[75px] pb-4 mx-auto w-full max-w-2xl max-md:px-3  flex gap-3">
-      {/* <aside className="max-w-[250px] w-full">
-        {profileSettingsLinks.map((item: any) => {
-          return (
-            <Link
-              className="flex items-center gap-2.5"
-              key={item.href}
-              href={item.href}
-            >
-              <item.icon />
-              <p>{item.label}</p>
-            </Link>
-          );
-        })}
-      </aside> */}
-      <div className="flex flex-col gap-3 flex-1">
+    <section className="mx-auto flex w-full max-w-2xl gap-3 pb-4  pt-[75px] max-md:px-3">
+      <div className="flex flex-1 flex-col gap-3">
         <Link
           href={`/${user.username}`}
-          className="text-indigo-500 text-3xl font-bold"
+          className="text-3xl font-bold text-indigo-500"
         >
           @{user.username}
         </Link>

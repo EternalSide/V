@@ -1,16 +1,16 @@
-"use client";
+// "use client";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 
-const ModalProvider = () => {
-  const [contentHydrated, setContentHydrated] = useState<boolean>(false);
+// const ModalProvider = () => {
+//   const [contentHydrated, setContentHydrated] = useState<boolean>(false);
 
-  useEffect(() => {
-    setContentHydrated(true);
-  }, []);
+//   useEffect(() => {
+//     setContentHydrated(true);
+//   }, []);
 
-  if (!contentHydrated) return null;
+//   if (!contentHydrated) return null;
 
-  return <></>;
-};
-export default ModalProvider;
+//   return <></>;
+// };
+// export default ModalProvider;

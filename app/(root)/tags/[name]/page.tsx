@@ -6,19 +6,18 @@ import TagHeader from "@/components/shared/TagHeader";
 import { UserAvatar } from "@/components/shared/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { homeFilters } from "@/constants";
-import { IPost } from "@/database/models/post.model";
 import { getTagInfo } from "@/lib/actions/tag.action";
 import { getUserById } from "@/lib/actions/user.action";
+import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
-interface TagPageProps {
+interface TagPageProps extends SearchParamsProps {
   params: {
     name: string;
   };
-  searchParams: any;
 }
 
 export async function generateMetadata({
@@ -40,8 +39,9 @@ export async function generateMetadata({
 const TagPage = async ({ params, searchParams }: TagPageProps) => {
   const tag = await getTagInfo({
     tagName: params.name,
-    search: searchParams?.q ? searchParams.q : "",
+    search: searchParams?.q,
   });
+
   const { userId } = auth();
   const user = await getUserById({ clerkId: userId! });
 
@@ -49,11 +49,11 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
     (t: any) => t._id.toString() === user?._id.toString(),
   );
 
-  const isCreator = tag.author.toString() === user?._id.toString();
+  const isCreator = tag.author?.toString() === user?._id.toString();
 
   return (
-    <div className="pt-[85px] w-full max-[1280px]:px-4 h-[2000px]">
-      <h1 className="font-bold text-4xl first-letter:uppercase">{tag.name}</h1>
+    <div className="h-[2000px] w-full pt-[85px] max-[1280px]:px-4">
+      <h1 className="text-4xl font-bold first-letter:uppercase">{tag.name}</h1>
       <TagHeader
         tagId={JSON.stringify(tag._id)}
         isFollowing={isFollowing}
@@ -61,26 +61,26 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
         tagTitle={tag.name}
         isCreator={isCreator}
       />
-      <section className="flex justify-start gap-10 w-full mt-10 px-4">
+      <section className="mt-10 flex w-full justify-start gap-10 px-4">
         <div className="w-[285px] max-lg:hidden">
           <Link href={"/create"}>
-            <Button className="text-white bg-indigo-600">Новый пост</Button>
+            <Button className="bg-indigo-600 text-white">Новый пост</Button>
           </Link>
-          <div className="border-t px-5 py-5 mt-4 border-b border-neutral-800">
+          <div className="mt-4 border-y border-neutral-800 p-5">
             <h3 className="font-semibold">Информация</h3>
             {tag?.info ? (
               tag.info
             ) : (
-              <p className="text-sm text-zinc-300 mt-4">
+              <p className="mt-4 text-sm text-zinc-300">
                 Автор не указал информацию.
               </p>
             )}
           </div>
-          <div className="border-neutral-800 w-full" />
-          <div className="px-5 py-5 border-b border-neutral-800">
+          <div className="w-full border-neutral-800" />
+          <div className="border-b border-neutral-800 p-5">
             <h3 className="font-semibold">Участники</h3>
             {tag?.followers.length > 0 ? (
-              <div className="grid grid-cols-4 gap-3 mt-4">
+              <div className="mt-4 grid grid-cols-4 gap-3">
                 {tag.followers.map((item: any) => (
                   <Link key={item._id} href={`/${item.username}`}>
                     <UserAvatar imgUrl={item.picture} classNames="h-12 w-12" />
@@ -88,7 +88,7 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col items-center gap-3 mt-4">
+              <div className="mt-4 flex flex-col items-center gap-3">
                 <div className="relative h-32 w-3/4">
                   <Image
                     fill
@@ -101,15 +101,15 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
               </div>
             )}
           </div>
-          <div className="text-center mt-5">
+          <div className="mt-5 text-center">
             <p className="font-semibold text-zinc-400">
               Опубликовано постов: {tag.posts.length}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col pt-3 flex-1">
-          <div className="flex gap-3 items-center">
+        <div className="flex flex-1 flex-col pt-3">
+          <div className="flex items-center gap-3">
             <MobileTagLeft />
             <HomeFilters />
             <FilterComponents

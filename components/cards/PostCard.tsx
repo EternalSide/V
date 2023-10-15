@@ -9,21 +9,20 @@ import TagLink from "../shared/TagLink";
 import Metric from "../shared/Metric";
 
 interface PostCardProps {
+  userId: string;
+  isPostSaved: boolean;
+
   banner?: string;
   index?: number;
   isOwnProfile?: any;
   page?: string;
   firstPost?: boolean;
-  userId: string;
   titleClassnames?: string;
-  isPostSaved: boolean;
-  author: {
-    name: string;
-    picture: string;
-    username: string;
-    _id: string;
-  };
+
+  author: { _id: string; name: string; picture: string; username: string };
+
   post: {
+    id: string;
     title: string;
     comments: number;
     tags: {
@@ -33,14 +32,12 @@ interface PostCardProps {
     likes: number;
     views: number;
     createdAt: Date;
-    id: string;
   };
 }
 
 const PostCard = ({
   author,
   userId,
-  index,
   firstPost,
   isOwnProfile,
   isPostSaved,
@@ -93,7 +90,7 @@ const PostCard = ({
             </p>
             <h3
               className={cn(
-                "font-bold transition hover:text-indigo-400 mt-3",
+                "mt-3 font-bold transition hover:text-indigo-400",
                 titleClassnames ? `${titleClassnames}` : "text-3xl",
               )}
             >

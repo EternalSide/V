@@ -75,7 +75,7 @@ const StarAction = ({
       fill={test ? "#6366f1" : ""}
       className={cn(
         baseStyles,
-        test && "text-[#6366f1] hover:opacity-90 transition",
+        test && "text-[#6366f1] transition hover:opacity-90",
       )}
     />
   );

@@ -32,14 +32,17 @@ export async function generateMetadata({
 const PostPage = async ({ params }: ProfilePageProps) => {
   const post = await getPostById({ id: params.postId });
   const { userId } = auth();
+
   let user;
+
   if (userId) {
     user = await getUserById({ clerkId: userId });
   }
+
   const isOwnPost = post?.author.clerkId === userId;
 
   return (
-    <div className="pt-[75px] flex w-full items-start gap-3 max-md:px-0 max-lg:pt-[55px] max-lg:px-0 max-[1400px]:px-3">
+    <div className="flex w-full items-start gap-3 pt-[75px] max-[1400px]:px-3 max-lg:px-0 max-lg:pt-[55px] max-md:px-0">
       <PostActions
         isLiked={post.upvotes.includes(user?._id.toString())}
         isPostSaved={user?.savedPosts.includes(post._id)}
@@ -73,10 +76,10 @@ const PostPage = async ({ params }: ProfilePageProps) => {
                 imgUrl={post.author.picture}
               />
               <div>
-                <h3 className="font-semibold first-letter:uppercase text-lg">
+                <h3 className="text-lg font-semibold first-letter:uppercase">
                   {post.author.name}
                 </h3>
-                <p className="text-sm text-neutral-400 -mt-0.5">
+                <p className="-mt-0.5 text-sm text-neutral-400">
                   @{post.author.username}
                 </p>
               </div>
@@ -112,7 +115,7 @@ const PostPage = async ({ params }: ProfilePageProps) => {
           <ParseHTML data={post.text} post={true} />
         </div>
 
-        <div className="w-full p-12 pt-8 border-t border-neutral-800 max-md:p-6">
+        <div className="w-full border-t border-neutral-800 p-12 pt-8 max-md:p-6">
           <h1 className="text-3xl font-semibold">
             Все Комментарии ({post.comments.length})
           </h1>
@@ -125,7 +128,7 @@ const PostPage = async ({ params }: ProfilePageProps) => {
             />
           ) : (
             <Link href="/sign-in">
-              <p className="text-center mt-6">
+              <p className="mt-6 text-center">
                 Войдите, чтобы оставить комментарий.
               </p>
             </Link>

@@ -29,7 +29,7 @@ const HomeFilters = () => {
         <h3
           onClick={() => handleSearch(item.value)}
           key={item.value}
-          className={`text-lg text-white cursor-pointer hover:text-indigo-500 transition  ${
+          className={`cursor-pointer text-lg text-white transition hover:text-indigo-500  ${
             active === item.value && "font-bold"
           }`}
         >
