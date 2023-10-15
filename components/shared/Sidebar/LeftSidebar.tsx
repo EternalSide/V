@@ -43,7 +43,7 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
             <BaseLink
               key={item.label}
               label={item.label}
-              route={`/${!username ? "sign-in" : username}`}
+              route={item.route}
               icon={item.icon}
             />
           );
