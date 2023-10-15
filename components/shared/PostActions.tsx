@@ -58,7 +58,6 @@ const PostActions = ({
 
     try {
       if (isLikedOptimistic) {
-        console.log("ok");
         setIsLikedOptimistic(false);
         addOptimisticLikes(-1);
 

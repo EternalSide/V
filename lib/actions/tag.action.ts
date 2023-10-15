@@ -10,7 +10,24 @@ export const getPopularTags = async () => {
   try {
     connectToDatabase();
 
-    const tags = await Tag.find({}).limit(3);
+    const tags = await Tag.aggregate([
+      {
+        $project: {
+          name: true,
+          numberOfPosts: {
+            $size: "$posts",
+          },
+
+          upvotes: "$upvotes",
+        },
+      },
+      {
+        $sort: {
+          numberOfPosts: -1,
+        },
+      },
+      { $limit: 3 },
+    ]);
 
     return tags;
   } catch (e) {
@@ -63,17 +80,45 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
   try {
     connectToDatabase();
 
-    const { tagName } = params;
+    const { tagName, search } = params;
+
+    let sortQuery = {};
+
+    switch (search) {
+      case "new":
+        sortQuery = { createdAt: -1 };
+        break;
+
+      case "recommended":
+        sortQuery = { views: -1, createdAt: -1, upvotes: -1 };
+        break;
+
+      case "popular":
+        sortQuery = { upvotes: -1, views: -1 };
+        break;
+
+      default:
+        break;
+    }
 
     const tag = await Tag.findOne({ name: tagName })
       .populate({
         path: "posts",
         model: Post,
         options: {
-          populate: {
-            path: "author",
-            model: User,
-          },
+          populate: [
+            {
+              path: "author",
+              select: "_id username picture",
+              model: User,
+            },
+            {
+              path: "tags",
+              select: "_id name",
+              model: Tag,
+            },
+          ],
+          sort: sortQuery,
         },
       })
       .populate("followers");

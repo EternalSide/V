@@ -37,6 +37,10 @@ export default async function Home({ searchParams }: any) {
                   key={post._id}
                   index={index}
                   banner={post?.banner}
+                  firstPost={index === 0}
+                  isOwnProfile={
+                    user?._id.toString() === post.author._id.toString()
+                  }
                   titleClassnames="text-2xl"
                   isPostSaved={user?.savedPosts.includes(post._id)}
                   userId={user?._id.toString()}

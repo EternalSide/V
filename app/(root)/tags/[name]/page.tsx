@@ -1,10 +1,12 @@
 import PostCard from "@/components/cards/PostCard";
 import FilterComponents from "@/components/shared/FilterComponents";
 import HomeFilters from "@/components/shared/HomeFilters";
+import MobileTagLeft from "@/components/shared/MobileTagLeft";
 import TagHeader from "@/components/shared/TagHeader";
 import { UserAvatar } from "@/components/shared/UserAvatar";
 import { Button } from "@/components/ui/button";
 import { homeFilters } from "@/constants";
+import { IPost } from "@/database/models/post.model";
 import { getTagInfo } from "@/lib/actions/tag.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
@@ -16,6 +18,7 @@ interface TagPageProps {
   params: {
     name: string;
   };
+  searchParams: any;
 }
 
 export async function generateMetadata({
@@ -34,14 +37,19 @@ export async function generateMetadata({
   };
 }
 
-const TagPage = async ({ params }: TagPageProps) => {
-  const tag = await getTagInfo({ tagName: params.name });
+const TagPage = async ({ params, searchParams }: TagPageProps) => {
+  const tag = await getTagInfo({
+    tagName: params.name,
+    search: searchParams?.q ? searchParams.q : "",
+  });
   const { userId } = auth();
   const user = await getUserById({ clerkId: userId! });
 
   const isFollowing = tag.followers.some(
-    (t: any) => t._id.toString() === user._id.toString(),
+    (t: any) => t._id.toString() === user?._id.toString(),
   );
+
+  const isCreator = tag.author.toString() === user?._id.toString();
 
   return (
     <div className="pt-[85px] w-full max-[1280px]:px-4 h-[2000px]">
@@ -51,21 +59,22 @@ const TagPage = async ({ params }: TagPageProps) => {
         isFollowing={isFollowing}
         userId={JSON.stringify(user?._id)}
         tagTitle={tag.name}
+        isCreator={isCreator}
       />
       <section className="flex justify-start gap-10 w-full mt-10 px-4">
-        <div className="w-[285px]">
+        <div className="w-[285px] max-lg:hidden">
           <Link href={"/create"}>
             <Button className="text-white bg-indigo-600">Новый пост</Button>
           </Link>
           <div className="border-t px-5 py-5 mt-4 border-b border-neutral-800">
             <h3 className="font-semibold">Информация</h3>
-            <p className="text-sm text-zinc-300 mt-4">
-              1️⃣ Post Facebooks React ⚛ related posts/questions/discussion
-              topics here~ <br /> <br />
-              2️⃣ There are no silly posts or questions as we all learn from each
-              other👩‍🎓👨‍🎓 <br /> <br />
-              3️⃣ Adhere to dev.to 👩‍💻👨‍💻Code of Conduct
-            </p>
+            {tag?.info ? (
+              tag.info
+            ) : (
+              <p className="text-sm text-zinc-300 mt-4">
+                Автор не указал информацию.
+              </p>
+            )}
           </div>
           <div className="border-neutral-800 w-full" />
           <div className="px-5 py-5 border-b border-neutral-800">
@@ -100,17 +109,21 @@ const TagPage = async ({ params }: TagPageProps) => {
         </div>
 
         <div className="flex flex-col pt-3 flex-1">
-          <HomeFilters />
-          <FilterComponents
-            containerClasses="sm:hidden"
-            filters={homeFilters}
-          />
+          <div className="flex gap-3 items-center">
+            <MobileTagLeft />
+            <HomeFilters />
+            <FilterComponents
+              containerClasses="sm:hidden flex-1"
+              filters={homeFilters}
+            />
+          </div>
+
           <div className="mt-2.5 flex flex-col gap-1.5">
-            {tag.posts.map((post: any, index: number) => {
-              return (
+            {tag.posts.length > 0 ? (
+              tag.posts.map((post: any, index: number) => (
                 <PostCard
                   key={post._id}
-                  index={index}
+                  firstPost={index === 0}
                   banner={post?.banner}
                   titleClassnames="text-2xl"
                   isPostSaved={user?.savedPosts.includes(post._id)}
@@ -131,8 +144,23 @@ const TagPage = async ({ params }: TagPageProps) => {
                     id: post._id.toString(),
                   }}
                 />
-              );
-            })}
+              ))
+            ) : (
+              <div className="flex flex-col items-center gap-3">
+                <div className="relative h-64 w-full">
+                  <Image
+                    fill
+                    src="https://i.pinimg.com/736x/33/a5/fe/33a5fe463b06359c015cfa2ac6c21afd.jpg"
+                    alt="Лого Тега"
+                    className="rounded-md object-cover"
+                  />
+                </div>
+                <h3 className="text-zinc-400">Ничего не найдено...</h3>
+                <p className="text-zinc-400">
+                  Станьте первым, кто напишет статью в разделе {params.name}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>

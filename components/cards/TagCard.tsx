@@ -20,12 +20,14 @@ const TagCard = ({
       <div className="flex flex-col gap-1.5">
         <h3 className="font-semibold text-xl">#{tagTitle}</h3>
         <p className="text-base text-neutral-400">Постов: {tagPostsNumber}</p>
-        <TagActions
-          isFollowing={isFollowing}
-          tagId={tagId}
-          tagTitle={tagTitle}
-          userId={userId}
-        />
+        <div className="mt-3">
+          <TagActions
+            isFollowing={isFollowing}
+            tagId={tagId}
+            tagTitle={tagTitle}
+            userId={userId}
+          />
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import Post from "@/database/models/post.model";
 import { connectToDatabase } from "../mongoose";
 import Interaction from "@/database/models/interaction.model";
 import { revalidatePath } from "next/cache";
+import Tag from "@/database/models/tag.model";
 
 export async function viewQuestion(params: any) {
   try {
@@ -12,7 +13,13 @@ export async function viewQuestion(params: any) {
     const { postId, userId, path } = params;
 
     // Увеличить просмотры поста.
-    await Post.findByIdAndUpdate(postId, { $inc: { views: 1 } });
+    const post = await Post.findByIdAndUpdate(postId, {
+      $inc: { views: 1 },
+    }).populate({
+      path: "tags",
+      model: Tag,
+      select: "name _id",
+    });
 
     if (userId) {
       const existingInteraction = await Interaction.findOne({
@@ -28,6 +35,7 @@ export async function viewQuestion(params: any) {
         user: userId,
         action: "view",
         post: postId,
+        tags: post.tags,
       });
 
       revalidatePath(path);

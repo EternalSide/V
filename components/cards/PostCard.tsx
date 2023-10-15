@@ -1,17 +1,19 @@
-import { Eye, Heart, MessageCircle, Star } from "lucide-react";
+import { Eye, Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, getTimestamp } from "@/lib/utils";
 import { UserAvatar } from "../shared/UserAvatar";
-import { Badge } from "../ui/badge";
 import EditDeletePost from "../shared/EditDeletePost";
 import StarAction from "../shared/StarAction";
+import TagLink from "../shared/TagLink";
+import Metric from "../shared/Metric";
 
 interface PostCardProps {
   banner?: string;
   index?: number;
   isOwnProfile?: any;
   page?: string;
+  firstPost?: boolean;
   userId: string;
   titleClassnames?: string;
   isPostSaved: boolean;
@@ -39,6 +41,7 @@ const PostCard = ({
   author,
   userId,
   index,
+  firstPost,
   isOwnProfile,
   isPostSaved,
   page,
@@ -46,19 +49,14 @@ const PostCard = ({
   banner,
   titleClassnames,
 }: PostCardProps) => {
-  const firstPost = index === 0;
-
   return (
-    <Link
-      href={`/post/${post.id}`}
-      className="cursor-pointer bg-main flex w-full flex-col items-start rounded-md border-neutral-800/40 border  hover:border-indigo-700"
-    >
+    <Link href={`/post/${post.id}`} className="card">
       {firstPost && banner && (
         <div className="relative h-64 w-full">
           <Image
             fill
-            className="aspect-auto object-cover object-top"
-            alt="Test alt"
+            className="object-cover object-top"
+            alt="Изображение к посту"
             src={banner}
           />
         </div>
@@ -73,7 +71,6 @@ const PostCard = ({
               isPostSaved={isPostSaved}
             />
           )}
-
           {isOwnProfile && page === "Profile" && (
             <EditDeletePost
               type="Post"
@@ -90,13 +87,10 @@ const PostCard = ({
             classNames="h-10 w-10"
           />
           <div className="flex flex-col">
-            <div>
-              <h3 className="first-letter:uppercase">{author.username}</h3>
-              <p className="text-xs text-neutral-400">
-                {getTimestamp(post.createdAt)}
-              </p>
-            </div>
-
+            <h3 className="first-letter:uppercase">{author.username}</h3>
+            <p className="text-xs text-neutral-400">
+              {getTimestamp(post.createdAt)}
+            </p>
             <h3
               className={cn(
                 "font-bold transition hover:text-indigo-400 mt-3",
@@ -106,38 +100,18 @@ const PostCard = ({
               {post.title}
             </h3>
 
-            {/* Теги */}
             <div className="mt-1.5 flex items-center gap-0.5">
               {post.tags.map((tag: any) => (
-                <Badge
-                  className="cursor-pointer !rounded-md border border-transparent bg-transparent !px-1.5 py-1  text-sm text-neutral-300 first-letter:uppercase hover:border hover:border-neutral-700 hover:bg-neutral-800"
-                  key={tag._id}
-                >
-                  #{tag.name}
-                </Badge>
+                <TagLink key={tag._id} tagName={tag.name} />
               ))}
             </div>
 
             <div className="mt-3 flex items-center gap-6">
               <div className="flex items-center gap-6">
-                <div className="flex items-center gap-1 rounded-md">
-                  <Heart className="text-neutral-300" />
-                  <p className="ml-0.5 text-sm text-neutral-300">
-                    {post.likes}
-                  </p>
-                </div>
-                <div className="flex items-center gap-1 rounded-md">
-                  <MessageCircle className="text-neutral-300" />
-                  <p className="ml-0.5 text-sm text-neutral-300">
-                    {post.comments}
-                  </p>
-                </div>
+                <Metric icon={Heart} number={post.likes} />
+                <Metric icon={MessageCircle} number={post.comments} />
               </div>
-
-              <div className="flex items-center gap-1">
-                <Eye className="text-neutral-300" />
-                <p className="ml-0.5 text-sm text-neutral-300">{post.views}</p>
-              </div>
+              <Metric icon={Eye} number={post.views} />
             </div>
           </div>
         </div>

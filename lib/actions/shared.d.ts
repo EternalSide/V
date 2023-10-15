@@ -78,6 +78,7 @@ export interface SavePostParams {
 
 export interface GetTagInfoParams {
   tagName: string;
+  search?: any;
 }
 export interface FollowTagParams {
   path: string;

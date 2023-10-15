@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 
 const UserCard = ({ author }: any) => {
-  const userButtonInfo = [
+  const userInfo = [
     {
       label: "О себе:",
       text: author?.bio ? author.bio : "Информация отсутствует.",
@@ -25,8 +25,8 @@ const UserCard = ({ author }: any) => {
         <Link className="flex items-start gap-2" href={`/${author.username}`}>
           <UserAvatar
             alt={author.name}
-            classNames="h-10 w-10"
             imgUrl={author.picture}
+            classNames="h-10 w-10"
           />
           <div>
             <h3 className="text-xl font-semibold first-letter:uppercase">
@@ -37,17 +37,17 @@ const UserCard = ({ author }: any) => {
         </Link>
 
         <div className="mt-4 flex flex-col gap-4">
-          {userButtonInfo.map((item: any) => (
+          {userInfo.map((item: any) => (
             <div key={item.label}>
               <h3 className="text-base font-semibold text-neutral-400">
                 {item.label}
               </h3>
-              <p>{item.text}</p>
+              <p className="first-letter:uppercase">{item.text}</p>
             </div>
           ))}
 
           <Link href={`/${author.username}`}>
-            <Button className="w-full bg-indigo-600 text-white">Профиль</Button>
+            <Button className="w-full bg-indigo-600">Профиль</Button>
           </Link>
         </div>
       </div>

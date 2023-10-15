@@ -18,7 +18,7 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
     },
     {
       label: "Telegram",
-      href: "/",
+      href: "https://t.me/j_eternal",
       icon: Send,
     },
   ];
@@ -61,7 +61,7 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
       <div>
         <h3 className="px-3 text-xl font-bold max-lg:hidden">Подписки</h3>
         <div className="mt-3 flex flex-col gap-2">
-          {followingTags.map((tag: any) => {
+          {followingTags?.map((tag: any) => {
             return (
               <Link
                 key={tag._id}
@@ -94,6 +94,7 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
         <div className="mt-3 flex flex-col gap-3">
           {moreLinks.map((item: any) => (
             <Link
+              target="_blank"
               key={item.label}
               href={item.href}
               className="flex items-center

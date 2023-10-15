@@ -1,12 +1,10 @@
 "use client";
-
-import { useState } from "react";
 import { toast } from "../ui/use-toast";
 import { usePathname } from "next/navigation";
 import { followTag } from "@/lib/actions/tag.action";
 import { Button } from "../ui/button";
 import Link from "next/link";
-
+import { useState } from "react";
 interface Props {
   tagTitle: string;
   tagId: string;
@@ -17,7 +15,7 @@ interface Props {
 
 const TagActions = ({ tagId, isFollowing, userId, tagTitle, page }: Props) => {
   const path = usePathname();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isTagOptimistic, setIsTagOptimistic] = useState(isFollowing || false);
 
   const handleFollowTag = async (e: any) => {
     try {
@@ -29,22 +27,23 @@ const TagActions = ({ tagId, isFollowing, userId, tagTitle, page }: Props) => {
           description: `Войдите в аккаунт, чтобы подписаться на тег.`,
         });
       }
-      setIsLoading(true);
-      if (isFollowing) {
+
+      if (isTagOptimistic) {
+        setIsTagOptimistic(!isTagOptimistic);
         toast({
           duration: 2000,
           title: "Подписка отменена ❌",
           description: `Вы отписались от тега - ${tagTitle}`,
         });
       } else {
+        setIsTagOptimistic(!isTagOptimistic);
         toast({
           duration: 2000,
           title: "Подписка добавлена ✅",
           description: `Вы подписались на тег - ${tagTitle}`,
         });
       }
-
-      return await followTag({
+      await followTag({
         tagId: JSON.parse(tagId),
         userId: JSON.parse(userId),
         path,
@@ -52,21 +51,19 @@ const TagActions = ({ tagId, isFollowing, userId, tagTitle, page }: Props) => {
       });
     } catch (e) {
       console.log(e);
-    } finally {
-      setIsLoading(false);
     }
   };
+
   return (
-    <div className="flex gap-3 items-center mt-3">
+    <div className="flex gap-3 items-center">
       <Button
-        disabled={isLoading}
-        onClick={(e) => handleFollowTag(e)}
+        onClick={handleFollowTag}
         className={`!bg-indigo-600 !text-white ${
-          isFollowing &&
+          isTagOptimistic &&
           "!bg-transparent border-2 border-neutral-600 !text-neutral-300"
         }`}
       >
-        {isFollowing ? "В читаемых ✓" : "Подписаться"}
+        {isTagOptimistic ? "В читаемых ✓" : "Подписаться"}
       </Button>
       {page !== "tagPage" && (
         <Link href={`/tags/${tagTitle}`}>

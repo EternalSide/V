@@ -14,6 +14,7 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import { deletePost } from "@/lib/actions/post.action";
 import { useToast } from "../ui/use-toast";
+import React from "react";
 
 interface Props {
   type?: string;
@@ -26,7 +27,10 @@ const EditDeletePost = ({ type, itemId, authorId }: Props) => {
   const router = useRouter();
   const { toast } = useToast();
 
-  async function handleDeletePost() {
+  async function handleDeletePost(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
+    e.preventDefault();
     if (type === "Post") {
       await deletePost({ postId: itemId, authorId: authorId!, path });
       return toast({
@@ -37,17 +41,22 @@ const EditDeletePost = ({ type, itemId, authorId }: Props) => {
     }
   }
 
-  async function handleEdit() {
+  async function handleEdit(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
+    e.preventDefault();
     router.push(`/edit/${itemId}`);
   }
 
   return (
     <>
-      <FileEdit
-        onClick={handleEdit}
-        className="h-5 w-5 cursor-pointer text-indigo-500 transition hover:opacity-90"
-      />
-      <AlertDialog>
+      <button onClick={handleEdit}>
+        <FileEdit className="h-5 w-5 cursor-pointer text-indigo-500 transition hover:opacity-90" />
+      </button>
+      <button onClick={handleDeletePost}>
+        <Trash className="h-5 w-5 cursor-pointer text-red-500 transition hover:opacity-90" />
+      </button>
+      {/* <AlertDialog>
         <AlertDialogTrigger>
           <Trash className="h-5 w-5 cursor-pointer text-red-500 transition hover:opacity-90" />
         </AlertDialogTrigger>
@@ -69,7 +78,7 @@ const EditDeletePost = ({ type, itemId, authorId }: Props) => {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
     </>
   );
 };

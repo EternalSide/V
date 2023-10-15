@@ -12,6 +12,8 @@ import CreateCommentForm from "@/components/forms/CreateCommentForm";
 import AllComents from "@/components/shared/AllComents";
 import { Metadata } from "next";
 import UserCard from "@/components/cards/UserCard";
+import { ITag } from "@/database/models/tag.model";
+import TagLink from "@/components/shared/TagLink";
 
 interface ProfilePageProps {
   params: { postId: string };
@@ -91,6 +93,11 @@ const PostPage = async ({ params }: ProfilePageProps) => {
           <p className="text-xs text-neutral-400">
             {getTimestamp(post.createdAt)}
           </p>
+          <div className="mt-2.5">
+            {post.tags.map((tag: ITag) => (
+              <TagLink key={tag._id} tagName={tag.name} />
+            ))}
+          </div>
         </div>
 
         <div className="mt-4 flex items-center gap-3 px-14 max-md:px-6">
@@ -111,10 +118,18 @@ const PostPage = async ({ params }: ProfilePageProps) => {
           </h1>
 
           <AllComents postId={params.postId} />
-          <CreateCommentForm
-            authorId={user?._id.toString()}
-            postId={params.postId}
-          />
+          {user ? (
+            <CreateCommentForm
+              authorId={user?._id.toString()}
+              postId={params.postId}
+            />
+          ) : (
+            <Link href="/sign-in">
+              <p className="text-center mt-6">
+                Войдите, чтобы оставить комментарий.
+              </p>
+            </Link>
+          )}
         </div>
       </div>
 

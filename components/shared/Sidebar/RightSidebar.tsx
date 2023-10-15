@@ -13,7 +13,7 @@ const BlockTitle = ({ name }: { name: string }) => {
 const RightSidebar = async () => {
   const popularTags = await getPopularTags();
   const popularPosts = await getPopularPosts();
-
+  // console.log(popularTags);
   return (
     <div
       className="pt-[75px] sticky right-0 top-0 flex max-[1330px]:pr-4
@@ -49,7 +49,7 @@ const RightSidebar = async () => {
               {tag.name}
             </p>
             <p className="mt-2 text-sm text-neutral-400">
-              Постов: {tag.posts.length}
+              Постов: {tag.numberOfPosts}
             </p>
           </Link>
         ))}

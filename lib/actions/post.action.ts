@@ -19,9 +19,7 @@ export const createPost = async (params: CreatePostParams) => {
     connectToDatabase();
 
     const { author, path, tags, text, title, banner } = params;
-    // Добавить Пост, Пост пользователю в коллекцию. Добавить теги если есть.
 
-    // Создадим новый Пост.
     const newPost = await Post.create({
       title,
       text,
@@ -29,14 +27,13 @@ export const createPost = async (params: CreatePostParams) => {
       banner,
     });
 
-    // * Массив тегов на добавление к посту.
     const tagDocuments = [];
 
     for (const tag of tags) {
       const existingTag = await Tag.findOneAndUpdate(
         { name: { $regex: new RegExp(`^${tag}$`, "i") } },
         {
-          $setOnInsert: { name: tag },
+          $setOnInsert: { name: tag, author },
           $push: { posts: newPost._id },
         },
         { upsert: true, new: true },
@@ -68,8 +65,8 @@ export const getPostById = async (params: GetPostByIdParams) => {
     const { id } = params;
 
     const post = await Post.findById(id)
-      .populate("author")
-      .populate({ path: "tags", model: Tag, select: "name" });
+      .populate({ path: "author", model: User })
+      .populate({ path: "tags", model: Tag, select: "_id name" });
 
     return post;
   } catch (error) {
@@ -123,6 +120,12 @@ export const getPopularPosts = async () => {
   try {
     connectToDatabase();
 
+    // Минимальные критерии для попадания в топ
+    let minimalCriterias = [
+      { views: { $gte: 1000 } }, // Минимум 1000 просмотров
+      { upvotes: { $gte: 100 } }, // Минимум 100 голосов "вверх"
+    ];
+
     const posts = await Post.aggregate([
       {
         $match: {
@@ -130,10 +133,7 @@ export const getPopularPosts = async () => {
             // @ts-ignore
             $gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000), // Выбираем документы, созданные в последние две недели
           },
-          // $or: [
-          //   { views: { $gte: 1000 } }, // Минимум 1000 просмотров
-          //   { upvotes: { $gte: 100 } }, // Минимум 100 голосов "вверх"
-          // ],
+          // $or: minimalCriterias,
         },
       },
       {
