@@ -88,6 +88,8 @@ export interface FollowTagParams {
 
 export interface GetAllPostsParams {
   filterValue?: string;
+  pageSize?: number;
+  page?: number;
 }
 
 export interface EditTagParams {
@@ -101,4 +103,10 @@ export interface EditTagParams {
     description: string;
     picture: string;
   };
+}
+
+export interface GetUserNotificationParams {
+  clerkId: string;
+  page?: number;
+  pageSize?: number;
 }

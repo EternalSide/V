@@ -29,6 +29,19 @@ export const createComment = async (params: CreateCommentParams) => {
       tags: updatedPost.tags,
     });
 
+    const notification = {
+      event: "comment", // Тип события
+      text: text,
+      postId: updatedPost._id,
+      user: updatedPost.author, // ID пользователя, связанного с событием
+      // Другие поля уведомления, если необходимо
+    };
+
+    await User.findByIdAndUpdate(updatedPost.author, {
+      $push: {
+        notifications: notification,
+      },
+    });
     revalidatePath(path);
   } catch (e) {
     console.log(e);

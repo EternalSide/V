@@ -3,6 +3,7 @@ import User from "@/database/models/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
   CreateUserParams,
+  GetUserNotificationParams,
   SavePostParams,
   UpdateUserParams,
   deleteUserParams,
@@ -134,6 +135,47 @@ export async function savePost(params: SavePostParams) {
     }
 
     revalidatePath(path);
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+}
+
+export async function getUserNotifications(params: GetUserNotificationParams) {
+  try {
+    connectToDatabase();
+    const { clerkId, page = 1, pageSize = 2 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
+
+    const user = await User.findOne({
+      clerkId,
+    })
+      .select("notifications")
+      .populate([
+        {
+          path: "notifications.user",
+          select: "username picture name",
+        },
+        {
+          path: "notifications.postId",
+          select: "_id title",
+        },
+      ])
+      .limit(pageSize);
+
+    if (!user) {
+      throw new Error("user не найден.");
+    }
+
+    const notifications = user.notifications.slice(
+      skipAmount,
+      pageSize + skipAmount,
+    );
+
+    const isNext = user.notifications.length > pageSize + skipAmount;
+
+    return { notifications, isNext };
   } catch (e) {
     console.log(e);
     throw e;

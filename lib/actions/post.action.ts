@@ -87,7 +87,9 @@ export const getPostById = async (params: GetPostByIdParams) => {
 export const getAllPosts = async (params: GetAllPostsParams) => {
   try {
     connectToDatabase();
-    const { filterValue } = params;
+    const { filterValue, page = 1, pageSize = 3 } = params;
+
+    const skipValue = (page - 1) * pageSize;
 
     let sortOptions = {};
 
@@ -113,9 +115,14 @@ export const getAllPosts = async (params: GetAllPostsParams) => {
       })
       .populate({ path: "tags", select: "name _id" })
       .sort(sortOptions)
-      .limit(25);
+      .skip(skipValue)
+      .limit(pageSize);
 
-    return posts;
+    const totalPosts = await Post.countDocuments({});
+
+    const isNext = totalPosts > skipValue + posts.length;
+
+    return { posts, isNext };
   } catch (error) {
     console.log(error);
     throw error;

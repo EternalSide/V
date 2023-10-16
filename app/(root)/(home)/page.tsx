@@ -1,6 +1,7 @@
 import PostCard from "@/components/cards/PostCard";
 import FilterComponents from "@/components/shared/FilterComponents";
 import HomeFilters from "@/components/shared/HomeFilters";
+import Pagination from "@/components/shared/Pagination";
 import LeftSidebar from "@/components/shared/Sidebar/LeftSidebar";
 import RightSidebar from "@/components/shared/Sidebar/RightSidebar";
 import { homeFilters } from "@/constants";
@@ -19,16 +20,19 @@ export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
   const user = await getUserById({ clerkId: userId! });
 
-  let posts: any;
+  let result: any = [];
 
   if (searchParams?.q === "recommended") {
     if (userId) {
-      posts = await getRecommendedPosts({ userId });
+      result = await getRecommendedPosts({ userId });
     } else {
-      posts = await getRecommendedPosts({});
+      result = await getRecommendedPosts({});
     }
   } else {
-    posts = await getAllPosts({ filterValue: searchParams?.q });
+    result = await getAllPosts({
+      filterValue: searchParams?.q!,
+      page: searchParams?.page ? Number(searchParams?.page) : 1,
+    });
   }
 
   return (
@@ -41,7 +45,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         <HomeFilters />
         <FilterComponents containerClasses="sm:hidden" filters={homeFilters} />
         <div className="mt-2.5 flex flex-col gap-1.5">
-          {posts?.map((post: any, index: number) => {
+          {result.posts?.map((post: any, index: number) => {
             return (
               <PostCard
                 key={post._id}
@@ -69,6 +73,10 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             );
           })}
         </div>
+        <Pagination
+          pageValue={searchParams?.page ? Number(searchParams?.page) : 1}
+          isNext={result.isNext}
+        />
       </section>
       <RightSidebar />
     </>

@@ -48,7 +48,9 @@ const MobileNavbar = async () => {
                   return (
                     <SheetClose key={item.route} asChild>
                       <BaseLink
-                        route={`/${!user.username ? "sign-in" : user.username}`}
+                        route={`/${
+                          !user?.username ? "sign-in" : user.username
+                        }`}
                         label={item.label}
                         icon={item.icon}
                       />
@@ -70,7 +72,7 @@ const MobileNavbar = async () => {
             <div className="mt-8 text-left">
               <h3 className="px-3 text-xl font-bold">Подписки</h3>
               <div className="mt-3 flex flex-col gap-3">
-                {user.followingTags?.map((tag: any) => {
+                {user?.followingTags?.map((tag: any) => {
                   return (
                     <SheetClose key={tag._id} asChild>
                       <BaseLink
@@ -82,7 +84,7 @@ const MobileNavbar = async () => {
                   );
                 })}
               </div>
-              {!user.username && (
+              {!user?.username && (
                 <div
                   className="flex items-center
                     gap-x-2 rounded-md px-3 py-2"

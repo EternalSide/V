@@ -12,6 +12,13 @@ export interface IUser extends Document {
   bio?: string;
   portfolioWebsite?: string;
   reputation?: number;
+  notifications: {
+    event: string;
+    text: string;
+    postId: string;
+    user: Schema.Types.ObjectId;
+    createdAt: Date;
+  };
   posts: Schema.Types.ObjectId[];
   savedPosts: Schema.Types.ObjectId[];
   followingTags: Schema.Types.ObjectId[];
@@ -35,6 +42,30 @@ const UserSchema = new Schema<IUser>(
     followingTags: [{ type: Schema.Types.ObjectId, ref: "Tag", default: [] }],
     joinedAt: { type: Date, default: Date.now },
     role: { type: String, default: "user" },
+    notifications: [
+      {
+        event: {
+          type: String,
+          required: true,
+        },
+        text: {
+          type: String,
+        },
+        postId: {
+          type: Schema.Types.ObjectId,
+          ref: "Post",
+        },
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
   {
     versionKey: false,

@@ -53,7 +53,7 @@ export const homeFilters: HomeFiltersTypes[] = [
 export const moreLinks = [
   {
     label: "Уведомления",
-    href: "/",
+    href: "/notifications",
     icon: Bell,
   },
   {

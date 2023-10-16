@@ -54,9 +54,7 @@ const Navbar = () => {
                 Опубликовать
               </Button>
             </Link>
-            <Button className="bg-transparent p-2 hover:bg-indigo-600">
-              <Bell className="cursor-pointer transition hover:opacity-90" />
-            </Button>
+
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
         </div>
