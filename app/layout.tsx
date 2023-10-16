@@ -20,9 +20,6 @@ export const metadata: Metadata = {
   openGraph: {
     images: "/favicon.png",
   },
-  twitter: {
-    images: "/favicon.png",
-  },
   description:
     "V — платформа, где пользователи могут находить интересующие их статьи по выбранным темам, общаться с единомышленниками, делиться статьями с друзьями или подписчиками.",
   icons: {

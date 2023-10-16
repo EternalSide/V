@@ -30,7 +30,7 @@ const Notifications = ({ userId }: Props) => {
           duration: 2000,
           title: data,
         });
-        audioElement.play();
+        // audioElement.play();
       });
 
       return () => pusherClient.unsubscribe(userId);
