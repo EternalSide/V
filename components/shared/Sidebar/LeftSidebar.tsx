@@ -1,8 +1,9 @@
-import { moreLinks, sidebarLinks } from "@/constants";
+import { sidebarLinks } from "@/constants";
 
-import { Bell, Hash } from "lucide-react";
+import { Hash } from "lucide-react";
 import { Schema } from "mongoose";
 import Link from "next/link";
+import BellPusher from "../BellPusher";
 
 interface Props {
   username: string;
@@ -85,19 +86,7 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
       <div>
         <h3 className="px-3 text-xl font-bold max-lg:hidden">Еще</h3>
         <div className="mt-3 flex flex-col gap-3">
-          <Link
-            href="/notifications"
-            className="flex items-center
-          gap-x-4 rounded-md px-3 py-2 hover:bg-indigo-900"
-          >
-            <div className="relative">
-              <Bell className="h-6 w-6 animate-in fade-in zoom-in max-lg:h-7 max-lg:w-7" />
-              <span className="animate-pulse absolute -right-[0.5px] -top-[3px] inline-flex h-2 w-2 rounded-full bg-sky-500" />
-            </div>
-            <p className="text-[20px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden">
-              Уведомления
-            </p>
-          </Link>
+          <BellPusher />
           {/* {moreLinks.map((item: any) => (
             
             // <BaseLink

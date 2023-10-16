@@ -1,6 +1,7 @@
 import Pagination from "@/components/shared/Pagination";
 import ParseHTML from "@/components/shared/ParseHTML";
 import { UserAvatar } from "@/components/shared/UserAvatar";
+import { ViewAllNotifications } from "@/lib/actions/general.action";
 import { getUserNotifications } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
@@ -22,6 +23,8 @@ const NotificationPage = async ({ searchParams }: any) => {
     clerkId: userId,
     page: searchParams?.page ? Number(searchParams?.page) : 1,
   });
+
+  await ViewAllNotifications({ userId });
 
   return (
     <div className="mx-auto w-full max-w-5xl pb-6 pt-[85px] max-[1280px]:px-4">

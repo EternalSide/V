@@ -144,7 +144,7 @@ export async function savePost(params: SavePostParams) {
 export async function getUserNotifications(params: GetUserNotificationParams) {
   try {
     connectToDatabase();
-    const { clerkId, page = 1, pageSize = 2 } = params;
+    const { clerkId, page = 1, pageSize = 10 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 

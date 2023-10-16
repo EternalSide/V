@@ -2,11 +2,13 @@ import { ChildrenProps } from "@/types";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, auth } from "@clerk/nextjs";
 import { ruRU } from "@clerk/localizations";
 import { dark } from "@clerk/themes";
 import "../styles/prism.css";
 import { EdgeStoreProvider } from "@/lib/edgestore";
+import Pusher from "@/providers/Notifications";
+import { getUserById } from "@/lib/actions/user.action";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: ChildrenProps) {
+export default async function RootLayout({ children }: ChildrenProps) {
   return (
     <ClerkProvider
       appearance={{

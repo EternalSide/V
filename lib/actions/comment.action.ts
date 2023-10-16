@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import Post from "@/database/models/post.model";
 import User from "@/database/models/user.model";
 import Interaction from "@/database/models/interaction.model";
+import { pusherServer } from "../pusher";
 
 export const createComment = async (params: CreateCommentParams) => {
   try {
@@ -23,25 +24,42 @@ export const createComment = async (params: CreateCommentParams) => {
       $push: { comments: newComment._id },
     });
 
+    // Для рекомендаций.
     await Interaction.create({
       action: "comment_post",
       user: author,
       tags: updatedPost.tags,
     });
 
+    // Уведомления.
     const notification = {
-      event: "comment", // Тип события
-      text: text,
+      event: "comment",
+      text,
       postId: updatedPost._id,
-      user: updatedPost.author, // ID пользователя, связанного с событием
-      // Другие поля уведомления, если необходимо
+      user: updatedPost.author,
     };
 
+    // Добавить уведомление.
     await User.findByIdAndUpdate(updatedPost.author, {
       $push: {
         notifications: notification,
       },
     });
+
+    // Отправляем уведомление пользователю.
+    // Сменить на !isOwnAction - сейчас стоит для теста.
+    const isOwnAction = author === updatedPost.author.toString();
+
+    if (isOwnAction) {
+      const user = await User.findById(author);
+      const messageForUser = `🐱‍💻 ${user.name} прокоментировал ваш пост - ${updatedPost.title}`;
+      await pusherServer.trigger(
+        updatedPost.author.toString(),
+        "comment",
+        messageForUser,
+      );
+    }
+
     revalidatePath(path);
   } catch (e) {
     console.log(e);

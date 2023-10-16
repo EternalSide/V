@@ -51,6 +51,11 @@ const UserSchema = new Schema<IUser>(
         text: {
           type: String,
         },
+        seen: {
+          type: String,
+          required: true,
+          default: "not_seen",
+        },
         postId: {
           type: Schema.Types.ObjectId,
           ref: "Post",

@@ -15,6 +15,7 @@ import Tag from "@/database/models/tag.model";
 import Comment from "@/database/models/comment.model";
 import Interaction from "@/database/models/interaction.model";
 import { FilterQuery } from "mongoose";
+import { pusherServer } from "../pusher";
 
 export const createPost = async (params: CreatePostParams) => {
   try {
@@ -239,6 +240,15 @@ export async function setLike(params: setLikeParams) {
     const post = await Post.findByIdAndUpdate(postId, updateQuery, {
       new: true,
     });
+
+    const user = await User.findById(userId);
+
+    // const isOwnPost;
+
+    if (!hasUpVoted) {
+      const zxcasd = `🐱‍💻 ${user.name} оценил ваш пост - ${post.title}`;
+      await pusherServer.trigger(post.author._id.toString(), "like", zxcasd);
+    }
 
     if (!post) {
       throw new Error("Пост не найден.");
