@@ -15,7 +15,7 @@ const TagsPage = async () => {
   const user = await getUserById({ clerkId: userId! });
 
   return (
-    <div className="w-full pt-[85px] max-[1300px]:px-8">
+    <div className="mx-auto w-full max-w-7xl pt-[85px]  max-[1300px]:px-8">
       <h1 className="text-3xl font-bold text-white">Теги</h1>
 
       <div className="mt-6 grid grid-cols-4 gap-3 max-lg:grid-cols-2 max-sm:grid-cols-1">

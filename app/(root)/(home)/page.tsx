@@ -24,9 +24,14 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 
   if (searchParams?.q === "recommended") {
     if (userId) {
-      result = await getRecommendedPosts({ userId });
+      result = await getRecommendedPosts({
+        userId,
+        page: searchParams?.page ? Number(searchParams.page) : 1,
+      });
     } else {
-      result = await getRecommendedPosts({});
+      result = await getRecommendedPosts({
+        page: searchParams?.page ? Number(searchParams.page) : 1,
+      });
     }
   } else {
     result = await getAllPosts({
@@ -36,7 +41,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
   }
 
   return (
-    <>
+    <div className="mx-auto flex w-full max-w-7xl">
       <LeftSidebar
         username={user?.username}
         followingTags={user?.followingTags}
@@ -79,6 +84,6 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         />
       </section>
       <RightSidebar />
-    </>
+    </div>
   );
 }

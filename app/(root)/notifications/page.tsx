@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 
 const NotificationPage = async ({ searchParams }: any) => {
   const { userId } = auth();
-
   if (!userId) redirect("/sign-in");
 
   const result = await getUserNotifications({
@@ -31,7 +30,7 @@ const NotificationPage = async ({ searchParams }: any) => {
       <h1 className="text-4xl font-bold">Уведомления</h1>
 
       <div className="mt-8 flex flex-col gap-1">
-        {result.notifications?.map((item: any) => (
+        {result?.notifications?.map((item: any) => (
           <div
             key={item._id}
             className="bg-main flex w-full flex-col items-center rounded-md p-10 text-center"
@@ -65,7 +64,7 @@ const NotificationPage = async ({ searchParams }: any) => {
       </div>
 
       <Pagination
-        isNext={result.isNext}
+        isNext={result?.isNext!}
         pageValue={searchParams?.page ? Number(searchParams?.page) : 1}
       />
     </div>

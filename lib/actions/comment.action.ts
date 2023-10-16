@@ -51,8 +51,9 @@ export const createComment = async (params: CreateCommentParams) => {
     const isOwnAction = author === updatedPost.author.toString();
 
     if (isOwnAction) {
+      console.log(updatedPost.author.toString());
       const user = await User.findById(author);
-      const messageForUser = `🐱‍💻 ${user.name} прокоментировал ваш пост - ${updatedPost.title}`;
+      const messageForUser = `🐱‍💻 ${user.name} прокомментировал ваш пост - ${updatedPost.title}`;
       await pusherServer.trigger(
         updatedPost.author.toString(),
         "comment",

@@ -165,7 +165,7 @@ export async function getUserNotifications(params: GetUserNotificationParams) {
       .limit(pageSize);
 
     if (!user) {
-      throw new Error("user не найден.");
+      return null;
     }
 
     const notifications = user.notifications.slice(

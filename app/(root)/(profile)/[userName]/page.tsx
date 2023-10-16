@@ -4,14 +4,7 @@ import { Button } from "@/components/ui/button";
 import { getUserById, getUserByUserName } from "@/lib/actions/user.action";
 import { formatDate, formatedLink } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
-import {
-  Cake,
-  ExternalLink,
-  FileEdit,
-  MapPin,
-  MessageCircle,
-  Verified,
-} from "lucide-react";
+import { Cake, ExternalLink, FileEdit, MapPin, Verified } from "lucide-react";
 import { Metadata } from "next";
 
 import Image from "next/image";
@@ -61,6 +54,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 pt-[75px] max-md:px-0 ">
+      <div className="absolute left-0 top-[55px] -z-50 h-[130px] w-full bg-indigo-600" />
       <div className="bg-main mt-12 w-full rounded-md border-neutral-900 pb-8">
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           {isOwnProfile && (
@@ -124,10 +118,6 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           <div className="flex items-center gap-2.5">
             <FileEdit color="#969696" className="h-5 w-5" />
             <p className="text-neutral-200">Публикаций: {user.posts.length}</p>
-          </div>
-          <div className="flex items-center gap-2.5">
-            <MessageCircle color="#969696" className="h-5 w-5" />
-            <p className="text-neutral-200">Комментариев: 0</p>
           </div>
         </div>
 

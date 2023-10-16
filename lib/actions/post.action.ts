@@ -261,11 +261,17 @@ export async function setLike(params: setLikeParams) {
   }
 }
 
-export async function getRecommendedPosts(params: { userId?: string }) {
+export async function getRecommendedPosts(params: {
+  userId?: string;
+  pageSize?: number;
+  page?: number;
+}) {
   try {
     connectToDatabase();
 
-    const { userId } = params;
+    const { userId, page = 1, pageSize = 3 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const user = await User.findOne({ clerkId: userId });
 
@@ -323,9 +329,14 @@ export async function getRecommendedPosts(params: { userId?: string }) {
           path: "author",
           select: "name _id picture username",
         })
-        .populate({ path: "tags", model: Tag, select: "name _id" });
+        .populate({ path: "tags", model: Tag, select: "name _id" })
+        .skip(skipAmount)
+        .limit(pageSize);
 
-      return recommendedPosts;
+      const totalPosts = await Post.countDocuments(query);
+      const isNext = totalPosts > skipAmount + recommendedPosts.length;
+
+      return { posts: recommendedPosts, isNext };
     }
   } catch (e) {
     console.log(e);

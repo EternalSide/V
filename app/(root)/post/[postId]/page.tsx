@@ -42,7 +42,7 @@ const PostPage = async ({ params }: ProfilePageProps) => {
   const isOwnPost = post?.author.clerkId === userId;
 
   return (
-    <div className="flex w-full items-start gap-3 pt-[75px] max-[1400px]:px-3 max-lg:px-0 max-lg:pt-[55px] max-md:px-0">
+    <div className="mx-auto flex w-full max-w-7xl items-start gap-3 pt-[75px] max-[1400px]:px-3 max-lg:px-0 max-lg:pt-[55px] max-md:px-0">
       <PostActions
         isLiked={post.upvotes.includes(user?._id.toString())}
         isPostSaved={user?.savedPosts.includes(post._id)}

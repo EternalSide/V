@@ -13,7 +13,8 @@ const RootLayout = async ({ children }: ChildrenProps) => {
   return (
     <main className="relative">
       <Navbar />
-      <div className="relative mx-auto flex w-full max-w-7xl text-white">
+      {/* <div className="relative mx-auto flex w-full max-w-7xl text-white"> */}
+      <div className="relative mx-auto flex w-full  text-white">
         {children}
         <Notifications userId={user?._id.toString()} />
         <Toaster />

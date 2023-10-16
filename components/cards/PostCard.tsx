@@ -84,11 +84,14 @@ const PostCard = ({
           />
 
           <div className="flex flex-col">
-            <h3 className="first-letter:uppercase">{author.name}</h3>
+            <div className="flex items-center gap-2">
+              <h3 className="first-letter:uppercase">{author.name}</h3>
+              <p className="mt-1 text-xs text-neutral-400">
+                {getTimestamp(post.createdAt)}
+              </p>
+            </div>
             <p className="-mt-1 text-sm text-neutral-400">@{author.username}</p>
-            <p className="mt-1 text-xs text-neutral-400">
-              {getTimestamp(post.createdAt)}
-            </p>
+
             <h3
               className={cn(
                 "mt-3 font-bold transition hover:text-indigo-400",

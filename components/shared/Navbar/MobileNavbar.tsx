@@ -6,11 +6,12 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { moreLinks, sidebarLinks } from "@/constants";
+import { sidebarLinks } from "@/constants";
 import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { Hash, Menu } from "lucide-react";
 import Link from "next/link";
+import BellPusher from "../BellPusher";
 
 const BaseLink = ({ route, label, icon: Icon }: any) => {
   return (
@@ -67,6 +68,7 @@ const MobileNavbar = async () => {
                   </SheetClose>
                 );
               })}
+              <BellPusher page={true} />
             </div>
 
             <div className="mt-8 text-left">
@@ -94,21 +96,6 @@ const MobileNavbar = async () => {
                   </p>
                 </div>
               )}
-            </div>
-
-            <div className="mt-8 text-left">
-              <h3 className="px-3 text-xl font-bold">Еще</h3>
-              <div className="mt-3 flex flex-col gap-3">
-                {moreLinks.map((item: any) => (
-                  <SheetClose key={item.route} asChild>
-                    <BaseLink
-                      route={item.href}
-                      label={item.label}
-                      icon={item.icon}
-                    />
-                  </SheetClose>
-                ))}
-              </div>
             </div>
           </SheetDescription>
         </SheetHeader>

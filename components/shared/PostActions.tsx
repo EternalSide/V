@@ -3,7 +3,7 @@ import { viewQuestion } from "@/lib/actions/interaction.action";
 import { setLike } from "@/lib/actions/post.action";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { toast } from "../ui/use-toast";
 import StarAction from "./StarAction";
 import {
@@ -37,6 +37,7 @@ const PostActions = ({
     likesNumber || 0,
     (state, amount) => state + Number(amount),
   );
+  // const router = useRouter();
 
   useEffect(() => {
     viewQuestion({
@@ -44,7 +45,9 @@ const PostActions = ({
       userId: userId || undefined,
       path,
     });
-  }, [postId, path, userId]);
+
+    // router.refresh();
+  }, [postId, userId]);
 
   const baseStyles = `hover:text-indigo-500 text-white transition cursor-pointer h-6 w-6`;
 

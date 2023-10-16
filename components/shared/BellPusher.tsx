@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs";
 import { Bell } from "lucide-react";
 import Link from "next/link";
 
-const BellPusher = async () => {
+const BellPusher = async ({ page }: any) => {
   const { userId } = auth();
   const result = await getUserNotifications({ clerkId: userId! });
 
@@ -23,7 +23,11 @@ const BellPusher = async () => {
           <span className="absolute -right-[0.5px] -top-[3px] inline-flex h-2 w-2 animate-pulse rounded-full bg-sky-500" />
         )}
       </div>
-      <p className="text-[20px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden">
+      <p
+        className={`text-[20px] text-neutral-200 group-hover:text-indigo-300 ${
+          !page && "max-lg:hidden"
+        }`}
+      >
         Уведомления
       </p>
     </Link>
