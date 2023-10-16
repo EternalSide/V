@@ -110,7 +110,7 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
           populate: [
             {
               path: "author",
-              select: "_id username picture",
+              select: "_id username picture name",
               model: User,
             },
             {
