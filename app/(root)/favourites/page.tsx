@@ -1,4 +1,4 @@
 const FavouritesPage = () => {
-  return <div>FavouritesPage</div>;
+  return <div className="h-full">FavouritesPage</div>;
 };
 export default FavouritesPage;

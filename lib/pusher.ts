@@ -9,6 +9,15 @@ export const pusherServer = new PusherServer({
   useTLS: true,
 });
 
-export const pusherClient = new PusherClient(`d3e5b23db86bfc6c8ec2`, {
-  cluster: "ap1",
-});
+declare global {
+  let pusher: PusherClient | undefined;
+}
+
+export const pusher =
+  // @ts-ignore
+  globalThis.pusher ||
+  new PusherClient(`d3e5b23db86bfc6c8ec2`, {
+    cluster: "ap1",
+  });
+// @ts-ignore
+if (process.env.NODE_ENV !== "production") globalThis.pusher = pusher;

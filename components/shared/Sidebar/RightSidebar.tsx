@@ -15,7 +15,7 @@ const BlockTitle = ({ name }: { name: string }) => {
 const RightSidebar = async () => {
   const popularTags = await getPopularTags();
   const popularPosts = await getPopularPosts();
-  // console.log(popularTags);
+
   return (
     <div
       className="sticky right-0 top-0 flex h-fit w-[330px]

@@ -1,4 +1,3 @@
-import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { getUserById } from "@/lib/actions/user.action";
@@ -12,10 +11,10 @@ const RootLayout = async ({ children }: ChildrenProps) => {
   const user = await getUserById({ clerkId: userId! });
 
   return (
-    <main className="relative">
+    <main className="relative h-full">
       <Navbar />
       {/* <div className="relative mx-auto flex w-full max-w-7xl text-white"> */}
-      <div className="relative mx-auto flex w-full flex-col justify-between  text-white">
+      <div className="relative mx-auto flex h-full w-full flex-col justify-between  text-white">
         {children}
         {/* <Footer /> */}
         <Notifications userId={user?._id.toString()} />

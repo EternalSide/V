@@ -7,6 +7,7 @@ export interface ITag extends Document {
   picture: string;
   author: Schema.Types.ObjectId;
   posts: Schema.Types.ObjectId[];
+  messages: Schema.Types.ObjectId[];
   followers: Schema.Types.ObjectId[];
   createdOn: Date;
 }
@@ -38,6 +39,12 @@ const TagSchema = new Schema<ITag>(
         ref: "Post",
       },
     ],
+    messages: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Message",
+      },
+    ],
     followers: [
       {
         type: Schema.Types.ObjectId,
@@ -54,6 +61,6 @@ const TagSchema = new Schema<ITag>(
   },
 );
 
-const Tag = models.Tag || model("Tag", TagSchema);
+const Tag = models.Tag || model<ITag>("Tag", TagSchema);
 
 export default Tag;

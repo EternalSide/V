@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "@/components/ui/use-toast";
-import { pusherClient } from "@/lib/pusher";
+import { pusher } from "@/lib/pusher";
 import { useEffect } from "react";
 
 interface Props {
@@ -13,8 +13,9 @@ const Notifications = ({ userId }: Props) => {
 
   useEffect(() => {
     if (userId) {
-      const channel = pusherClient.subscribe(userId);
-      console.log(userId);
+      // @ts-ignore
+      const channel = pusher.subscribe(userId);
+
       // Комментарии
       channel.bind("comment", (data: string) => {
         toast({
@@ -22,7 +23,6 @@ const Notifications = ({ userId }: Props) => {
           title: data,
         });
         // audioElement.play();
-        console.log("okkk");
       });
 
       // Лайки
@@ -31,14 +31,14 @@ const Notifications = ({ userId }: Props) => {
           duration: 2000,
           title: data,
         });
-        console.log("okkk");
+
         // audioElement.play();
       });
 
       return () => {
-        pusherClient.unsubscribe(userId);
-        pusherClient.unbind("comment");
-        pusherClient.unbind("like");
+        pusher.unsubscribe(userId);
+        pusher.unbind("comment");
+        pusher.unbind("like");
       };
     }
   }, []);

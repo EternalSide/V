@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
 import Post from "@/database/models/post.model";
 import { EditTagParams, FollowTagParams, GetTagInfoParams } from "./shared";
+import Message from "@/database/message.model";
 
 export const getPopularTags = async () => {
   try {
@@ -103,25 +104,40 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
     }
 
     const tag = await Tag.findOne({ name: tagName })
-      .populate({
-        path: "posts",
-        model: Post,
-        options: {
-          populate: [
-            {
-              path: "author",
-              select: "_id username picture name",
-              model: User,
-            },
-            {
-              path: "tags",
-              select: "_id name",
-              model: Tag,
-            },
-          ],
-          sort: sortQuery,
+      .populate([
+        {
+          path: "posts",
+          model: Post,
+          options: {
+            populate: [
+              {
+                path: "author",
+                select: "_id username picture name",
+                model: User,
+              },
+              {
+                path: "tags",
+                select: "_id name",
+                model: Tag,
+              },
+            ],
+            sort: sortQuery,
+          },
         },
-      })
+        {
+          path: "messages",
+          model: Message,
+          options: {
+            populate: [
+              {
+                path: "author",
+                select: "_id username picture name",
+                model: User,
+              },
+            ],
+          },
+        },
+      ])
       .populate("followers");
 
     return tag;

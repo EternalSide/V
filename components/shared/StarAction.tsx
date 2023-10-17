@@ -45,10 +45,9 @@ const StarAction = ({
           title: `Пост добавлен в избранное ⭐`,
           description: `Вы добавили пост пользователя ${authorName} в избранное.`,
         });
-        console.log("ok");
       } else {
         testQ(false);
-        // console.log("o2k");
+
         // setIsSavedOptimistic(false);
         toast({
           duration: 1000,

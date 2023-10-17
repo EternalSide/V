@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import TagActions from "./TagActions";
 import { Button } from "../ui/button";
@@ -13,6 +12,7 @@ interface TagHeaderProps {
   tagId: string;
   userId: string;
   isCreator?: boolean;
+  chat?: boolean;
 }
 
 const TagHeader = ({
@@ -21,12 +21,17 @@ const TagHeader = ({
   tagDescription,
   tagId,
   isFollowing,
-
+  chat,
   userId,
   isCreator,
 }: TagHeaderProps) => {
   return (
-    <div className="bg-main mt-3 w-full rounded-md p-2">
+    <div
+      className={`bg-main mt-3 w-full rounded-md p-2 ${
+        chat &&
+        "!rounded-none border !border-neutral-700 !border-r-transparent !bg-black"
+      }`}
+    >
       <div className="flex items-start  justify-between px-6 py-5 max-lg:flex-col max-lg:gap-10">
         <div className="flex items-center gap-4">
           <div>

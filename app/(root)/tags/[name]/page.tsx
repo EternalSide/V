@@ -11,9 +11,11 @@ import { getTagInfo } from "@/lib/actions/tag.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import { MessageSquare } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import Loading from "../../(home)/loading";
 
 interface TagPageProps extends SearchParamsProps {
   params: {
@@ -66,9 +68,14 @@ const TagPage = async ({ params, searchParams }: TagPageProps) => {
       />
       <section className="mt-8 flex w-full justify-start gap-10 max-lg:mt-6">
         <div className="w-[285px] max-lg:hidden">
-          <Link href="/create">
-            <Button className="bg-indigo-600 text-white">Новый пост</Button>
-          </Link>
+          <div className="flex items-center justify-between">
+            <Link href="/create">
+              <Button className="bg-indigo-600 text-white">Новый пост</Button>
+            </Link>
+            <Link href={`/tags/${tag.name}/chat`}>
+              <MessageSquare className="h-6 w-6 hover:opacity-90" />
+            </Link>
+          </div>
           <div className="mt-4 border-y border-neutral-800 p-5">
             <h3 className="font-semibold">Информация</h3>
             {tag?.info ? (

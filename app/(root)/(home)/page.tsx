@@ -9,6 +9,7 @@ import { getAllPosts, getRecommendedPosts } from "@/lib/actions/post.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
+import Loading from "./loading";
 
 export const metadata = {
   title: {
@@ -39,6 +40,9 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       page: searchParams?.page ? Number(searchParams?.page) : 1,
     });
   }
+  // const isLoading = true;
+
+  // if (isLoading) return <Loading />;
 
   return (
     <div className="mx-auto flex w-full max-w-7xl">

@@ -10,6 +10,7 @@ export default authMiddleware({
     "/:userName",
     "/post/:postId",
     "/tags/:name",
+    "/tags/:name/chat",
   ],
   ignoredRoutes: ["/api/webhook"],
 });
