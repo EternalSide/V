@@ -88,7 +88,7 @@ export const getPostById = async (params: GetPostByIdParams) => {
 export const getAllPosts = async (params: GetAllPostsParams) => {
   try {
     connectToDatabase();
-    const { filterValue, page = 1, pageSize = 3 } = params;
+    const { filterValue, page = 1, pageSize = 5 } = params;
 
     const skipValue = (page - 1) * pageSize;
 
@@ -269,7 +269,7 @@ export async function getRecommendedPosts(params: {
   try {
     connectToDatabase();
 
-    const { userId, page = 1, pageSize = 3 } = params;
+    const { userId, page = 1, pageSize = 5 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 

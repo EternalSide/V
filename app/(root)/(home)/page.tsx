@@ -40,9 +40,9 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       page: searchParams?.page ? Number(searchParams?.page) : 1,
     });
   }
-  // const isLoading = true;
+  const isLoading = true;
 
-  // if (isLoading) return <Loading />;
+  if (isLoading) return <Loading />;
 
   return (
     <div className="mx-auto flex w-full max-w-7xl">
@@ -50,7 +50,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         username={user?.username}
         followingTags={user?.followingTags}
       />
-      <section className="flex w-full flex-1 flex-col px-4 pb-6  pt-[87px]  max-lg:pl-0 max-md:pb-14 max-sm:px-4">
+      <section className="flex w-full flex-1 flex-col px-4 pb-6 pt-[87px] max-lg:pl-0 max-md:pb-14 max-sm:px-4">
         <HomeFilters />
         <FilterComponents containerClasses="sm:hidden" filters={homeFilters} />
         <div className="mt-2.5 flex flex-col gap-1.5">

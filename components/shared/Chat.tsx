@@ -43,6 +43,7 @@ const Chat = ({ authorId, tagId, messagesQ }: ChatParams) => {
   });
 
   const parsedMessages = JSON.parse(messagesQ);
+  // make -  useOptimistic
   const [messages, setMessages] = useState(parsedMessages);
 
   const router = useRouter();
@@ -155,12 +156,23 @@ const Chat = ({ authorId, tagId, messagesQ }: ChatParams) => {
     }
   };
 
+  const insertLineBreaks = (inputText: any, charactersPerLine: any) => {
+    return Array.from(inputText)
+      .map((char, index) => {
+        if (index % charactersPerLine === 0 && index !== 0) {
+          return "\n" + char;
+        }
+        return char;
+      })
+      .join("");
+  };
+
   return (
     <>
       <div className="w-full flex-1 overflow-y-auto border-x border-neutral-700">
-        <div className="flex flex-1 flex-col  gap-6  px-4  pt-5">
+        <div className="flex flex-1 flex-col-reverse  gap-6  px-4  pt-5">
           {messages?.map((message: any) => (
-            <div className="flex items-center gap-2" key={message._id}>
+            <div className="flex items-start gap-2" key={message._id}>
               <Link href={`/${message.author.username}`}>
                 <UserAvatar
                   imgUrl={message.author.picture}
@@ -168,48 +180,25 @@ const Chat = ({ authorId, tagId, messagesQ }: ChatParams) => {
                 />
               </Link>
               <div>
-                <div className="flex max-w-3xl items-center gap-2">
+                <div className="flex items-center gap-2">
                   <Link href={`/${message.author.username}`}>
                     <h3 className="font-semibold">{message.author.name}</h3>
                   </Link>
                   <p className="text-xs text-zinc-400">Сегодня, в 7:36</p>
                 </div>
-                <p className="line-clamp-1">{message.text}</p>
+                <div className="mt-1.5 max-w-3xl rounded-3xl bg-indigo-700 p-5">
+                  <p className="">{insertLineBreaks(message.text, 30)}</p>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mb-1.5 ml-4">
+        <div className="mb-1.5 ml-4 mt-10">
           {typing.length > 1 && <p>{typing}</p>}
         </div>
         {/* @ts-ignore */}
         <div ref={scrollRef!} className="pt-10" />
-        {/* <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="text_message"
-            render={({ field }) => (
-              <FormItem onChange={(e: any) => setValue(e.target.value)}>
-                <FormControl>
-                  <div className="flex items-center justify-between gap-3 border-t border-neutral-700  bg-transparent py-2.5 pl-2 pr-6">
-                    <Textarea
-                      className="!no-focus !h-2 border-transparent bg-transparent"
-                      placeholder="Введите сообщение.."
-                      {...field}
-                    />
-                    <Button type="submit" className="!w-fit">
-                      <Send className="h-7 w-7 text-indigo-500 transition hover:opacity-90" />
-                    </Button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form> */}
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -221,7 +210,7 @@ const Chat = ({ authorId, tagId, messagesQ }: ChatParams) => {
                 <FormControl>
                   <div className="flex items-center justify-between gap-3 border-l border-t border-neutral-700  bg-transparent py-2.5 pl-2 pr-6">
                     <Textarea
-                      className="!no-focus !h-2 border-transparent bg-transparent"
+                      className="!no-focus border-transparent bg-transparent"
                       placeholder="Введите сообщение.."
                       {...field}
                     />

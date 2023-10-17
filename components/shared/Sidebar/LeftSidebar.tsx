@@ -10,7 +10,7 @@ interface Props {
   followingTags: Schema.Types.ObjectId[];
 }
 
-const BaseLink = ({ route, label, icon: Icon }: any) => {
+export const BaseLink = ({ route, label, icon: Icon }: any) => {
   return (
     <Link
       href={route}

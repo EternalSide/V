@@ -38,9 +38,6 @@ const TagChat = async ({ params }: { params: { name: string } }) => {
   return (
     <div className="flex h-full w-full justify-end ">
       <div className="ml-auto flex h-full w-full max-w-7xl flex-col  max-[1280px]:px-4">
-        <h1 className="text-4xl font-bold first-letter:uppercase">
-          Чат - {tag.name}
-        </h1>
         <TagHeader
           chat={true}
           tagId={JSON.stringify(tag._id)}

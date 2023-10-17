@@ -39,7 +39,7 @@ const MobileNavbar = async () => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="bg-main w-[300px] overflow-y-auto border-r-black  pt-16 text-white"
+        className="bg-main w-[300px] overflow-y-auto border-r-black pt-16 "
       >
         <SheetHeader>
           <SheetDescription>

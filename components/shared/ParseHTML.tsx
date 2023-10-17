@@ -65,7 +65,9 @@ const ParseHTML = ({
   };
 
   return (
-    <div className={`${post && "mb-6 mt-10"}`}>{parse(data, options)}</div>
+    <div className={`${post && "mb-6 mt-10"} w-full min-w-full  max-w-full `}>
+      {parse(data, options)}
+    </div>
   );
 };
 export default ParseHTML;
