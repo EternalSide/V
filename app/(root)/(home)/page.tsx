@@ -40,10 +40,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       page: searchParams?.page ? Number(searchParams?.page) : 1,
     });
   }
-  const isLoading = true;
 
-  if (isLoading) return <Loading />;
-
+  
   return (
     <div className="mx-auto flex w-full max-w-7xl">
       <LeftSidebar
