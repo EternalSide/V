@@ -14,25 +14,9 @@ const Loading = () => {
     <div className="mx-auto w-full max-w-7xl pb-6 pt-[85px]  max-[1280px]:px-4">
       <Skeleton className="h-[40px] w-full" />
       <Skeleton className="mt-4 h-[168px] w-full" />
-      <section className="mt-8 flex w-full justify-start gap-10 max-lg:mt-6">
+      <section className="mt-8 flex w-full justify-start gap-6 max-lg:mt-6">
         <div className="w-[285px] max-lg:hidden">
-          <div className="flex items-center justify-between">
-            <button className="button bg-indigo-600 text-white">
-              Новый пост
-            </button>
-          </div>
-          <div className="mt-4 border-y border-neutral-800 p-5">
-            <h3 className="font-semibold">Информация</h3>
-            <Loader2Icon className="mx-auto my-10 h-10 w-10 animate-spin text-indigo-500" />
-          </div>
-          <div className="w-full border-neutral-800" />
-          <div className="border-b border-neutral-800 p-5">
-            <h3 className="font-semibold">Участники</h3>
-            <Loader2Icon className="mx-auto my-10 h-10 w-10 animate-spin text-indigo-500" />
-          </div>
-          <div className="mt-5 text-center">
-            <Skeleton className="h-[200px] w-full" />
-          </div>
+          <Skeleton className="h-full w-full" />
         </div>
 
         <div className="flex flex-1 flex-col pt-3">

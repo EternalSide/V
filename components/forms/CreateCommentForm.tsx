@@ -33,7 +33,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
   });
 
   const path = usePathname();
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isDirty, isValid } = form.formState;
   const { toast } = useToast();
   const editorRef = useRef(null);
 
@@ -63,7 +63,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
           render={({ field }) => (
             <FormItem className="max-w-3xl">
               <FormLabel className="text-xl">
-                Оставьте комментарий <span className="text-indigo-500">*</span>
+                Оставить комментарий <span className="text-indigo-500">*</span>
               </FormLabel>
               <FormControl>
                 <Editor
@@ -74,7 +74,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   init={{
-                    height: 450,
+                    height: 250,
                     menubar: false,
                     plugins: editorPlugins,
                     toolbar:
@@ -94,7 +94,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
           )}
         />
         <Button
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isDirty || !isValid}
           className="bg-main -mt-8 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
           type="submit"
         >

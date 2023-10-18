@@ -11,7 +11,7 @@ const RootLayout = async ({ children }: ChildrenProps) => {
 
   return (
     <main className="relative h-full">
-      <Navbar />
+      <Navbar followingTags={user?.followingTags} username={user?.username} />
       <div className="relative mx-auto flex h-full w-full flex-col justify-between">
         {children}
         <Notifications userId={user?._id.toString()} />

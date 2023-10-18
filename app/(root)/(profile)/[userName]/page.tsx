@@ -1,13 +1,11 @@
 import PostCard from "@/components/cards/PostCard";
-import NoProfile from "@/components/shared/NoProfile";
-import { Button } from "@/components/ui/button";
+import ProfileNotFound from "@/components/shared/ProfileNotFound";
+import { UserAvatar } from "@/components/shared/UserAvatar";
 import { getUserById, getUserByUserName } from "@/lib/actions/user.action";
 import { formatDate, formatedLink } from "@/lib/utils";
 import { auth } from "@clerk/nextjs";
 import { Cake, ExternalLink, FileEdit, MapPin, Verified } from "lucide-react";
 import { Metadata } from "next";
-
-import Image from "next/image";
 import Link from "next/link";
 
 type ProfilePageProps = {
@@ -37,20 +35,22 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   const mongoUser = await getUserById({ clerkId: userId! });
   const isOwnProfile = userId && user?.clerkId === userId;
 
-  if (!user) {
-    return <NoProfile />;
-  }
+  if (!user) return <ProfileNotFound />;
 
-  const userInfo = [
-    {
-      icon: MapPin,
-      text: user?.location ? user.location : "Не Известно",
-    },
-    {
-      icon: Cake,
-      text: `Регистрация: ${formatDate(user.joinedAt)}`,
-    },
-  ];
+  const generateUserInfo = (user: any) => {
+    return [
+      {
+        icon: MapPin,
+        text: user?.location ? user.location : "Не Известно",
+      },
+      {
+        icon: Cake,
+        text: `Регистрация: ${formatDate(user.joinedAt)}`,
+      },
+    ];
+  };
+
+  const userInfo = generateUserInfo(user);
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 pt-[75px] max-md:px-0 ">
@@ -64,14 +64,12 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
               </button>
             </Link>
           )}
-          <div className="relative -mt-12 h-32 w-32">
-            <Image
-              fill
-              className="aspect-auto rounded-full border-[8px] border-black object-cover object-top"
-              alt="Test alt"
-              src={user.picture}
-            />
-          </div>
+          <UserAvatar
+            imgUrl={user.picture}
+            alt={`Фото ${user.username}`}
+            classNames="relative -mt-12 h-32 w-32"
+            imageClassNames="aspect-auto border-[8px] border-black object-top"
+          />
           <div className="mt-6 flex flex-col items-center gap-3 text-center max-md:items-start max-md:px-3 max-md:text-left">
             <div>
               <div className="flex items-center gap-2">
@@ -114,8 +112,29 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
       </div>
 
       <div className="mt-1.5 flex items-start gap-3 pb-4">
-        <div className="bg-main flex w-[330px] flex-col gap-5 p-5 max-md:hidden">
-          <div className="flex items-center gap-2.5">
+        <div className=" flex w-[330px] flex-col gap-2.5 max-md:hidden">
+          <div className="bg-main rounded-md">
+            <h3 className="p-5 text-lg font-semibold">Сообщества</h3>
+            <div className="border-b border-black" />
+
+            {user.followingTags.map((item: any) => (
+              <Link
+                className="group flex items-center gap-2.5 border-b border-black p-5"
+                key={item.name}
+                href={`/tags/${item.name}`}
+              >
+                <UserAvatar
+                  imgUrl={item.picture || "/nouser.jfif"}
+                  classNames="h-10 w-10"
+                />
+                <p className="font-semibold text-zinc-300 first-letter:uppercase group-hover:text-indigo-500">
+                  {item.name}
+                </p>
+              </Link>
+            ))}
+          </div>
+
+          <div className="bg-main flex items-center gap-2.5 rounded-md p-5 ">
             <FileEdit color="#969696" className="h-5 w-5" />
             <p className="text-neutral-200">Публикаций: {user.posts.length}</p>
           </div>
@@ -125,28 +144,26 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           {user.posts.map((post: any, index: number) => (
             <PostCard
               key={post._id}
-              firstPost={index === 0}
               userId={mongoUser?._id.toString()}
               banner={post?.banner}
               page="Profile"
-              titleClassnames="text-2xl"
+              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
+              isOwnProfile={isOwnProfile}
               author={{
                 name: user.name,
                 picture: user.picture,
                 username: user.username,
                 _id: user._id.toString(),
               }}
-              isOwnProfile={isOwnProfile}
               post={{
                 title: post.title,
-                comments: post.comments.length,
+                comments: post.comments,
                 tags: post.tags,
                 likes: post.upvotes.length,
                 views: post.views,
                 createdAt: post.createdAt,
                 id: post._id.toString(),
               }}
-              isPostSaved={mongoUser?.savedPosts.includes(post._id)}
             />
           ))}
         </div>

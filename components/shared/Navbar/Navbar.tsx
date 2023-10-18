@@ -5,7 +5,7 @@ import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Input } from "../../ui/input";
 import MobileNavbar from "./MobileNavbar";
 
-const Navbar = () => {
+const Navbar = ({ followingTags, username }: any) => {
   return (
     <div className="bg-main fixed z-50 flex h-14 w-full border-b border-neutral-800 shadow-xl max-[1280px]:px-4">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
@@ -21,7 +21,7 @@ const Navbar = () => {
           </Link>
 
           <div className="sm:hidden">
-            <MobileNavbar />
+            <MobileNavbar followingTags={followingTags} username={username} />
           </div>
 
           <div className="relative w-[425px] max-lg:hidden">

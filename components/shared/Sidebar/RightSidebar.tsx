@@ -43,7 +43,7 @@ const RightSidebar = async () => {
   return (
     <div
       className="sticky right-0 top-0 flex h-fit w-[330px]
-    flex-col overflow-y-auto pb-5  pt-[75px] text-white dark:shadow-none max-[1330px]:pr-4 max-xl:hidden"
+    flex-col overflow-y-auto pb-5 pt-[75px] max-[1330px]:pr-4 max-xl:hidden"
     >
       <div className="bg-main flex w-full flex-col rounded-md border border-neutral-800">
         <BlockTitle name="Популярное" />

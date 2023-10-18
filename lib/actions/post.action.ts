@@ -115,6 +115,14 @@ export const getAllPosts = async (params: GetAllPostsParams) => {
         select: "name _id picture username",
       })
       .populate({ path: "tags", select: "name _id" })
+      .populate({
+        path: "comments",
+        options: {
+          populate: {
+            path: "author",
+          },
+        },
+      })
       .sort(sortOptions)
       .skip(skipValue)
       .limit(pageSize);
@@ -330,6 +338,14 @@ export async function getRecommendedPosts(params: {
           select: "name _id picture username",
         })
         .populate({ path: "tags", model: Tag, select: "name _id" })
+        .populate({
+          path: "comments",
+          options: {
+            populate: {
+              path: "author",
+            },
+          },
+        })
         .skip(skipAmount)
         .limit(pageSize);
 

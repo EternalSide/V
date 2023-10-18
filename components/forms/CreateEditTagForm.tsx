@@ -180,7 +180,7 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                   <Button
                     disabled={isLoading || field?.value!.length >= 1}
                     type="button"
-                    className={`button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
+                    className={`button-main relative  mt-1 w-full max-w-[300px] rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
                       isLoading && "border-b-[0px] "
                     }`}
                     onClick={(e) => handleUploadPicture(e, field)}
@@ -210,7 +210,7 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   init={{
-                    height: 450,
+                    height: 350,
                     menubar: false,
                     plugins: editorPlugins,
                     toolbar:
@@ -229,7 +229,7 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
         />
         <Button
           disabled={isSubmitting}
-          className="bg-main -mt-5 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
+          className="bg-main -mt-7 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
           type="submit"
         >
           {isSubmitting ? "Сохранение.." : " Сохранить"}

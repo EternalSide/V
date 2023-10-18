@@ -9,7 +9,6 @@ import { getAllPosts, getRecommendedPosts } from "@/lib/actions/post.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { SearchParamsProps } from "@/types";
 import { auth } from "@clerk/nextjs";
-import Loading from "./loading";
 
 export const metadata = {
   title: {
@@ -21,68 +20,76 @@ export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
   const user = await getUserById({ clerkId: userId! });
 
-  let result: any = [];
+  let data: any = [];
+
+  const pageResolver = searchParams?.page ? Number(searchParams.page) : 1;
 
   if (searchParams?.q === "recommended") {
     if (userId) {
-      result = await getRecommendedPosts({
+      data = await getRecommendedPosts({
         userId,
-        page: searchParams?.page ? Number(searchParams.page) : 1,
+        page: pageResolver,
       });
     } else {
-      result = await getRecommendedPosts({
-        page: searchParams?.page ? Number(searchParams.page) : 1,
+      data = await getRecommendedPosts({
+        page: pageResolver,
       });
     }
   } else {
-    result = await getAllPosts({
+    data = await getAllPosts({
       filterValue: searchParams?.q!,
-      page: searchParams?.page ? Number(searchParams?.page) : 1,
+      page: pageResolver,
     });
   }
 
-  
   return (
-    <div className="mx-auto flex w-full max-w-7xl">
+    <div className="mx-auto flex  w-full max-w-7xl gap-3 max-lg:gap-0">
       <LeftSidebar
         username={user?.username}
         followingTags={user?.followingTags}
       />
-      <section className="flex w-full flex-1 flex-col px-4 pb-6 pt-[87px] max-lg:pl-0 max-md:pb-14 max-sm:px-4">
-        <HomeFilters />
-        <FilterComponents containerClasses="sm:hidden" filters={homeFilters} />
+      <section className="flex w-full flex-1 flex-col border-x border-neutral-700 pb-6 pt-[87px] max-lg:border-l-transparent  max-md:pb-14">
+        <div className="">
+          <div className="mb-3 border-b border-neutral-700 pb-4 ">
+            <h1 className="px-4 text-3xl font-bold">Главная</h1>
+          </div>
+
+          <div className="px-4">
+            <HomeFilters />
+            <FilterComponents
+              containerClasses="sm:hidden"
+              filters={homeFilters}
+            />
+          </div>
+        </div>
         <div className="mt-2.5 flex flex-col gap-1.5">
-          {result.posts?.map((post: any, index: number) => {
-            return (
-              <PostCard
-                key={post._id}
-                userId={user?._id.toString()}
-                firstPost={index === 0}
-                banner={post?.banner}
-                titleClassnames="text-2xl"
-                author={{
-                  name: post.author.name,
-                  picture: post.author.picture,
-                  username: post.author.username,
-                  _id: post.author._id.toString(),
-                }}
-                post={{
-                  id: post._id.toString(),
-                  title: post.title,
-                  comments: post.comments.length,
-                  likes: post.upvotes.length,
-                  views: post.views,
-                  createdAt: post.createdAt,
-                  tags: post.tags,
-                }}
-                isPostSaved={user?.savedPosts.includes(post._id)}
-              />
-            );
-          })}
+          {data.posts?.map((post: any) => (
+            <PostCard
+              key={post._id}
+              userId={user?._id.toString()}
+              banner={post?.banner}
+              isPostSaved={user?.savedPosts.includes(post._id)}
+              author={{
+                name: post.author.name,
+                picture: post.author.picture,
+                username: post.author.username,
+                _id: post.author._id.toString(),
+              }}
+              post={{
+                id: post._id.toString(),
+                title: post.title,
+                comments: post.comments,
+                likes: post.upvotes.length,
+                views: post.views,
+                createdAt: post.createdAt,
+                tags: post.tags,
+              }}
+            />
+          ))}
         </div>
         <Pagination
           pageValue={searchParams?.page ? Number(searchParams?.page) : 1}
-          isNext={result.isNext}
+          isNext={data.isNext}
         />
       </section>
       <RightSidebar />

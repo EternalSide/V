@@ -13,8 +13,8 @@ const AllComents = async ({ postId }: AllComentsProps) => {
 
   return (
     <div className="mt-7 flex flex-col gap-10">
-      {comments.map((item: any) => (
-        <article className="flex w-full items-start gap-3" key={item._id}>
+      {comments?.map((item: any) => (
+        <article key={item._id} className="flex w-full items-start gap-3">
           <Link href={`/${item.author.username}`}>
             <UserAvatar
               imgUrl={item.author.picture}
@@ -34,7 +34,6 @@ const AllComents = async ({ postId }: AllComentsProps) => {
                 {formatDate(item.createdAt)}
               </p>
             </div>
-
             <ParseHTML data={item.text} />
           </div>
         </article>

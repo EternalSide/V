@@ -13,6 +13,8 @@ import {
 import { revalidatePath } from "next/cache";
 import Post from "@/database/models/post.model";
 import Tag from "@/database/models/tag.model";
+import Interaction from "@/database/models/interaction.model";
+import Comment from "@/database/models/comment.model";
 
 export const createUser = async (userData: CreateUserParams) => {
   try {
@@ -57,9 +59,9 @@ export const deleteUser = async (params: deleteUserParams) => {
     }
 
     const deletedUser = await User.findByIdAndDelete(user._id);
-    // await Post.deleteMany({});
-    // await Interaction.deleteMany({});
-    // await Comment.deleteMany({});
+    await Post.deleteMany({ author: deletedUser._id });
+    await Interaction.deleteMany({ user: deletedUser._id });
+    await Comment.deleteMany({ user: deletedUser._id });
 
     return deletedUser;
   } catch (e) {
@@ -76,12 +78,15 @@ export async function getUserById(params: getUserByIdParams) {
 
     const user = await User.findOne({ clerkId }).populate("followingTags");
 
+    if (!user) return null;
+
     return user;
   } catch (e) {
     console.log(e);
     throw e;
   }
 }
+
 export async function getUserByUserName(params: getUserByUsername) {
   try {
     connectToDatabase();
@@ -90,21 +95,36 @@ export async function getUserByUserName(params: getUserByUsername) {
 
     const user = await User.findOne({
       username: username.toLowerCase(),
-    }).populate({
-      path: "posts",
-      model: Post,
-      options: {
-        sort: { createdAt: -1 },
-        select: ["-text"],
-        populate: [
-          {
-            path: "tags",
-            model: Tag,
-            select: "name",
-          },
-        ],
-      },
-    });
+    })
+      .populate({
+        path: "posts",
+        model: Post,
+        options: {
+          sort: { createdAt: -1 },
+          select: ["-text"],
+          populate: [
+            {
+              path: "tags",
+              model: Tag,
+              select: "name",
+            },
+            {
+              path: "comments",
+              options: {
+                populate: {
+                  path: "author",
+                },
+              },
+            },
+          ],
+        },
+      })
+      .populate({
+        path: "followingTags",
+        options: {
+          select: "name picture",
+        },
+      });
 
     return user;
   } catch (e) {
@@ -116,6 +136,7 @@ export async function getUserByUserName(params: getUserByUsername) {
 export async function savePost(params: SavePostParams) {
   try {
     connectToDatabase();
+
     const { postId, userId, path, isPostSaved } = params;
 
     let updateQuery = {};
@@ -126,13 +147,9 @@ export async function savePost(params: SavePostParams) {
       updateQuery = { $addToSet: { savedPosts: postId } };
     }
 
-    const user = await User.findByIdAndUpdate(userId, updateQuery, {
-      new: true,
-    });
+    const user = await User.findByIdAndUpdate(userId, updateQuery);
 
-    if (!user) {
-      throw new Error("user не найден.");
-    }
+    if (!user) throw new Error("User не найден.");
 
     revalidatePath(path);
   } catch (e) {
@@ -164,9 +181,7 @@ export async function getUserNotifications(params: GetUserNotificationParams) {
       ])
       .limit(pageSize);
 
-    if (!user) {
-      return null;
-    }
+    if (!user) return null;
 
     const notifications = user.notifications.slice(
       skipAmount,

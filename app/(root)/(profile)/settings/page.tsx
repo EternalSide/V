@@ -11,7 +11,6 @@ export const metadata: Metadata = {
 };
 export default async function SettingsPage() {
   const { userId } = auth();
-
   if (!userId) return redirectToSignIn();
 
   const user = await getUserById({ clerkId: userId });
@@ -23,7 +22,7 @@ export default async function SettingsPage() {
           href={`/${user.username}`}
           className="text-3xl font-bold text-indigo-500"
         >
-          @{user.username}
+          <p>@{user.username}</p>
         </Link>
 
         <div className="mt-3">

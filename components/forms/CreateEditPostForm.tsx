@@ -55,7 +55,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
   const editorRef = useRef(null);
   const path = usePathname();
   const router = useRouter();
-  const { isSubmitting } = form.formState;
+  const { isSubmitting, isDirty } = form.formState;
   const { toast } = useToast();
 
   const onSubmit = async (values: z.infer<typeof createPostSchema>) => {
@@ -145,7 +145,6 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
         toast({
           title: "Баннер успешно загружен ✅",
           duration: 2000,
-          className: "toast-black",
         });
         setIsLoading(false);
       }
@@ -236,11 +235,10 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
           render={({ field }) => (
             <FormItem className="max-w-3xl">
               <FormLabel className="text-xl">Баннер</FormLabel>
-
               <FormControl>
                 <div className="w-full">
                   <SingleImageDropzone
-                    height={400}
+                    height={320}
                     value={type === "Edit" ? field?.value || file : file}
                     onChange={(file: any) => {
                       setFile(file);
@@ -251,12 +249,16 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                   <button
                     disabled={isLoading || field?.value!.length >= 1}
                     type="button"
-                    className={`button button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
+                    className={`button button-main relative mt-1 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
                       isLoading && "border-b-[0px] "
                     }`}
                     onClick={(e) => handleUploadPicture(e, field)}
                   >
-                    {isLoading ? "Загружается..." : "Загрузить"}
+                    {isLoading
+                      ? "Загружается..."
+                      : field?.value!.length >= 1
+                      ? "Сохранено"
+                      : "Загрузить"}
                   </button>
                 </div>
               </FormControl>
@@ -268,7 +270,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
           control={form.control}
           name="text"
           render={({ field }) => (
-            <FormItem className="max-w-3xl">
+            <FormItem className="w-full">
               <FormLabel className="text-xl">
                 Текст <span className="text-indigo-500">*</span>
               </FormLabel>
@@ -281,7 +283,7 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
                   init={{
-                    height: 450,
+                    height: 850,
                     menubar: false,
                     plugins: editorPlugins,
                     toolbar:
@@ -299,11 +301,15 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
           )}
         />
         <button
-          disabled={isSubmitting}
-          className="button bg-main -mt-5 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
+          disabled={isSubmitting || !isDirty}
+          className="button -mt-7 w-full bg-indigo-700 hover:bg-indigo-600"
           type="submit"
         >
-          {isSubmitting ? "Публикация.." : " Опубликовать"}
+          {isSubmitting
+            ? "Публикация.."
+            : type !== "Edit"
+            ? "Опубликовать"
+            : "Сохранить"}
         </button>
       </form>
     </Form>

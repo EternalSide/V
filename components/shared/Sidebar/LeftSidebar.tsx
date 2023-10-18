@@ -1,5 +1,4 @@
 import { sidebarLinks } from "@/constants";
-
 import { Hash } from "lucide-react";
 import { Schema } from "mongoose";
 import Link from "next/link";
@@ -27,30 +26,17 @@ export const BaseLink = ({ route, label, icon: Icon }: any) => {
 
 const LeftSidebar = async ({ username, followingTags }: Props) => {
   return (
-    <div className="sticky left-0 top-0 flex h-fit flex-col justify-between gap-8 overflow-y-auto pl-4 pt-[75px] text-white max-lg:px-3 max-sm:hidden lg:w-[266px]">
+    <div className="sticky left-0 top-0 flex h-fit flex-col gap-8 overflow-y-auto border-neutral-700 pl-4 pt-[95px] text-white max-lg:h-full max-lg:border-r max-lg:px-2 max-sm:hidden lg:w-[254px]">
       <div className="flex flex-col gap-3">
-        <div className="pl-3 max-lg:hidden">
-          <h1 className="text-3xl font-semibold">
-            <span className="text-4xl text-indigo-600">V</span>endetta
-          </h1>
-          <p className="text-sm text-zinc-400">0.1.4</p>
-        </div>
         {sidebarLinks.map((item) => {
-          if (item.label === "Профиль") {
-            return (
-              <BaseLink
-                key={item.label}
-                label={item.label}
-                route={`/${!username ? "sign-in" : username}`}
-                icon={item.icon}
-              />
-            );
-          }
+          const isProfileLink = item.label === "Профиль";
           return (
             <BaseLink
               key={item.label}
               label={item.label}
-              route={item.route}
+              route={
+                !isProfileLink ? item.route : !username ? "/sign-in" : username
+              }
               icon={item.icon}
             />
           );
@@ -61,16 +47,14 @@ const LeftSidebar = async ({ username, followingTags }: Props) => {
       <div>
         <h3 className="px-3 text-xl font-bold max-lg:hidden">Подписки</h3>
         <div className="mt-3 flex flex-col gap-2">
-          {followingTags?.map((tag: any) => {
-            return (
-              <BaseLink
-                key={tag._id}
-                label={tag.name}
-                route={`/tags/${tag.name}`}
-                icon={Hash}
-              />
-            );
-          })}
+          {followingTags?.map((tag: any) => (
+            <BaseLink
+              key={tag._id}
+              label={tag.name}
+              route={`/tags/${tag.name}`}
+              icon={Hash}
+            />
+          ))}
         </div>
         {!username && (
           <div

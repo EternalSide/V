@@ -1,33 +1,32 @@
 import { Eye, Heart, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { cn, getTimestamp } from "@/lib/utils";
+import { getTimestamp } from "@/lib/utils";
 import { UserAvatar } from "../shared/UserAvatar";
 import EditDeletePost from "../shared/EditDeletePost";
 import StarAction from "../shared/StarAction";
 import TagLink from "../shared/TagLink";
 import Metric from "../shared/Metric";
+import ParseHTML from "../shared/ParseHTML";
 
-export interface PostCardProps {
+interface Props {
   userId: string;
   isPostSaved: boolean;
-
   banner?: string;
   isOwnProfile?: any;
   page?: string;
-  firstPost?: boolean;
-  titleClassnames?: string;
 
   author: { _id: string; name: string; picture: string; username: string };
 
   post: {
     id: string;
     title: string;
-    comments: number;
+    comments: any;
     tags: {
       _id: string;
       name: string;
     }[];
+
     likes: number;
     views: number;
     createdAt: Date;
@@ -38,16 +37,15 @@ const PostCard = ({
   author,
   post,
   userId,
-  firstPost,
+
   isOwnProfile,
   isPostSaved,
   page,
   banner,
-  titleClassnames,
-}: PostCardProps) => {
+}: Props) => {
   return (
     <Link href={`/post/${post.id}`} className="card-main">
-      {firstPost && banner && (
+      {banner && (
         <div className="relative h-64 w-full">
           <Image
             fill
@@ -57,6 +55,7 @@ const PostCard = ({
           />
         </div>
       )}
+
       <div className="relative w-full py-4 pl-5 pr-7">
         <div className="absolute right-7 top-4 flex items-center gap-x-2">
           {page !== "Profile" && (
@@ -75,46 +74,71 @@ const PostCard = ({
             />
           )}
         </div>
+        <div>
+          <div className="flex gap-2">
+            <UserAvatar
+              imgUrl={author.picture}
+              alt={author.name}
+              classNames="h-10 w-10"
+            />
 
-        <div className="flex gap-2">
-          <UserAvatar
-            imgUrl={author.picture}
-            alt={author.name}
-            classNames="h-10 w-10"
-          />
-
-          <div className="flex flex-col">
-            <div className="flex items-center gap-2">
-              <h3 className="first-letter:uppercase">{author.name}</h3>
-              <p className="mt-1 text-xs text-neutral-400">
-                {getTimestamp(post.createdAt)}
-              </p>
-            </div>
-            <p className="-mt-1 text-sm text-neutral-400">@{author.username}</p>
-
-            <h3
-              className={cn(
-                "mt-3 font-bold transition hover:text-indigo-400",
-                titleClassnames ? `${titleClassnames}` : "text-3xl",
-              )}
-            >
-              {post.title}
-            </h3>
-
-            <div className="mt-1.5 flex items-center gap-0.5">
-              {post.tags.map((tag: any) => (
-                <TagLink key={tag._id} tagName={tag.name} />
-              ))}
-            </div>
-
-            <div className="mt-3 flex items-center gap-6">
-              <div className="flex items-center gap-6">
-                <Metric icon={Heart} number={post.likes} />
-                <Metric icon={MessageCircle} number={post.comments} />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-2">
+                <h3 className="first-letter:uppercase">{author.name}</h3>
+                <p className="mt-1 text-xs text-zinc-400">
+                  {getTimestamp(post.createdAt)}
+                </p>
               </div>
-              <Metric icon={Eye} number={post.views} />
+              <p className="-mt-1 text-sm text-zinc-400">@{author.username}</p>
+              <h3 className="mt-3 text-2xl font-bold transition hover:text-indigo-400 max-sm:text-xl">
+                {post.title}
+              </h3>
+              <div className="mt-1.5 flex items-center gap-0.5">
+                {post.tags.map((tag: any) => (
+                  <TagLink key={tag._id} tagName={tag.name} />
+                ))}
+              </div>
+              <div className="mt-3 flex items-center gap-6">
+                <div className="flex items-center gap-6">
+                  <Metric icon={Heart} number={post.likes} />
+                  <Metric icon={MessageCircle} number={post.comments.length} />
+                </div>
+                <Metric icon={Eye} number={post.views} />
+              </div>
             </div>
           </div>
+        </div>
+        <div className="mt-6 flex flex-col gap-3">
+          {post?.comments.length >= 2 &&
+            post.comments.map((item: any) => (
+              <article key={item._id} className="flex w-full items-start gap-2">
+                <div>
+                  <UserAvatar
+                    imgUrl={item.author.picture}
+                    classNames="h-8 w-8"
+                  />
+                </div>
+                <div className="flex-1 rounded-lg bg-[#272727] p-5 pb-2.5">
+                  <div className="mb-5 flex items-center gap-1.5">
+                    <div className="flex items-center gap-1 font-semibold">
+                      <p>{item.author.name}</p>
+                      <p className="text-sm text-zinc-400">
+                        @{item.author.username}
+                      </p>
+                    </div>
+                    <p className="mt-0.5 text-xs text-zinc-400">
+                      {getTimestamp(item.createdAt)}
+                    </p>
+                  </div>
+                  <ParseHTML data={item.text} comment />
+                </div>
+              </article>
+            ))}
+        </div>
+        <div className="group ml-8 mt-4 w-fit rounded-xl px-3 py-2  hover:bg-zinc-800">
+          <p className="text-sm font-semibold text-zinc-400 group-hover:text-white">
+            Все комментарии ({post.comments.length})
+          </p>
         </div>
       </div>
     </Link>

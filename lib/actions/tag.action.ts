@@ -106,18 +106,23 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
       .populate([
         {
           path: "posts",
-          model: Post,
           options: {
             populate: [
               {
                 path: "author",
                 select: "_id username picture name",
-                model: User,
               },
               {
                 path: "tags",
                 select: "_id name",
-                model: Tag,
+              },
+              {
+                path: "comments",
+                options: {
+                  populate: {
+                    path: "author",
+                  },
+                },
               },
             ],
             sort: sortQuery,
@@ -141,10 +146,10 @@ export const editTag = async (params: EditTagParams) => {
 
     const user = await User.findById(userId);
 
-    if (user._id.toString() !== authorId)
-      throw new Error("Вы не создатель тега.");
+    if (user._id.toString() !== authorId) throw new Error("Unauthorized.");
 
     await Tag.findByIdAndUpdate(tagId, updatedData);
+
     revalidatePath(path);
   } catch (e) {
     console.log(e);

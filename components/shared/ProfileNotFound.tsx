@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../ui/button";
 
-const NoProfile = () => {
+const ProfileNotFound = () => {
   const userInfo = [
     {
       icon: MapPin,
@@ -94,4 +94,4 @@ const NoProfile = () => {
     </div>
   );
 };
-export default NoProfile;
+export default ProfileNotFound;

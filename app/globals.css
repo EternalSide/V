@@ -23,7 +23,7 @@ html,
   }
 
   .card-main {
-    @apply bg-main flex w-full flex-col items-start rounded-md border border-neutral-800/40  hover:border-indigo-700;
+    @apply bg-main flex w-full flex-col items-start  border border-transparent  hover:border-indigo-700;
   }
 
   .no-focus {

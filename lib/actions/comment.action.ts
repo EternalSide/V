@@ -46,13 +46,17 @@ export const createComment = async (params: CreateCommentParams) => {
       },
     });
 
-    // Отправляем уведомление пользователю.
-    // Сменить на !isOwnAction - сейчас стоит для теста.
+    /* Отправляем уведомление пользователю.
+    Сменить на !isOwnAction - сейчас отправляет 
+    уведомление сам себе
+    */
     const isOwnAction = author === updatedPost.author.toString();
 
     if (isOwnAction) {
       const user = await User.findById(author);
-      const messageForUser = `🐱‍💻 ${user.name} прокомментировал ваш пост - ${updatedPost.title}`;
+
+      const messageForUser = `🔔 ${user.name} прокомментировал ваш пост - ${updatedPost.title}`;
+
       await pusherServer.trigger(
         updatedPost.author.toString(),
         "comment",
@@ -75,12 +79,10 @@ export const getComments = async (params: GetCommentsParams) => {
 
     const post = await Post.findById(postId).populate({
       path: "comments",
-      model: Comment,
       options: {
         sort: { createdAt: -1 },
         populate: {
           path: "author",
-          model: User,
           select: "_id username picture name",
         },
       },

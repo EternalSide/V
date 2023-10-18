@@ -7,8 +7,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { sidebarLinks } from "@/constants";
-import { getUserById } from "@/lib/actions/user.action";
-import { auth } from "@clerk/nextjs";
 import { Hash, Menu } from "lucide-react";
 import Link from "next/link";
 import BellPusher from "../BellPusher";
@@ -28,10 +26,7 @@ const BaseLink = ({ route, label, icon: Icon }: any) => {
   );
 };
 
-const MobileNavbar = async () => {
-  const { userId } = auth();
-  const user = await getUserById({ clerkId: userId! });
-
+const MobileNavbar = async ({ username, followingTags }: any) => {
   return (
     <Sheet>
       <SheetTrigger>
@@ -39,30 +34,25 @@ const MobileNavbar = async () => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="bg-main w-[300px] overflow-y-auto border-r-black pt-16 "
+        className="w-[300px] overflow-y-auto border-r-black bg-black pt-20"
       >
         <SheetHeader>
           <SheetDescription>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
               {sidebarLinks.map((item) => {
-                if (item.label === "Профиль") {
-                  return (
-                    <SheetClose key={item.route} asChild>
-                      <BaseLink
-                        route={`/${
-                          !user?.username ? "sign-in" : user.username
-                        }`}
-                        label={item.label}
-                        icon={item.icon}
-                      />
-                    </SheetClose>
-                  );
-                }
+                const isProfileLink = item.label === "Профиль";
                 return (
                   <SheetClose key={item.route} asChild>
                     <BaseLink
-                      route={item.route}
+                      key={item.label}
                       label={item.label}
+                      route={
+                        !isProfileLink
+                          ? item.route
+                          : !username
+                          ? "/sign-in"
+                          : username
+                      }
                       icon={item.icon}
                     />
                   </SheetClose>
@@ -74,19 +64,17 @@ const MobileNavbar = async () => {
             <div className="mt-8 text-left">
               <h3 className="px-3 text-xl font-bold">Подписки</h3>
               <div className="mt-3 flex flex-col gap-3">
-                {user?.followingTags?.map((tag: any) => {
-                  return (
-                    <SheetClose key={tag._id} asChild>
-                      <BaseLink
-                        route={`/tags/${tag.name}`}
-                        label={tag.name}
-                        icon={Hash}
-                      />
-                    </SheetClose>
-                  );
-                })}
+                {followingTags?.map((tag: any) => (
+                  <SheetClose key={tag._id} asChild>
+                    <BaseLink
+                      route={`/tags/${tag.name}`}
+                      label={tag.name}
+                      icon={Hash}
+                    />
+                  </SheetClose>
+                ))}
               </div>
-              {!user?.username && (
+              {!username && (
                 <div
                   className="flex items-center
                     gap-x-2 rounded-md px-3 py-2"

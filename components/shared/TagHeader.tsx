@@ -25,13 +25,8 @@ const TagHeader = ({
   isCreator,
 }: TagHeaderProps) => {
   return (
-    <div
-      className={`bg-main mt-3 w-full rounded-md p-2 ${
-        chat &&
-        "!rounded-none border !border-neutral-700 !border-r-transparent !bg-black"
-      }`}
-    >
-      <div className="flex items-start  justify-between px-6 py-5 max-lg:flex-col max-lg:gap-10">
+    <div className="bg-main w-full  p-2">
+      <div className="flex items-start justify-between px-6 py-5 max-lg:flex-col max-lg:gap-10">
         <div className="flex items-center gap-4">
           <div>
             {tagPicture ? (

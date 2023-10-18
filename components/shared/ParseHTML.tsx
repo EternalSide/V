@@ -29,10 +29,12 @@ const ParseHTML = ({
   data,
   post,
   info,
+  comment,
 }: {
   data: string;
   post?: boolean;
   info?: boolean;
+  comment?: boolean;
 }) => {
   useEffect(() => {
     Prism.highlightAll();
@@ -47,7 +49,7 @@ const ParseHTML = ({
           <p
             className={`mb-3 w-full text-lg ${
               info && "mt-4 !text-sm text-zinc-300"
-            }`}
+            }  ${comment && "!text-[16px]"}  `}
             style={{ fontSize: 18 }}
           >
             {domToReact(domNode.children, options)}
@@ -65,7 +67,7 @@ const ParseHTML = ({
   };
 
   return (
-    <div className={`${post && "mb-6 mt-10"} w-full min-w-full  max-w-full `}>
+    <div className={`${post && "mb-6 mt-10"}w-full min-w-full  max-w-full `}>
       {parse(data, options)}
     </div>
   );

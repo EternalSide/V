@@ -1,9 +1,8 @@
-import { getPostById } from "@/lib/actions/post.action";
+import { getPopularPosts, getPostById } from "@/lib/actions/post.action";
 import { getTimestamp } from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Link from "next/link";
 import { UserAvatar } from "@/components/shared/UserAvatar";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { auth } from "@clerk/nextjs";
 import PostActions from "@/components/shared/PostActions";
@@ -14,6 +13,7 @@ import { Metadata } from "next";
 import UserCard from "@/components/cards/UserCard";
 import { ITag } from "@/database/models/tag.model";
 import TagLink from "@/components/shared/TagLink";
+import { BlockTitle } from "@/components/shared/Sidebar/RightSidebar";
 
 interface ProfilePageProps {
   params: { postId: string };
@@ -32,7 +32,8 @@ export async function generateMetadata({
 const PostPage = async ({ params }: ProfilePageProps) => {
   const post = await getPostById({ id: params.postId });
   const { userId } = auth();
-
+  // Заменить на рекомендуемое
+  const popularPosts = await getPopularPosts();
   let user;
 
   if (userId) {
@@ -110,8 +111,8 @@ const PostPage = async ({ params }: ProfilePageProps) => {
           </p>
         </div>
 
-        <div className="mt-10 px-14 max-md:px-6">
-          <h1 className="text-5xl font-bold">{post.title}</h1>
+        <div className=" mt-10 px-14 max-md:px-6">
+          <h1 className="mb-14 text-5xl font-bold">{post.title}</h1>
           <ParseHTML data={post.text} post={true} />
         </div>
 
@@ -136,7 +137,27 @@ const PostPage = async ({ params }: ProfilePageProps) => {
         </div>
       </div>
 
-      <UserCard author={post.author} />
+      <div className="sticky right-0 top-0 overflow-y-auto">
+        <UserCard author={post.author} />
+
+        <div className="bg-main mt-5 flex h-fit w-[320px] flex-col rounded-md border border-neutral-800 max-lg:hidden">
+          <BlockTitle name="Похожее" />
+          {popularPosts.map((post: any) => (
+            <Link
+              href={`/post/${post._id.toString()}`}
+              key={post._id}
+              className="group border border-transparent px-5 py-4 hover:border-indigo-700"
+            >
+              <p className="text-neutral-200 transition group-hover:text-indigo-500">
+                {post.title}
+              </p>
+              <p className="mt-2 text-sm text-zinc-400">
+                Комментариев: {post.numberOfComments}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
