@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import Loading from "./loading";
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +58,7 @@ const NotificationPage = async ({ searchParams }: any) => {
               {item.postId.title}
             </Link>
             <div className="mt-1.5 rounded-md bg-[#333232] p-6 pb-2 text-left">
-              <ParseHTML data={item?.text} />
+              <p>{item?.text}</p>
             </div>
           </div>
         ))}

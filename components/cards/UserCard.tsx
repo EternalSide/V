@@ -1,7 +1,6 @@
 import { formatDate } from "@/lib/utils";
 import { UserAvatar } from "../shared/UserAvatar";
 import Link from "next/link";
-import { Button } from "../ui/button";
 
 const UserCard = ({ author }: any) => {
   const userInfo = [
@@ -47,7 +46,7 @@ const UserCard = ({ author }: any) => {
           ))}
 
           <Link href={`/${author.username}`}>
-            <Button className="w-full bg-indigo-600">Профиль</Button>
+            <button className="button w-full bg-indigo-600">Профиль</button>
           </Link>
         </div>
       </div>

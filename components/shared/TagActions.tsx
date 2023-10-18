@@ -2,9 +2,10 @@
 import { toast } from "../ui/use-toast";
 import { usePathname } from "next/navigation";
 import { followTag } from "@/lib/actions/tag.action";
-import { Button } from "../ui/button";
 import Link from "next/link";
+
 import { useState } from "react";
+
 interface Props {
   tagTitle: string;
   tagId: string;
@@ -56,20 +57,20 @@ const TagActions = ({ tagId, isFollowing, userId, tagTitle, page }: Props) => {
 
   return (
     <div className="flex items-center gap-3">
-      <Button
+      <button
         onClick={handleFollowTag}
-        className={`!bg-indigo-600 !text-white ${
+        className={`button !bg-indigo-600 !text-white ${
           isTagOptimistic &&
           "border-2 border-neutral-600 !bg-transparent !text-neutral-300"
         }`}
       >
         {isTagOptimistic ? "Отписаться" : "Подписаться"}
-      </Button>
+      </button>
       {page !== "tagPage" && (
         <Link href={`/tags/${tagTitle}`}>
-          <Button className="button-main !bg-indigo-600 !text-white">
+          <button className="button button-main !bg-indigo-600 !text-white">
             Перейти
-          </Button>
+          </button>
         </Link>
       )}
     </div>

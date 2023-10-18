@@ -86,7 +86,7 @@ const PostPage = async ({ params }: ProfilePageProps) => {
             </Link>
             {isOwnPost && (
               <Link href={`/edit/${post._id}`}>
-                <Button className="button-main">Редактировать</Button>
+                <button className="button button-main">Редактировать</button>
               </Link>
             )}
           </div>

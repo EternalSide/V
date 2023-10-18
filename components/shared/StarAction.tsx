@@ -20,12 +20,7 @@ const StarAction = ({
 }: StarActionProps) => {
   const path = usePathname();
 
-  const [test, testQ] = useState(isPostSaved || false);
-
-  const [isSavedOptimistic, setIsSavedOptimistic] = useOptimistic(
-    isPostSaved || false,
-    (state) => (isPostSaved = state),
-  );
+  const [isSaved, setIsSaved] = useState(isPostSaved || false);
 
   const handleAddPostToFavourites = async (e: any) => {
     e.preventDefault();
@@ -37,24 +32,22 @@ const StarAction = ({
         description: `Войдите в аккаунт, чтобы добавить пост в избранное.`,
       });
     try {
-      if (!test) {
-        testQ(true);
-        // setIsSavedOptimistic(true);
+      if (!isSaved) {
+        setIsSaved(true);
+
         toast({
           duration: 1000,
           title: `Пост добавлен в избранное ⭐`,
           description: `Вы добавили пост пользователя ${authorName} в избранное.`,
         });
       } else {
-        testQ(false);
+        setIsSaved(false);
 
-        // setIsSavedOptimistic(false);
         toast({
           duration: 1000,
           title: `Пост удален из избранного ❌`,
           description: `Вы удалили пост пользователя ${authorName} из избранного.`,
         });
-        console.log("ok");
       }
       await savePost({
         userId,
@@ -71,10 +64,10 @@ const StarAction = ({
   return (
     <Star
       onClick={handleAddPostToFavourites}
-      fill={test ? "#6366f1" : ""}
+      fill={isSaved ? "#6366f1" : ""}
       className={cn(
         baseStyles,
-        test && "text-[#6366f1] transition hover:opacity-90",
+        isSaved && "text-[#6366f1] transition hover:opacity-90",
       )}
     />
   );

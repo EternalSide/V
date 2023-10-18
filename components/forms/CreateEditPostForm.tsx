@@ -4,7 +4,6 @@ import { createPostSchema } from "@/lib/validation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -21,9 +20,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { createPost, editPost } from "@/lib/actions/post.action";
 import { SingleImageDropzone } from "@/components/shared/SingleImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
-import BarLoader from "react-spinners/BarLoader";
 import { useToast } from "../ui/use-toast";
-import { editorPlugins } from "@/constants/editor";
+import { editorPlugins } from "@/constants";
 
 interface Props {
   mongoUserId: string;
@@ -250,22 +248,16 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
                     }}
                   />
 
-                  <Button
+                  <button
                     disabled={isLoading || field?.value!.length >= 1}
                     type="button"
-                    className={`button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
+                    className={`button button-main relative  mt-3 w-full rounded-md bg-indigo-600 py-2 text-center hover:opacity-90 ${
                       isLoading && "border-b-[0px] "
                     }`}
                     onClick={(e) => handleUploadPicture(e, field)}
                   >
                     {isLoading ? "Загружается..." : "Загрузить"}
-                    {isLoading && (
-                      <BarLoader
-                        height={"1px"}
-                        className="!absolute bottom-0 left-0 !w-full !bg-indigo-700"
-                      />
-                    )}
-                  </Button>
+                  </button>
                 </div>
               </FormControl>
               <FormMessage className="text-indigo-500" />
@@ -306,13 +298,13 @@ const CreateEditPostForm = ({ type, postDetails, mongoUserId }: Props) => {
             </FormItem>
           )}
         />
-        <Button
+        <button
           disabled={isSubmitting}
-          className="bg-main -mt-5 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
+          className="button bg-main -mt-5 w-full max-w-3xl bg-indigo-700 hover:bg-indigo-600"
           type="submit"
         >
           {isSubmitting ? "Публикация.." : " Опубликовать"}
-        </Button>
+        </button>
       </form>
     </Form>
   );

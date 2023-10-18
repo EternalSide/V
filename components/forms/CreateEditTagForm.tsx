@@ -19,11 +19,10 @@ import { Editor } from "@tinymce/tinymce-react";
 import { usePathname, useRouter } from "next/navigation";
 import { SingleImageDropzone } from "@/components/shared/SingleImageDropzone";
 import { useEdgeStore } from "@/lib/edgestore";
-import BarLoader from "react-spinners/BarLoader";
 import { useToast } from "@/components/ui/use-toast";
 import { editTag } from "@/lib/actions/tag.action";
 import { Textarea } from "@/components//ui/textarea";
-import { editorPlugins } from "@/constants/editor";
+import { editorPlugins } from "@/constants";
 
 interface Props {
   mongoUserId: string;
@@ -187,12 +186,6 @@ const CreateEditTagForm = ({ type, tagDetails, mongoUserId }: Props) => {
                     onClick={(e) => handleUploadPicture(e, field)}
                   >
                     {isLoading ? "Загрузка..." : "Загрузить"}
-                    {isLoading && (
-                      <BarLoader
-                        height={"1px"}
-                        className="!absolute bottom-0 left-0 !w-full !bg-indigo-700"
-                      />
-                    )}
                   </Button>
                 </div>
               </FormControl>

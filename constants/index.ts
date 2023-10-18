@@ -49,3 +49,21 @@ export const homeFilters: HomeFiltersTypes[] = [
     label: "Популярное",
   },
 ];
+
+export const editorPlugins = [
+  "advlist",
+  "autolink",
+  "lists",
+  "link",
+  "image",
+  "charmap",
+  "preview",
+  "anchor",
+  "searchreplace",
+  "visualblocks",
+  "codesample",
+  "fullscreen",
+  "insertdatetime",
+  "media",
+  "table",
+];

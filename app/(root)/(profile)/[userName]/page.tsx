@@ -59,9 +59,9 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
         <div className="relative flex flex-col items-center max-md:items-start max-md:px-3">
           {isOwnProfile && (
             <Link href="/settings">
-              <Button className="button-main absolute right-7 top-4">
+              <button className="button button-main absolute right-7 top-4">
                 Редактировать
-              </Button>
+              </button>
             </Link>
           )}
           <div className="relative -mt-12 h-32 w-32">

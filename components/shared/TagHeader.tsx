@@ -1,7 +1,6 @@
 "use client";
 import Image from "next/image";
 import TagActions from "./TagActions";
-import { Button } from "../ui/button";
 import Link from "next/link";
 
 interface TagHeaderProps {
@@ -77,9 +76,9 @@ const TagHeader = ({
           />
           {isCreator && (
             <Link href={`/tags/${tagTitle}/edit`}>
-              <Button className="bg-indigo-600 text-white">
+              <button className="button bg-indigo-600 text-white">
                 Редактировать
-              </Button>
+              </button>
             </Link>
           )}
         </div>

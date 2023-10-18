@@ -17,6 +17,7 @@ import { useToast } from "../ui/use-toast";
 import { createComment } from "@/lib/actions/comment.action";
 import { useRef } from "react";
 import { commentSchema } from "@/lib/validation";
+import { editorPlugins } from "@/constants";
 
 interface Props {
   authorId: string;
@@ -75,23 +76,7 @@ const CreateCommentForm = ({ postId, authorId }: Props) => {
                   init={{
                     height: 450,
                     menubar: false,
-                    plugins: [
-                      "advlist",
-                      "autolink",
-                      "lists",
-                      "link",
-                      "image",
-                      "charmap",
-                      "preview",
-                      "anchor",
-                      "searchreplace",
-                      "visualblocks",
-                      "codesample",
-                      "fullscreen",
-                      "insertdatetime",
-                      "media",
-                      "table",
-                    ],
+                    plugins: editorPlugins,
                     toolbar:
                       "undo redo | " +
                       "codesample | bold italic forecolor | alignleft aligncenter |" +

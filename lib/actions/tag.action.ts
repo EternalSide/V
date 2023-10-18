@@ -5,7 +5,6 @@ import { revalidatePath } from "next/cache";
 import User from "@/database/models/user.model";
 import Post from "@/database/models/post.model";
 import { EditTagParams, FollowTagParams, GetTagInfoParams } from "./shared";
-import Message from "@/database/message.model";
 
 export const getPopularTags = async () => {
   try {
@@ -124,19 +123,6 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
             sort: sortQuery,
           },
         },
-        {
-          path: "messages",
-          model: Message,
-          options: {
-            populate: [
-              {
-                path: "author",
-                select: "_id username picture name",
-                model: User,
-              },
-            ],
-          },
-        },
       ])
       .populate("followers");
 
@@ -155,12 +141,10 @@ export const editTag = async (params: EditTagParams) => {
 
     const user = await User.findById(userId);
 
-    if (user._id.toString() !== authorId) {
-      throw new Error("Отказано.");
-    }
+    if (user._id.toString() !== authorId)
+      throw new Error("Вы не создатель тега.");
 
     await Tag.findByIdAndUpdate(tagId, updatedData);
-
     revalidatePath(path);
   } catch (e) {
     console.log(e);
