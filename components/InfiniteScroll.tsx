@@ -24,8 +24,10 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 	}, [inView]);
 
 	useEffect(() => {
-		setInitianPosts([...posts]);
-	}, [searchParams.get("q")]);
+		if (searchParams.get("q")) {
+			setInitianPosts([...posts]);
+		}
+	}, [searchParams]);
 
 	const loadMorePosts = async () => {
 		try {
