@@ -25,7 +25,6 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 
 	useEffect(() => {
 		setInitianPosts([...posts]);
-		alert("данные сменились");
 	}, [searchParams.get("q")]);
 
 	const loadMorePosts = async () => {
