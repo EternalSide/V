@@ -23,6 +23,8 @@ export interface getUserByIdParams {
 }
 export interface getUserByUsername {
 	username: string;
+	page?: number;
+	pageSize?: number;
 }
 
 export interface CreatePostParams {

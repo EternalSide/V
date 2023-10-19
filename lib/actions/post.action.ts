@@ -88,7 +88,7 @@ export const getPostById = async (params: GetPostByIdParams) => {
 export const getAllPosts = async (params: GetAllPostsParams) => {
 	try {
 		connectToDatabase();
-		const {filterValue, page = 1, pageSize = 3, path = "/"} = params;
+		const {filterValue, page = 1, pageSize = 5} = params;
 
 		const skipValue = (page - 1) * pageSize;
 
@@ -279,11 +279,26 @@ export async function getRecommendedPosts(params: {userId?: string; pageSize?: n
 
 		if (!user) {
 			recommendedPosts = await Post.find({})
-				.populate("author")
+				.select(["-text"])
+				.populate({
+					path: "author",
+					select: "name _id picture username",
+				})
 				.populate({path: "tags", model: Tag, select: "name _id"})
-				.sort({createdAt: -1, upvotes: -1, views: -1});
-
-			return recommendedPosts;
+				.populate({
+					path: "comments",
+					options: {
+						populate: {
+							path: "author",
+						},
+					},
+				})
+				.skip(skipAmount)
+				.limit(pageSize)
+				.sort({views: -1, createdAt: -1, upvotes: -1});
+			return {
+				posts: JSON.parse(JSON.stringify(recommendedPosts)),
+			};
 		} else {
 			const userInteractions = await Interaction.find({user: user._id}).populate("tags").exec();
 

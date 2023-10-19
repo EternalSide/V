@@ -1,3 +1,4 @@
+import InfiniteScroll from "@/components/InfiniteScroll";
 import PostCard from "@/components/cards/PostCard";
 import ProfileNotFound from "@/components/shared/ProfileNotFound";
 import {UserAvatar} from "@/components/shared/UserAvatar";
@@ -147,7 +148,14 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 				</div>
 
 				<div className='flex w-full flex-col gap-1.5'>
-					{user.posts.map((post: any, index: number) => (
+					<InfiniteScroll
+						userId={userId?.toString()}
+						user={JSON.stringify(mongoUser)}
+						posts={JSON.parse(JSON.stringify(user.posts))}
+						id='ProfilePage'
+						username={user.username}
+					/>
+					{/* {user.posts.map((post: any, index: number) => (
 						<PostCard
 							key={post._id}
 							userId={mongoUser?._id.toString()}
@@ -171,7 +179,7 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 								id: post._id.toString(),
 							}}
 						/>
-					))}
+					))} */}
 				</div>
 			</div>
 		</div>

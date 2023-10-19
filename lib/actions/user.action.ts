@@ -1,198 +1,203 @@
 "use server";
 import User from "@/database/models/user.model";
-import { connectToDatabase } from "../mongoose";
+import {connectToDatabase} from "../mongoose";
 import {
-  CreateUserParams,
-  GetUserNotificationParams,
-  SavePostParams,
-  UpdateUserParams,
-  deleteUserParams,
-  getUserByIdParams,
-  getUserByUsername,
+	CreateUserParams,
+	GetUserNotificationParams,
+	SavePostParams,
+	UpdateUserParams,
+	deleteUserParams,
+	getUserByIdParams,
+	getUserByUsername,
 } from "./shared";
-import { revalidatePath } from "next/cache";
+import {revalidatePath} from "next/cache";
 import Post from "@/database/models/post.model";
 import Tag from "@/database/models/tag.model";
 import Interaction from "@/database/models/interaction.model";
 import Comment from "@/database/models/comment.model";
 
 export const createUser = async (userData: CreateUserParams) => {
-  try {
-    connectToDatabase();
+	try {
+		connectToDatabase();
 
-    const user = await User.create(userData);
+		const user = await User.create(userData);
 
-    return user;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		return user;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 };
 
 export const updateUser = async (params: UpdateUserParams) => {
-  try {
-    connectToDatabase();
+	try {
+		connectToDatabase();
 
-    const { clerkId, updatedData, path } = params;
+		const {clerkId, updatedData, path} = params;
 
-    await User.findOneAndUpdate({ clerkId }, updatedData, {
-      new: true,
-      upsert: true,
-    });
+		await User.findOneAndUpdate({clerkId}, updatedData, {
+			new: true,
+			upsert: true,
+		});
 
-    revalidatePath(path);
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		revalidatePath(path);
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 };
 
 export const deleteUser = async (params: deleteUserParams) => {
-  try {
-    connectToDatabase();
-    const { clerkId } = params;
+	try {
+		connectToDatabase();
+		const {clerkId} = params;
 
-    const user = await User.findOne({ clerkId });
+		const user = await User.findOne({clerkId});
 
-    if (!user) {
-      throw new Error("Пользователь не найден.");
-    }
+		if (!user) {
+			throw new Error("Пользователь не найден.");
+		}
 
-    const deletedUser = await User.findByIdAndDelete(user._id);
-    await Post.deleteMany({ author: deletedUser._id });
-    await Interaction.deleteMany({ user: deletedUser._id });
-    await Comment.deleteMany({ user: deletedUser._id });
+		const deletedUser = await User.findByIdAndDelete(user._id);
+		await Post.deleteMany({author: deletedUser._id});
+		await Interaction.deleteMany({user: deletedUser._id});
+		await Comment.deleteMany({user: deletedUser._id});
 
-    return deletedUser;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		return deletedUser;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 };
 
 export async function getUserById(params: getUserByIdParams) {
-  try {
-    connectToDatabase();
+	try {
+		connectToDatabase();
 
-    const { clerkId } = params;
+		const {clerkId} = params;
 
-    const user = await User.findOne({ clerkId }).populate("followingTags");
+		const user = await User.findOne({clerkId}).populate("followingTags");
 
-    if (!user) return null;
+		if (!user) return null;
 
-    return user;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		return user;
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 }
 
 export async function getUserByUserName(params: getUserByUsername) {
-  try {
-    connectToDatabase();
+	try {
+		connectToDatabase();
 
-    const { username } = params;
+		const {username, page = 1, pageSize = 5} = params;
 
-    const user = await User.findOne({
-      username: username.toLowerCase(),
-    })
-      .populate({
-        path: "posts",
-        model: Post,
-        options: {
-          sort: { createdAt: -1 },
-          select: ["-text"],
-          populate: [
-            {
-              path: "tags",
-              model: Tag,
-              select: "name",
-            },
-            {
-              path: "comments",
-              options: {
-                populate: {
-                  path: "author",
-                },
-              },
-            },
-          ],
-        },
-      })
-      .populate({
-        path: "followingTags",
-        options: {
-          select: "name picture",
-        },
-      });
+		const skipAmount = (page - 1) * pageSize;
 
-    return user;
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		const user = await User.findOne({
+			username: username.toLowerCase(),
+		})
+			.populate({
+				path: "posts",
+				model: Post,
+				options: {
+					sort: {createdAt: -1},
+					skip: skipAmount,
+					limit: 5,
+					select: ["-text"],
+					populate: [
+						{
+							path: "tags",
+							model: Tag,
+							select: "name",
+						},
+
+						{
+							path: "author",
+						},
+						{
+							path: "comments",
+							options: {
+								populate: {
+									path: "author",
+								},
+							},
+						},
+					],
+				},
+			})
+			.populate({
+				path: "followingTags",
+				options: {
+					select: "name picture",
+				},
+			});
+
+		return JSON.parse(JSON.stringify(user));
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 }
 
 export async function savePost(params: SavePostParams) {
-  try {
-    connectToDatabase();
+	try {
+		connectToDatabase();
 
-    const { postId, userId, path, isPostSaved } = params;
+		const {postId, userId, path, isPostSaved} = params;
 
-    let updateQuery = {};
+		let updateQuery = {};
 
-    if (isPostSaved) {
-      updateQuery = { $pull: { savedPosts: postId } };
-    } else {
-      updateQuery = { $addToSet: { savedPosts: postId } };
-    }
+		if (isPostSaved) {
+			updateQuery = {$pull: {savedPosts: postId}};
+		} else {
+			updateQuery = {$addToSet: {savedPosts: postId}};
+		}
 
-    const user = await User.findByIdAndUpdate(userId, updateQuery);
+		const user = await User.findByIdAndUpdate(userId, updateQuery);
 
-    if (!user) throw new Error("User не найден.");
+		if (!user) throw new Error("User не найден.");
 
-    revalidatePath(path);
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		revalidatePath(path);
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 }
 
 export async function getUserNotifications(params: GetUserNotificationParams) {
-  try {
-    connectToDatabase();
-    const { clerkId, page = 1, pageSize = 10 } = params;
+	try {
+		connectToDatabase();
+		const {clerkId, page = 1, pageSize = 10} = params;
 
-    const skipAmount = (page - 1) * pageSize;
+		const skipAmount = (page - 1) * pageSize;
 
-    const user = await User.findOne({
-      clerkId,
-    })
-      .select("notifications")
-      .populate([
-        {
-          path: "notifications.user",
-          select: "username picture name",
-        },
-        {
-          path: "notifications.postId",
-          select: "_id title",
-        },
-      ])
-      .limit(pageSize);
+		const user = await User.findOne({
+			clerkId,
+		})
+			.select("notifications")
+			.populate([
+				{
+					path: "notifications.user",
+					select: "username picture name",
+				},
+				{
+					path: "notifications.postId",
+					select: "_id title",
+				},
+			])
+			.limit(pageSize);
 
-    if (!user) return null;
+		if (!user) return null;
 
-    const notifications = user.notifications.slice(
-      skipAmount,
-      pageSize + skipAmount,
-    );
+		const notifications = user.notifications.slice(skipAmount, pageSize + skipAmount);
 
-    const isNext = user.notifications.length > pageSize + skipAmount;
+		const isNext = user.notifications.length > pageSize + skipAmount;
 
-    return { notifications, isNext };
-  } catch (e) {
-    console.log(e);
-    throw e;
-  }
+		return {notifications, isNext};
+	} catch (e) {
+		console.log(e);
+		throw e;
+	}
 }

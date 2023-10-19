@@ -6,8 +6,19 @@ import PostCard from "./cards/PostCard";
 import {getAllPosts, getRecommendedPosts} from "@/lib/actions/post.action";
 import {usePathname, useSearchParams} from "next/navigation";
 import {getTagInfo} from "@/lib/actions/tag.action";
+import {getUserByUserName} from "@/lib/actions/user.action";
 
-const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) => {
+interface Props {
+	userId?: string;
+	username?: string;
+	tagName?: string;
+	filterValue?: string;
+	user: any;
+	posts: any;
+	id?: string;
+}
+
+const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username}: Props) => {
 	const newPosts = JSON.parse(JSON.stringify(posts));
 	const path = usePathname();
 	const [initialPosts, setInitianPosts] = useState([...newPosts]);
@@ -34,20 +45,40 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 	const loadMorePosts = async () => {
 		try {
 			const nextPage = page + 1;
-			let posts: any;
-			if (id === "tagPage") {
+
+			let posts: any = [];
+
+			// Теги
+			if (id === "tagPage" && tagName) {
 				const tag = await getTagInfo({page: nextPage, tagName});
 				posts = tag.posts;
-			} else {
+			}
+			// Профиль
+			else if (id === "ProfilePage" && username) {
+				const user = await getUserByUserName({page: nextPage, username});
+
+				posts = user.posts;
+				// На главной страниице
+			} else if (id === "MainPage") {
+				// Рекомендованные
 				if (searchParams.get("q") === "recommended") {
-					// @ts-ignore
-					const {posts: data} = await getRecommendedPosts({page: nextPage, userId});
-					posts = data;
-					console.log("реккомендованые посты");
+					if (userId) {
+						// @ts-ignore
+						const {posts: data} = await getRecommendedPosts({
+							userId,
+							page: nextPage,
+						});
+						posts = data;
+					} else {
+						// @ts-ignore
+						const {posts: data} = await getRecommendedPosts({
+							page: nextPage,
+						});
+						posts = data;
+					}
 				} else {
-					const {posts: data} = await getAllPosts({page: nextPage, filterValue, path: path});
+					const {posts: data} = await getAllPosts({page: nextPage, filterValue, path});
 					posts = data;
-					console.log("обычные посты");
 				}
 			}
 
@@ -71,14 +102,14 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 			{initialPosts.map((post: any) => (
 				<PostCard
 					key={Math.random() * 1000}
-					userId={userId}
+					userId={userId || null}
 					banner={post?.banner}
 					isPostSaved={parsedUser?.savedPosts.includes(post._id)}
 					author={{
 						name: post.author.name,
 						picture: post.author.picture,
 						username: post.author.username,
-						_id: post.author._id.toString(),
+						_id: post.author?._id ? post.author?._id.toString() : post.author,
 					}}
 					post={{
 						id: post._id.toString(),

@@ -31,6 +31,7 @@ export default async function Home({searchParams}: SearchParamsProps) {
 			data = await getRecommendedPosts({
 				page: 1,
 			});
+			console.log(data);
 		}
 	} else {
 		data = await getAllPosts({
@@ -69,6 +70,7 @@ export default async function Home({searchParams}: SearchParamsProps) {
 						userId={userId?.toString()}
 						user={JSON.stringify(user)}
 						posts={data.posts}
+						id={"MainPage"}
 					/>
 				</div>
 			</section>
