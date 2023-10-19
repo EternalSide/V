@@ -88,7 +88,7 @@ export const getPostById = async (params: GetPostByIdParams) => {
 export const getAllPosts = async (params: GetAllPostsParams) => {
 	try {
 		connectToDatabase();
-		const {filterValue, page = 1, pageSize = 15} = params;
+		const {filterValue, page = 1, pageSize = 3, path = "/"} = params;
 
 		const skipValue = (page - 1) * pageSize;
 

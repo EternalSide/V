@@ -1,15 +1,16 @@
-/* eslint-disable */
 "use client";
 import {Loader2Icon} from "lucide-react";
 import {useEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 import PostCard from "./cards/PostCard";
 import {getAllPosts, getRecommendedPosts} from "@/lib/actions/post.action";
-import {useSearchParams} from "next/navigation";
+import {usePathname, useSearchParams} from "next/navigation";
 import {getTagInfo} from "@/lib/actions/tag.action";
 
 const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) => {
-	const [initialPosts, setInitianPosts] = useState([...posts]);
+	const newPosts = JSON.parse(JSON.stringify(posts));
+	const path = usePathname();
+	const [initialPosts, setInitianPosts] = useState([...newPosts]);
 	const {ref, inView} = useInView();
 	const [page, setPage] = useState(1);
 	const parsedUser = JSON.parse(user);
@@ -24,10 +25,11 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 	}, [inView]);
 
 	useEffect(() => {
-		if (searchParams.get("q")) {
-			setInitianPosts([...posts]);
-		}
-	}, [searchParams]);
+		const newData = JSON.parse(JSON.stringify(posts));
+
+		// @ts-ignore
+		setInitianPosts([...newData]);
+	}, [searchParams, posts, setInitianPosts]);
 
 	const loadMorePosts = async () => {
 		try {
@@ -43,7 +45,7 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 					posts = data;
 					console.log("реккомендованые посты");
 				} else {
-					const {posts: data} = await getAllPosts({page: nextPage, filterValue});
+					const {posts: data} = await getAllPosts({page: nextPage, filterValue, path: path});
 					posts = data;
 					console.log("обычные посты");
 				}
@@ -66,9 +68,9 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue}: any) =>
 
 	return (
 		<>
-			{initialPosts?.map((post: any) => (
+			{initialPosts.map((post: any) => (
 				<PostCard
-					key={post._id}
+					key={Math.random() * 1000}
 					userId={userId}
 					banner={post?.banner}
 					isPostSaved={parsedUser?.savedPosts.includes(post._id)}
