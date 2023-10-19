@@ -3,7 +3,7 @@ import { viewQuestion } from "@/lib/actions/interaction.action";
 import { setLike } from "@/lib/actions/post.action";
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { toast } from "../ui/use-toast";
 import StarAction from "./StarAction";
 import {

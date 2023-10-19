@@ -80,7 +80,9 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
   try {
     connectToDatabase();
 
-    const { tagName, search } = params;
+    const { tagName, search, pageSize = 15, page = 1 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     let sortQuery = {};
 
@@ -126,12 +128,14 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
               },
             ],
             sort: sortQuery,
+            limit: pageSize,
+            skip: skipAmount,
           },
         },
       ])
       .populate("followers");
 
-    return tag;
+    return JSON.parse(JSON.stringify(tag));
   } catch (e) {
     console.log(e);
     throw e;

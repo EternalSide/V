@@ -63,7 +63,7 @@ const RightSidebar = async () => {
         ))}
       </div>
 
-      <div className="bg-main mt-5 flex w-full flex-col rounded-md border border-neutral-800">
+      {/* <div className="bg-main mt-5 flex w-full flex-col rounded-md border border-neutral-800">
         <BlockTitle name="Топ Авторов" />
         {topAuthors.map((item: any) => (
           <Link
@@ -83,7 +83,7 @@ const RightSidebar = async () => {
             </button>
           </Link>
         ))}
-      </div>
+      </div> */}
 
       <div className="bg-main mt-5 flex w-full flex-col rounded-md border border-neutral-800">
         <BlockTitle name="Теги" />

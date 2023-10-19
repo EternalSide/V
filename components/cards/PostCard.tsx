@@ -8,6 +8,7 @@ import StarAction from "../shared/StarAction";
 import TagLink from "../shared/TagLink";
 import Metric from "../shared/Metric";
 import ParseHTML from "../shared/ParseHTML";
+import LikeAction from "../LikeAction";
 
 interface Props {
   userId: string;
@@ -27,7 +28,7 @@ interface Props {
       name: string;
     }[];
 
-    likes: number;
+    likes: any;
     views: number;
     createdAt: Date;
   };
@@ -37,7 +38,6 @@ const PostCard = ({
   author,
   post,
   userId,
-
   isOwnProfile,
   isPostSaved,
   page,
@@ -100,7 +100,12 @@ const PostCard = ({
               </div>
               <div className="mt-3 flex items-center gap-6">
                 <div className="flex items-center gap-6">
-                  <Metric icon={Heart} number={post.likes} />
+                  <LikeAction
+                    postId={post.id}
+                    userId={userId}
+                    likes={post.likes}
+                    likesLength={post.likes.length}
+                  />
                   <Metric icon={MessageCircle} number={post.comments.length} />
                 </div>
                 <Metric icon={Eye} number={post.views} />

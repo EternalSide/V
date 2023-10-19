@@ -26,7 +26,7 @@ export const BaseLink = ({ route, label, icon: Icon }: any) => {
 
 const LeftSidebar = async ({ username, followingTags }: Props) => {
   return (
-    <div className="sticky left-0 top-0 flex h-fit flex-col gap-8 overflow-y-auto border-neutral-700 pl-4 pt-[95px] text-white max-lg:h-full max-lg:border-r max-lg:px-2 max-sm:hidden lg:w-[254px]">
+    <div className="sticky left-0 top-0 flex h-fit flex-col gap-8 overflow-y-auto border-neutral-700 pl-4 pt-[95px] max-lg:h-full max-lg:border-r max-lg:px-2 max-sm:hidden lg:w-[254px]">
       <div className="flex flex-col gap-3">
         {sidebarLinks.map((item) => {
           const isProfileLink = item.label === "Профиль";
