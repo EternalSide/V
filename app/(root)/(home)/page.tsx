@@ -1,4 +1,4 @@
-import InfiniteScroll from "@/components/InfiniteScroll";
+import InfiniteScroll from "@/components/shared/InfiniteScroll";
 import FilterComponents from "@/components/shared/FilterComponents";
 import HomeFilters from "@/components/shared/HomeFilters";
 import LeftSidebar from "@/components/shared/Sidebar/LeftSidebar";
@@ -8,6 +8,7 @@ import {getAllPosts, getRecommendedPosts} from "@/lib/actions/post.action";
 import {getUserById} from "@/lib/actions/user.action";
 import {SearchParamsProps} from "@/types";
 import {auth} from "@clerk/nextjs";
+import Loading from "./loading";
 
 export const metadata = {
 	title: {
@@ -40,10 +41,8 @@ export default async function Home({searchParams}: SearchParamsProps) {
 		});
 	}
 
-	// Fake data для тест бесконечнеого скролла
-	// for (let i = 0; i <= 100; i++) {
-	//   sendFakeData();
-	// }
+	// const isLoading = true;
+	// if (isLoading) return <Loading />;
 
 	return (
 		<div className='mx-auto flex w-full max-w-7xl gap-3 max-lg:gap-0'>
@@ -71,6 +70,7 @@ export default async function Home({searchParams}: SearchParamsProps) {
 						user={JSON.stringify(user)}
 						posts={data.posts}
 						id={"MainPage"}
+						mainId={user?._id.toString()}
 					/>
 				</div>
 			</section>

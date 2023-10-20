@@ -2,7 +2,7 @@
 import {Loader2Icon} from "lucide-react";
 import {useEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
-import PostCard from "./cards/PostCard";
+import PostCard from "../cards/PostCard";
 import {getAllPosts, getRecommendedPosts} from "@/lib/actions/post.action";
 import {usePathname, useSearchParams} from "next/navigation";
 import {getTagInfo} from "@/lib/actions/tag.action";
@@ -15,13 +15,14 @@ interface Props {
 	filterValue?: string;
 	user: any;
 	posts: any;
-	id?: string;
+	id?: "TagPage" | "ProfilePage" | "MainPage";
+	mainId?: string;
 }
 
-const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username}: Props) => {
-	const newPosts = JSON.parse(JSON.stringify(posts));
+const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username, mainId}: Props) => {
+	// const newPosts = JSON.parse(JSON.stringify(posts));
 	const path = usePathname();
-	const [initialPosts, setInitianPosts] = useState([...newPosts]);
+	const [initialPosts, setInitianPosts] = useState([...posts]);
 	const {ref, inView} = useInView();
 	const [page, setPage] = useState(1);
 	const parsedUser = JSON.parse(user);
@@ -36,11 +37,24 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 	}, [inView]);
 
 	useEffect(() => {
-		const newData = JSON.parse(JSON.stringify(posts));
+		// const newData = JSON.parse(JSON.stringify(posts));
 
-		// @ts-ignore
-		setInitianPosts([...newData]);
+		setInitianPosts([...posts]);
 	}, [searchParams, posts, setInitianPosts]);
+
+	const MainPageDesider = async (nextPage: number, posts: any) => {
+		if (searchParams.get("q") === "recommended") {
+			const {posts: data} = await getRecommendedPosts({
+				userId: !userId ? undefined : userId,
+				page: nextPage,
+			});
+			posts = data;
+		} else {
+			const {posts: data} = await getAllPosts({page: nextPage, filterValue, path});
+			posts = data;
+		}
+		return posts;
+	};
 
 	const loadMorePosts = async () => {
 		try {
@@ -48,45 +62,37 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 
 			let posts: any = [];
 
-			// Теги
-			if (id === "tagPage" && tagName) {
-				const tag = await getTagInfo({page: nextPage, tagName});
-				posts = tag.posts;
-			}
-			// Профиль
-			else if (id === "ProfilePage" && username) {
-				const user = await getUserByUserName({page: nextPage, username});
-
-				posts = user.posts;
-				// На главной страниице
-			} else if (id === "MainPage") {
-				// Рекомендованные
-				if (searchParams.get("q") === "recommended") {
-					if (userId) {
-						// @ts-ignore
-						const {posts: data} = await getRecommendedPosts({
-							userId,
-							page: nextPage,
-						});
-						posts = data;
-					} else {
-						// @ts-ignore
-						const {posts: data} = await getRecommendedPosts({
-							page: nextPage,
-						});
-						posts = data;
-					}
-				} else {
-					const {posts: data} = await getAllPosts({page: nextPage, filterValue, path});
-					posts = data;
+			switch (id) {
+				case "TagPage": {
+					// @ts-ignore
+					const tag = await getTagInfo({page: nextPage, tagName});
+					posts = tag.posts;
+					break;
 				}
+
+				case "ProfilePage": {
+					// @ts-ignore
+					const user = await getUserByUserName({page: nextPage, username});
+					console.log(user);
+					posts = user.posts;
+
+					break;
+				}
+
+				case "MainPage": {
+					const data = await MainPageDesider(nextPage, posts);
+					posts = data;
+					break;
+				}
+
+				default:
+					break;
 			}
 
 			if (posts?.length) {
 				setPage(nextPage);
 				setInitianPosts((prev: any) => {
 					setHasMore(true);
-
 					return [...(prev?.length ? prev : []), ...posts];
 				});
 			} else {
@@ -102,7 +108,7 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 			{initialPosts.map((post: any) => (
 				<PostCard
 					key={Math.random() * 1000}
-					userId={userId || null}
+					userId={mainId || null}
 					banner={post?.banner}
 					isPostSaved={parsedUser?.savedPosts.includes(post._id)}
 					author={{

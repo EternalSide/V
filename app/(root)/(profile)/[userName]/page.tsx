@@ -1,4 +1,4 @@
-import InfiniteScroll from "@/components/InfiniteScroll";
+import InfiniteScroll from "@/components/shared/InfiniteScroll";
 import PostCard from "@/components/cards/PostCard";
 import ProfileNotFound from "@/components/shared/ProfileNotFound";
 import {UserAvatar} from "@/components/shared/UserAvatar";
@@ -53,9 +53,9 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 
 	return (
 		<div className='mx-auto w-full max-w-6xl px-4 pt-[75px] max-md:px-0 '>
-			<div className='absolute left-0 top-[55px] -z-50 h-[130px] w-full bg-indigo-600' />
-			<div className='bg-main mt-12 w-full rounded-md border-neutral-900 pb-8'>
-				<div className='relative flex flex-col items-center max-md:items-start max-md:px-3'>
+			<div className='absolute left-0 top-[55px] h-[130px] w-full bg-indigo-700' />
+			<div className='bg-main mt-12 w-full rounded-md pb-8 z-10 relative'>
+				<div className='relative flex  flex-col items-center max-md:items-start max-md:px-3'>
 					{isOwnProfile && (
 						<Link href='/settings'>
 							<button className='button button-main absolute right-7 top-4'>Редактировать</button>
@@ -115,35 +115,45 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 				</div>
 			</div>
 
-			<div className='mt-1.5 flex items-start gap-3 pb-4'>
-				<div className=' flex w-[330px] flex-col gap-2.5 max-md:hidden'>
-					<div className='bg-main rounded-md'>
-						<h3 className='p-5 text-lg font-semibold'>Сообщества</h3>
-						<div className='border-b border-black' />
-
-						{user.followingTags.map((item: any) => (
-							<Link
-								className='group flex items-center gap-2.5 border-b border-black p-5'
-								key={item.name}
-								href={`/tags/${item.name}`}
-							>
-								<UserAvatar
-									imgUrl={item.picture || "/nouser.jfif"}
-									classNames='h-10 w-10'
-								/>
-								<p className='font-semibold text-zinc-300 first-letter:uppercase group-hover:text-indigo-500'>
-									{item.name}
-								</p>
-							</Link>
-						))}
-					</div>
-
+			<div className='mt-1.5 flex items-start gap-2.5 pb-4'>
+				<div className=' flex w-[330px] flex-col gap-1.5 max-md:hidden'>
 					<div className='bg-main flex items-center gap-2.5 rounded-md p-5 '>
 						<FileEdit
 							color='#969696'
 							className='h-5 w-5'
 						/>
 						<p className='text-neutral-200'>Публикаций: {user.posts.length}</p>
+					</div>
+					<div className='bg-main rounded-md'>
+						<h3 className='p-5 text-lg font-semibold'>Сообщества</h3>
+						<div className='border-b border-zinc-800' />
+
+						{user.followingTags.map((item: any) => (
+							<Link
+								className='group flex items-start gap-2.5 border-b border-zinc-800 p-5'
+								key={item.name}
+								href={`/tags/${item.name}`}
+							>
+								<img
+									src={item.picture || "/nouser.jfif"}
+									className='h-10 w-10 object-cover rounded-full mt-0.5'
+								/>
+
+								<div className='flex flex-col gap-2.5'>
+									<p className='font-semibold text-zinc-300 first-letter:uppercase group-hover:text-indigo-500'>
+										{item.name}
+									</p>
+									<p className='text-xs text-zinc-300'>
+										{item?.description
+											? String(item.description).length > 50
+												? item.description.slice(0, 50) + "..."
+												: item.description
+											: "Информация отсутствует."}
+										{/* {item.description.toString()[20] ? item.description.slice(0, 20) + "..." : item.desciption} */}
+									</p>
+								</div>
+							</Link>
+						))}
 					</div>
 				</div>
 
@@ -154,32 +164,8 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 						posts={JSON.parse(JSON.stringify(user.posts))}
 						id='ProfilePage'
 						username={user.username}
+						mainId={mongoUser._id.toString()}
 					/>
-					{/* {user.posts.map((post: any, index: number) => (
-						<PostCard
-							key={post._id}
-							userId={mongoUser?._id.toString()}
-							banner={post?.banner}
-							page='Profile'
-							isPostSaved={mongoUser?.savedPosts.includes(post._id)}
-							isOwnProfile={isOwnProfile}
-							author={{
-								name: user.name,
-								picture: user.picture,
-								username: user.username,
-								_id: user._id.toString(),
-							}}
-							post={{
-								title: post.title,
-								comments: post.comments,
-								tags: post.tags,
-								likes: post.upvotes,
-								views: post.views,
-								createdAt: post.createdAt,
-								id: post._id.toString(),
-							}}
-						/>
-					))} */}
 				</div>
 			</div>
 		</div>

@@ -3,12 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {getTimestamp} from "@/lib/utils";
 import {UserAvatar} from "../shared/UserAvatar";
-import EditDeletePost from "../shared/EditDeletePost";
-import StarAction from "../shared/StarAction";
-import TagLink from "../shared/TagLink";
+import EditDeletePost from "../actions/EditDeletePost";
+import StarAction from "../actions/StarAction";
+import TagLink from "../shared/Tag/TagLink";
 import Metric from "../shared/Metric";
 import ParseHTML from "../shared/ParseHTML";
-import LikeAction from "../LikeAction";
+import LikeAction from "../actions/LikeAction";
 
 interface Props {
 	userId: string | null;
@@ -115,7 +115,7 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 				</div>
 				<div className='mt-6 flex flex-col gap-3'>
 					{post?.comments.length >= 2 &&
-						post.comments.map((item: any) => (
+						post.comments.slice(0, 2).map((item: any) => (
 							<article
 								key={item._id}
 								className='flex w-full items-start gap-2'

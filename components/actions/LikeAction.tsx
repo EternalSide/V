@@ -1,7 +1,7 @@
 "use client";
 
-import {usePathname, useRouter} from "next/navigation";
-import {toast} from "./ui/use-toast";
+import {usePathname} from "next/navigation";
+import {toast} from "../ui/use-toast";
 import {useState} from "react";
 import {setLike} from "@/lib/actions/post.action";
 import {Heart} from "lucide-react";
@@ -9,11 +9,6 @@ const LikeAction = ({postId, userId, likes, likesLength}: any) => {
 	const path = usePathname();
 
 	const [isLiked, setIsLiked] = useState(likes.includes(userId));
-	//   console.log(isLiked);
-	//   const [optimisticLikes, addOptimisticLikes] = experimental_useOptimistic(
-	//     likesLength || 0,
-	//     (state, amount) => state + Number(amount),
-	//   );
 
 	const handleLike = async (e: any) => {
 		e.preventDefault();
@@ -26,7 +21,7 @@ const LikeAction = ({postId, userId, likes, likesLength}: any) => {
 
 		try {
 			if (isLiked) {
-				setIsLiked(false);
+				// setIsLiked(false);
 				// addOptimisticLikes(-1);
 
 				toast({
@@ -35,7 +30,7 @@ const LikeAction = ({postId, userId, likes, likesLength}: any) => {
 					// description: `Вы отменили оценку поста пользователя ${authorName}`,
 				});
 			} else {
-				setIsLiked(true);
+				// setIsLiked(true);
 				// addOptimisticLikes(1);
 
 				toast({
@@ -60,11 +55,8 @@ const LikeAction = ({postId, userId, likes, likesLength}: any) => {
 		<div className='flex items-center gap-1.5'>
 			<Heart
 				onClick={handleLike}
-				className={
-					isLiked
-						? "text-indigo-600 transition hover:text-neutral-300 "
-						: "text-neutral-300 transition hover:text-indigo-600"
-				}
+				fill={isLiked && "#4f46e5"}
+				className={`hover:opacity-80 transition cursor-pointer ${isLiked ? "text-indigo-600" : "text-neutral-300"}`}
 			/>
 			<p className='text-sm text-neutral-300 '>{likesLength}</p>
 		</div>

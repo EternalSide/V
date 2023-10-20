@@ -3,7 +3,6 @@ import Tag from "@/database/models/tag.model";
 import {connectToDatabase} from "../mongoose";
 import {revalidatePath} from "next/cache";
 import User from "@/database/models/user.model";
-import Post from "@/database/models/post.model";
 import {EditTagParams, FollowTagParams, GetTagInfoParams} from "./shared";
 
 export const getPopularTags = async () => {

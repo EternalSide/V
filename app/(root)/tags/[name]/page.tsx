@@ -1,9 +1,9 @@
-import InfiniteScroll from "@/components/InfiniteScroll";
+import InfiniteScroll from "@/components/shared/InfiniteScroll";
 import FilterComponents from "@/components/shared/FilterComponents";
 import HomeFilters from "@/components/shared/HomeFilters";
-import MobileTagLeft from "@/components/shared/MobileTagLeft";
+import MobileTagLeft from "@/components/shared/Tag/MobileTagLeft";
 import ParseHTML from "@/components/shared/ParseHTML";
-import TagHeader from "@/components/shared/TagHeader";
+import TagHeader from "@/components/shared/Tag/TagHeader";
 import {UserAvatar} from "@/components/shared/UserAvatar";
 import {homeFilters} from "@/constants";
 import {getTagInfo} from "@/lib/actions/tag.action";
@@ -133,7 +133,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 							{tag.posts.length > 0 ? (
 								<InfiniteScroll
 									tagName={params.name}
-									id={"tagPage"}
+									id='TagPage'
 									posts={tag.posts}
 									user={JSON.stringify(user)}
 									filterValue={searchParams?.q!}

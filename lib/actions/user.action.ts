@@ -130,7 +130,7 @@ export async function getUserByUserName(params: getUserByUsername) {
 			.populate({
 				path: "followingTags",
 				options: {
-					select: "name picture",
+					select: "name picture description",
 				},
 			});
 
@@ -199,5 +199,62 @@ export async function getUserNotifications(params: GetUserNotificationParams) {
 	} catch (e) {
 		console.log(e);
 		throw e;
+	}
+}
+
+interface GetUserFavouritesParams {
+	clerkId: string;
+}
+
+export async function getUserFavourites(params: GetUserFavouritesParams) {
+	try {
+		const {clerkId} = params;
+
+		const user = await User.findOne({clerkId}).populate({
+			path: "savedPosts",
+			options: {
+				populate: [
+					{
+						path: "author",
+						select: "picture name username",
+					},
+					{
+						path: "tags",
+					},
+				],
+			},
+		});
+
+		if (!user) throw new Error("Пользователь не найден.");
+
+		return user.savedPosts;
+	} catch (e) {
+		console.log(e);
+	}
+}
+
+interface DeletePostFromFavouritesParams {
+	clerkId: string;
+	postId: string;
+}
+
+export async function deletePostFromFavourites(params: DeletePostFromFavouritesParams) {
+	try {
+		const {clerkId, postId} = params;
+
+		const user = await User.findOneAndUpdate(
+			{clerkId},
+			{
+				$pull: {
+					savedPosts: postId,
+				},
+			}
+		);
+
+		if (!user) throw new Error("Пользователь не найден.");
+
+		return;
+	} catch (e) {
+		console.log(e);
 	}
 }

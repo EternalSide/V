@@ -3,7 +3,7 @@
 import {homeFilters} from "@/constants";
 import {formUrlQuery} from "@/lib/utils";
 import {useRouter, useSearchParams} from "next/navigation";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 const HomeFilters = () => {
 	const searchParams = useSearchParams();
@@ -21,10 +21,15 @@ const HomeFilters = () => {
 
 		router.push(newUrl, {scroll: false});
 	};
+
+	useEffect(() => {
+		if (!searchParams.get("q")) return setActive("new");
+	}, [searchParams]);
+
 	const [active, setActive] = useState(value || "new");
 
 	return (
-		<div className='flex items-center justify-center gap-3 max-sm:hidden '>
+		<div className='flex items-center justify-start gap-3 max-sm:hidden '>
 			{homeFilters.map((item: any) => (
 				<h3
 					onClick={() => handleSearch(item.value)}

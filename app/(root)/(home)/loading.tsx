@@ -5,7 +5,7 @@ import {BaseLink} from "@/components/shared/Sidebar/LeftSidebar";
 import {BlockTitle} from "@/components/shared/Sidebar/RightSidebar";
 import {Skeleton} from "@/components/ui/skeleton";
 import {homeFilters, sidebarLinks} from "@/constants";
-import {Loader2Icon} from "lucide-react";
+import {Hash, Loader2Icon} from "lucide-react";
 
 const Loading = () => {
 	return (
@@ -27,8 +27,17 @@ const Loading = () => {
 
 				<div>
 					<h3 className='px-3 text-xl font-bold max-lg:hidden'>Подписки</h3>
-					<div className='mt-3'>
-						<Skeleton className='h-[45px] w-full' />
+					<div className='mt-3 flex flex-col gap-2'>
+						<div className='flex items-center  gap-x-4 rounded-md'>
+							<Hash className='h-[26px] w-[26px] animate-in fade-in zoom-in max-lg:h-7 max-lg:w-7' />
+							<Skeleton className='w-full h-8' />
+						</div>
+					</div>
+					<div className='mt-3 flex flex-col gap-2'>
+						<div className='flex items-center  gap-x-4 rounded-md'>
+							<Hash className='h-[26px] w-[26px] animate-in fade-in zoom-in max-lg:h-7 max-lg:w-7' />
+							<Skeleton className='w-full h-8' />
+						</div>
 					</div>
 				</div>
 			</div>
