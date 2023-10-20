@@ -1,5 +1,5 @@
 import {HomeFiltersTypes, SideBarLinksType} from "@/types";
-import {Home, Tag, PlusSquare, Star, Smile} from "lucide-react";
+import {Home, PlusSquare, Star, Smile, Users} from "lucide-react";
 
 export const sidebarLinks: SideBarLinksType[] = [
 	{
@@ -28,9 +28,9 @@ export const sidebarLinks: SideBarLinksType[] = [
 	},
 
 	{
-		label: "Теги",
+		label: "Сообщества",
 		route: "/tags",
-		icon: Tag,
+		icon: Users,
 		auth: false,
 	},
 ];

@@ -21,7 +21,7 @@ interface TagPageProps extends SearchParamsProps {
 }
 
 export async function generateMetadata({params}: TagPageProps): Promise<Metadata> {
-	const tag = await getTagInfo({tagName: params.name});
+	const {tag} = await getTagInfo({tagName: params.name});
 
 	if (!tag) {
 		return {
@@ -35,7 +35,7 @@ export async function generateMetadata({params}: TagPageProps): Promise<Metadata
 }
 
 const TagPage = async ({params, searchParams}: TagPageProps) => {
-	const tag = await getTagInfo({
+	const {tag, postsLength} = await getTagInfo({
 		tagName: params.name,
 		search: searchParams?.q,
 	});
@@ -50,7 +50,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 	return (
 		<div className='mx-auto w-full max-w-7xl pb-6 pt-[85px] max-[1280px]:px-4'>
 			<h1 className='text-4xl font-bold first-letter:uppercase'>{tag.name}</h1>
-			<div className='mt-3 h-full border border-neutral-800 border-b-transparent'>
+			<div className='mt-3 h-full'>
 				<TagHeader
 					tagId={JSON.stringify(tag._id)}
 					tagTitle={tag.name}
@@ -62,7 +62,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 				/>
 
 				<section className='flex w-full justify-start gap-0 max-lg:mt-6 max-sm:mt-0'>
-					<div className='w-[285px]  pt-20 max-lg:hidden '>
+					<div className='w-[285px]  pt-10 max-lg:hidden '>
 						<div className='flex items-center justify-between'>
 							<Link href='/create'>
 								<button className='button ml-3 bg-indigo-600 text-white'>Новый пост</button>
@@ -83,7 +83,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 						<div className='border-b border-neutral-800 p-5'>
 							<h3 className='font-semibold'>Участники</h3>
 							{tag?.followers.length > 0 ? (
-								<div className='mt-4 grid grid-cols-4 gap-3'>
+								<div className='mt-4 grid grid-cols-4 gap-3 content-center'>
 									{tag.followers.map((item: any) => (
 										<Link
 											key={item._id}
@@ -111,11 +111,11 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 							)}
 						</div>
 						<div className='p-5 text-center'>
-							<p className='font-semibold text-zinc-400'>Опубликовано постов: {tag.posts.length}</p>
+							<p className='font-semibold text-zinc-400'>Опубликовано постов: {postsLength}</p>
 						</div>
 					</div>
 
-					<div className='flex flex-1 flex-col  pt-16 max-lg:border-l-transparent max-sm:pt-6'>
+					<div className='flex flex-1 flex-col  pt-12 max-lg:border-l-transparent max-sm:pt-6'>
 						<div className='flex items-center gap-3 px-4 max-lg:px-0'>
 							<MobileTagLeft
 								info={tag?.info ? tag.info : null}

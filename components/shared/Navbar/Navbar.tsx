@@ -3,11 +3,11 @@ import Image from "next/image";
 import {FilePlus} from "lucide-react";
 import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
 import MobileNavbar from "./MobileNavbar";
-import GlobalSearch from "@/components/GlobalSearch";
+import GlobalSearch from "@/components/shared/GlobalSearch";
 
 const Navbar = ({followingTags, username}: any) => {
 	return (
-		<div className='bg-main fixed z-50 flex h-14 w-full border-b border-neutral-800 shadow-xl max-[1280px]:px-4'>
+		<div className='bg-main fixed z-[10000] flex h-14 w-full border-b border-neutral-800 shadow-xl max-[1280px]:px-4'>
 			<div className='mx-auto flex w-full max-w-7xl items-center justify-between'>
 				<div className='flex items-center gap-x-2'>
 					<Link

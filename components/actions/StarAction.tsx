@@ -27,7 +27,7 @@ const StarAction = ({isPostSaved, userId, postId, authorName}: StarActionProps) 
 				description: `Войдите в аккаунт, чтобы добавить пост в избранное.`,
 			});
 		try {
-			if (!isSaved) {
+			if (!isPostSaved) {
 				// setIsSaved(true);
 
 				toast({
@@ -58,8 +58,8 @@ const StarAction = ({isPostSaved, userId, postId, authorName}: StarActionProps) 
 	return (
 		<Star
 			onClick={handleAddPostToFavourites}
-			fill={isSaved ? "#6366f1" : ""}
-			className={cn(baseStyles, isSaved && "text-[#6366f1] transition hover:opacity-90")}
+			fill={isPostSaved ? "#6366f1" : ""}
+			className={cn(baseStyles, isPostSaved && "text-[#6366f1] transition hover:opacity-90")}
 		/>
 	);
 };

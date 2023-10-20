@@ -55,8 +55,10 @@ const LikeAction = ({postId, userId, likes, likesLength}: any) => {
 		<div className='flex items-center gap-1.5'>
 			<Heart
 				onClick={handleLike}
-				fill={isLiked && "#4f46e5"}
-				className={`hover:opacity-80 transition cursor-pointer ${isLiked ? "text-indigo-600" : "text-neutral-300"}`}
+				fill={likes.includes(userId) ? "#6366f1" : ""}
+				className={`hover:opacity-80 transition cursor-pointer ${
+					likes.includes(userId) ? "text-[#6366f1]" : "text-neutral-300"
+				}`}
 			/>
 			<p className='text-sm text-neutral-300 '>{likesLength}</p>
 		</div>

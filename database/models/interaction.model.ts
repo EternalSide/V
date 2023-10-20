@@ -36,6 +36,6 @@ const InteractionSchema = new Schema<IInteraction>(
 	}
 );
 
-const Interaction = models.Interaction || model("Interaction", InteractionSchema);
+const Interaction = models.Interaction || model<IInteraction>("Interaction", InteractionSchema);
 
 export default Interaction;

@@ -11,6 +11,7 @@ export interface IUser extends Document {
 	location?: string;
 	bio?: string;
 	portfolioWebsite?: string;
+	userPinned?: Schema.Types.ObjectId;
 	reputation?: number;
 	notifications: {
 		event: string;
@@ -39,6 +40,7 @@ const UserSchema = new Schema<IUser>(
 		reputation: {type: Number, default: 0},
 		posts: [{type: Schema.Types.ObjectId, ref: "Post"}],
 		savedPosts: [{type: Schema.Types.ObjectId, ref: "Post"}],
+		userPinned: {type: Schema.Types.ObjectId, ref: "Post"},
 		followingTags: [{type: Schema.Types.ObjectId, ref: "Tag", default: []}],
 		joinedAt: {type: Date, default: Date.now},
 		role: {type: String, default: "user"},
@@ -77,6 +79,6 @@ const UserSchema = new Schema<IUser>(
 	}
 );
 
-const User = models?.User || model("User", UserSchema);
+const User = models?.User || model<IUser>("User", UserSchema);
 
 export default User;

@@ -1,11 +1,11 @@
 import InfiniteScroll from "@/components/shared/InfiniteScroll";
-import PostCard from "@/components/cards/PostCard";
 import ProfileNotFound from "@/components/shared/ProfileNotFound";
 import {UserAvatar} from "@/components/shared/UserAvatar";
+import UserPinned from "@/components/shared/UserPinned";
 import {getUserById, getUserByUserName} from "@/lib/actions/user.action";
 import {formatDate, formatedLink} from "@/lib/utils";
 import {auth} from "@clerk/nextjs";
-import {Cake, ExternalLink, FileEdit, MapPin, Verified} from "lucide-react";
+import {BookUser, Cake, ExternalLink, FileEdit, Frown, MapPin, Users2, Verified} from "lucide-react";
 import {Metadata} from "next";
 import Link from "next/link";
 
@@ -31,7 +31,8 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 	const {userId} = auth();
 	const user = await getUserByUserName({username: params.userName});
 
-	const mongoUser = await getUserById({clerkId: userId!});
+	const currentUser = await getUserById({clerkId: userId!});
+
 	const isOwnProfile = userId && user?.clerkId === userId;
 
 	if (!user) return <ProfileNotFound />;
@@ -85,7 +86,7 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 						<div className='mt-4 flex gap-6 max-md:flex-col max-md:gap-4'>
 							{userInfo?.map((item: any) => (
 								<div
-									key={item.label}
+									key={item.text}
 									className='flex items-center gap-2'
 								>
 									<item.icon
@@ -118,54 +119,81 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 			<div className='mt-1.5 flex items-start gap-2.5 pb-4'>
 				<div className=' flex w-[330px] flex-col gap-1.5 max-md:hidden'>
 					<div className='bg-main flex items-center gap-2.5 rounded-md p-5 '>
-						<FileEdit
-							color='#969696'
-							className='h-5 w-5'
-						/>
+						<FileEdit className='h-5 w-5 text-zinc-400' />
 						<p className='text-neutral-200'>Публикаций: {user.posts.length}</p>
 					</div>
 					<div className='bg-main rounded-md'>
-						<h3 className='p-5 text-lg font-semibold'>Сообщества</h3>
+						<div className='flex gap-2 items-center p-4'>
+							<BookUser className='text-zinc-400 h-5 w-5' />
+							<h3 className='text-lg font-semibold'>О себе</h3>
+						</div>
 						<div className='border-b border-zinc-800' />
-
-						{user.followingTags.map((item: any) => (
-							<Link
-								className='group flex items-start gap-2.5 border-b border-zinc-800 p-5'
-								key={item.name}
-								href={`/tags/${item.name}`}
-							>
-								<img
-									src={item.picture || "/nouser.jfif"}
-									className='h-10 w-10 object-cover rounded-full mt-0.5'
-								/>
-
-								<div className='flex flex-col gap-2.5'>
-									<p className='font-semibold text-zinc-300 first-letter:uppercase group-hover:text-indigo-500'>
-										{item.name}
-									</p>
-									<p className='text-xs text-zinc-300'>
-										{item?.description
-											? String(item.description).length > 50
-												? item.description.slice(0, 50) + "..."
-												: item.description
-											: "Информация отсутствует."}
-										{/* {item.description.toString()[20] ? item.description.slice(0, 20) + "..." : item.desciption} */}
-									</p>
-								</div>
-							</Link>
-						))}
+						<div className='p-4'>
+							<p className='text-zinc-400'>Делаю вдох так пахнет диор......</p>
+						</div>
 					</div>
+					{user?.followingTags.length > 0 && (
+						<div className='bg-main rounded-md'>
+							<div className='flex gap-2 items-center p-5 '>
+								<Users2 className='text-zinc-400 h-5 w-5' />
+								<h3 className='text-lg font-semibold'>Сообщества</h3>
+							</div>
+							<div className='border-b border-zinc-800' />
+
+							{user.followingTags.map((item: any) => (
+								<Link
+									className='group flex items-start gap-2.5 border-b border-zinc-800 p-5'
+									key={item._id}
+									href={`/tags/${item.name}`}
+								>
+									<img
+										src={item.picture || "/nouser.jfif"}
+										className='h-10 w-10 object-cover rounded-full mt-0.5'
+									/>
+
+									<div className='flex flex-col gap-2.5'>
+										<p className='font-semibold text-zinc-300 first-letter:uppercase group-hover:text-indigo-400'>
+											{item.name}
+										</p>
+										<p className='text-xs text-zinc-300'>
+											{item?.description
+												? String(item.description).length > 50
+													? item.description.slice(0, 50) + "..."
+													: item.description
+												: "Информация отсутствует."}
+										</p>
+									</div>
+								</Link>
+							))}
+						</div>
+					)}
 				</div>
 
-				<div className='flex w-full flex-col gap-1.5'>
-					<InfiniteScroll
-						userId={userId?.toString()}
-						user={JSON.stringify(mongoUser)}
-						posts={JSON.parse(JSON.stringify(user.posts))}
-						id='ProfilePage'
-						username={user.username}
-						mainId={mongoUser._id.toString()}
-					/>
+				<div className='flex w-full flex-col gap-2'>
+					{user?.userPinned && (
+						<UserPinned
+							isOwnProfile={isOwnProfile}
+							pinnedPost={user.userPinned}
+							currentUserId={currentUser?._id.toString() || null}
+							isPostSaved={currentUser?.savedPosts.includes(user?.userPinned?._id.toString())}
+						/>
+					)}
+					{user?.posts.length > 0 ? (
+						<InfiniteScroll
+							userId={userId?.toString()}
+							user={JSON.stringify(currentUser)}
+							posts={JSON.parse(JSON.stringify(user.posts))}
+							id='ProfilePage'
+							username={user.username}
+							mainId={currentUser._id.toString()}
+							isOwnProfile={isOwnProfile}
+						/>
+					) : (
+						<div className='bg-main flex h-[400px] w-full flex-col items-center justify-center gap-1.5'>
+							<Frown className='h-16 w-16 text-zinc-400' />
+							<h3 className='font-semibold text-zinc-400 text-2xl'>Ничего не найдено :(</h3>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

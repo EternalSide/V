@@ -1,6 +1,6 @@
 "use client";
 import {Search} from "lucide-react";
-import {Input} from "./ui/input";
+import {Input} from "../ui/input";
 import {useEffect, useState} from "react";
 import {SearchInDatabase} from "@/lib/actions/general.action";
 

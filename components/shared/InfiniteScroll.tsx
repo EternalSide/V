@@ -17,9 +17,10 @@ interface Props {
 	posts: any;
 	id?: "TagPage" | "ProfilePage" | "MainPage";
 	mainId?: string;
+	isOwnProfile?: any;
 }
 
-const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username, mainId}: Props) => {
+const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username, mainId, isOwnProfile}: Props) => {
 	// const newPosts = JSON.parse(JSON.stringify(posts));
 	const path = usePathname();
 	const [initialPosts, setInitianPosts] = useState([...posts]);
@@ -65,7 +66,7 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 			switch (id) {
 				case "TagPage": {
 					// @ts-ignore
-					const tag = await getTagInfo({page: nextPage, tagName});
+					const {tag} = await getTagInfo({page: nextPage, tagName});
 					posts = tag.posts;
 					break;
 				}
@@ -109,6 +110,8 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 				<PostCard
 					key={Math.random() * 1000}
 					userId={mainId || null}
+					page={id === "ProfilePage" ? "Profile" : ""}
+					isOwnProfile={isOwnProfile}
 					banner={post?.banner}
 					isPostSaved={parsedUser?.savedPosts.includes(post._id)}
 					author={{
@@ -135,8 +138,7 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 				/>
 			) : (
 				<p className='my-10 text-center text-zinc-400'>
-					Больше ничего не найдено 😔 <br />
-					Попробуйте сменить сообщество или опубликовать новую статью!
+					Ничего не найдено 😔 <br />
 				</p>
 			)}
 		</>

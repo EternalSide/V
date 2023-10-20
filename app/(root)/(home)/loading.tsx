@@ -33,12 +33,6 @@ const Loading = () => {
 							<Skeleton className='w-full h-8' />
 						</div>
 					</div>
-					<div className='mt-3 flex flex-col gap-2'>
-						<div className='flex items-center  gap-x-4 rounded-md'>
-							<Hash className='h-[26px] w-[26px] animate-in fade-in zoom-in max-lg:h-7 max-lg:w-7' />
-							<Skeleton className='w-full h-8' />
-						</div>
-					</div>
 				</div>
 			</div>
 
@@ -71,11 +65,14 @@ const Loading = () => {
 					</div>
 				</div>
 
-				<div className='bg-main mt-5 w-full rounded-md border border-neutral-800'>
-					<BlockTitle name='Топ Авторов' />
+				<div className='bg-main mt-3 w-full rounded-md border border-neutral-800'>
+					<BlockTitle name='Сообщества' />
 					<div className='flex h-[248px] items-center justify-center'>
 						<Loader2Icon className='h-10 w-10 animate-spin text-indigo-500' />
 					</div>
+				</div>
+				<div className='text-center mt-5'>
+					<p className='text-zinc-400'>V (c) 2023</p>
 				</div>
 			</div>
 		</div>

@@ -41,7 +41,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 	const isOwnPost = post?.author.clerkId === userId;
 
 	return (
-		<div className='mx-auto flex w-full max-w-7xl items-start gap-3 pt-[75px] max-[1400px]:px-3 max-lg:px-0 max-lg:pt-[55px] max-md:px-0'>
+		<div className='mx-auto flex w-full max-w-7xl items-start gap-3 max-lg:gap-0 pt-[75px] max-[1400px]:px-3 max-lg:px-0 max-lg:pt-[55px] max-md:px-0'>
 			<PostActions
 				isLiked={post.upvotes.includes(user?._id.toString())}
 				isPostSaved={user?.savedPosts.includes(post._id)}
@@ -105,7 +105,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 				</div>
 
 				<div className=' mt-10 px-14 max-md:px-6'>
-					<h1 className='mb-14 text-5xl font-bold'>{post.title}</h1>
+					<h1 className='mb-10 text-5xl font-bold max-md:text-3xl'>{post.title}</h1>
 					<ParseHTML
 						data={post.text}
 						post={true}
@@ -132,9 +132,9 @@ const PostPage = async ({params}: ProfilePageProps) => {
 			<div className='sticky right-0 top-0 overflow-y-auto'>
 				<UserCard author={post.author} />
 
-				<div className='bg-main mt-5 flex h-fit w-[320px] flex-col rounded-md border border-neutral-800 max-lg:hidden'>
+				<div className='bg-main mt-3 flex h-fit w-[320px] flex-col rounded-md border border-neutral-800 max-lg:hidden'>
 					<BlockTitle name='Похожее' />
-					{popularPosts.map((post: any) => (
+					{popularPosts.slice(0, 3).map((post: any) => (
 						<Link
 							href={`/post/${post._id.toString()}`}
 							key={post._id}

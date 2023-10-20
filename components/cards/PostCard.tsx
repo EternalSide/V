@@ -1,4 +1,4 @@
-import {Eye, Heart, MessageCircle} from "lucide-react";
+import {Eye} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {getTimestamp} from "@/lib/utils";
@@ -9,6 +9,7 @@ import TagLink from "../shared/Tag/TagLink";
 import Metric from "../shared/Metric";
 import ParseHTML from "../shared/ParseHTML";
 import LikeAction from "../actions/LikeAction";
+import CommentAction from "../actions/CommentAction";
 
 interface Props {
 	userId: string | null;
@@ -44,7 +45,7 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 				<div className='relative h-64 w-full'>
 					<Image
 						fill
-						className='object-cover object-top'
+						className='object-cover object-top max-sm:p-4 max-sm:pb-0'
 						alt='Изображение к посту'
 						src={banner}
 					/>
@@ -53,14 +54,13 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 
 			<div className='relative w-full py-4 pl-5 pr-7'>
 				<div className='absolute right-7 top-4 flex items-center gap-x-2'>
-					{page !== "Profile" && (
-						<StarAction
-							authorName={author.name}
-							userId={userId!}
-							postId={post.id}
-							isPostSaved={isPostSaved}
-						/>
-					)}
+					<StarAction
+						authorName={author.name}
+						userId={userId!}
+						postId={post.id}
+						isPostSaved={isPostSaved}
+					/>
+
 					{isOwnProfile && page === "Profile" && (
 						<EditDeletePost
 							type='Post'
@@ -100,10 +100,7 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 										likes={post.likes}
 										likesLength={post.likes.length}
 									/>
-									<Metric
-										icon={MessageCircle}
-										number={post.comments.length}
-									/>
+									<CommentAction number={post.comments.length} />
 								</div>
 								<Metric
 									icon={Eye}

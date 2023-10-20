@@ -4,7 +4,7 @@ import {UserAvatar} from "@/components/shared/UserAvatar";
 import {getUserFavourites} from "@/lib/actions/user.action";
 import {getTimestamp} from "@/lib/utils";
 import {auth} from "@clerk/nextjs";
-import {DeleteIcon, Star} from "lucide-react";
+import {Star} from "lucide-react";
 import Link from "next/link";
 import {redirect} from "next/navigation";
 

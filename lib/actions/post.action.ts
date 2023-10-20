@@ -121,6 +121,9 @@ export const getAllPosts = async (params: GetAllPostsParams) => {
 					populate: {
 						path: "author",
 					},
+					sort: {
+						createdAt: -1,
+					},
 				},
 			})
 			.sort(sortOptions)
@@ -175,7 +178,7 @@ export const getPopularPosts = async () => {
 					upvotes: -1,
 				},
 			},
-			{$limit: 4},
+			{$limit: 3},
 		]);
 
 		return posts;
@@ -288,6 +291,9 @@ export async function getRecommendedPosts(params: {userId?: string; pageSize?: n
 				.populate({
 					path: "comments",
 					options: {
+						sort: {
+							createdAt: -1,
+						},
 						populate: {
 							path: "author",
 						},

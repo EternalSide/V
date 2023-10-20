@@ -132,6 +132,27 @@ export async function getUserByUserName(params: getUserByUsername) {
 				options: {
 					select: "name picture description",
 				},
+			})
+			.populate({
+				path: "userPinned",
+				options: {
+					populate: [
+						{
+							path: "author",
+						},
+						{
+							path: "tags",
+						},
+						{
+							path: "comments",
+							options: {
+								populate: {
+									path: "author",
+								},
+							},
+						},
+					],
+				},
 			});
 
 		return JSON.parse(JSON.stringify(user));

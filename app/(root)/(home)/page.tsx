@@ -8,7 +8,6 @@ import {getAllPosts, getRecommendedPosts} from "@/lib/actions/post.action";
 import {getUserById} from "@/lib/actions/user.action";
 import {SearchParamsProps} from "@/types";
 import {auth} from "@clerk/nextjs";
-import Loading from "./loading";
 
 export const metadata = {
 	title: {

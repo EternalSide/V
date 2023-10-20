@@ -134,7 +134,12 @@ export const getTagInfo = async (params: GetTagInfoParams) => {
 			])
 			.populate("followers");
 
-		return JSON.parse(JSON.stringify(tag));
+		const totalPostsCount = await Tag.findOne({name: tagName}).populate("posts");
+
+		return {
+			tag: JSON.parse(JSON.stringify(tag)),
+			postsLength: totalPostsCount.posts.length,
+		};
 	} catch (e) {
 		console.log(e);
 		throw e;
