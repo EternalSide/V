@@ -11,6 +11,7 @@ import {auth} from "@clerk/nextjs";
 import {Metadata} from "next";
 import Image from "next/image";
 import TagLeftInfo from "@/components/shared/Tag/TagLeftInfo";
+import TagRightInfo from "@/components/shared/Tag/TagRightInfo";
 
 interface TagPageProps extends SearchParamsProps {
 	params: {
@@ -46,9 +47,9 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 	const isCreator = tag.author?.toString() === user?._id.toString();
 
 	return (
-		<div className='mx-auto w-full max-w-7xl pb-6 pt-[85px] max-[1280px]:px-4'>
+		<div className='mx-auto w-full max-w-7xl pb-0 pt-[85px] max-[1280px]:px-4'>
 			<h1 className='text-4xl font-bold first-letter:uppercase'>{tag.name}</h1>
-			<div className='mt-3 h-full'>
+			<div className='mt-3'>
 				<TagHeader
 					tagId={JSON.stringify(tag._id)}
 					tagTitle={tag.name}
@@ -59,13 +60,12 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 					userId={JSON.stringify(user?._id)}
 				/>
 
-				<section className='flex w-full justify-start gap-0 max-lg:mt-6 max-sm:mt-0'>
+				<section className='flex w-full justify-start gap-4 max-lg:mt-6 max-sm:mt-0'>
 					<TagLeftInfo
 						tagInfo={tag?.info}
 						tagFollowers={tag?.followers}
 						postsLength={postsLength}
 					/>
-
 					<div className='flex flex-1 flex-col  pt-12 max-lg:border-l-transparent max-sm:pt-6'>
 						<div className='flex items-center gap-3 px-4 max-lg:px-0'>
 							<MobileTagLeft
@@ -105,6 +105,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 							)}
 						</div>
 					</div>
+					<TagRightInfo />
 				</section>
 			</div>
 		</div>

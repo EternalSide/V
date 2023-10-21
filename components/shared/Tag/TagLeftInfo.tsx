@@ -12,7 +12,7 @@ interface Props {
 
 const TagLeftInfo = ({tagInfo, tagFollowers, postsLength}: Props) => {
 	return (
-		<div className='w-[285px]  pt-10 max-lg:hidden '>
+		<div className='w-[280px] pt-10 max-lg:hidden'>
 			<div className='flex items-center justify-between'>
 				<Link href='/create'>
 					<button className='button ml-3 bg-indigo-600 text-white'>Новый пост</button>

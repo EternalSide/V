@@ -62,7 +62,7 @@ export const followTag = async (params: FollowTagParams) => {
 			userUpdateQ = {$pull: {followingTags: tagId}};
 		} else {
 			updateQuery = {$addToSet: {followers: userId}};
-			userUpdateQ = {$push: {followingTags: tagId}};
+			userUpdateQ = {$addToSet: {followingTags: tagId}};
 		}
 
 		await Tag.findByIdAndUpdate(tagId, updateQuery);

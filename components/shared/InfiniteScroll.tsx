@@ -134,7 +134,7 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 				/>
 			) : (
 				<p className='my-10 text-center text-zinc-400'>
-					Ничего не найдено 😔 <br />
+					На этом все, посты закончились.. 😔 <br />
 				</p>
 			)}
 		</>
