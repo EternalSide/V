@@ -29,10 +29,8 @@ const Navbar = ({followingTags, username}: any) => {
 							username={username}
 						/>
 					</div>
-
-					<GlobalSearch />
 				</div>
-
+				<GlobalSearch />
 				<div className='flex items-center gap-x-3'>
 					<SignedOut>
 						<Link href='/sign-in'>

@@ -1,11 +1,10 @@
 import {Milestone} from "lucide-react";
 import PostCard from "../cards/PostCard";
-import {twMerge} from "tailwind-merge";
 
-const UserPinnedPost = ({pinnedPost, isOwnProfile, currentUserId, isPostSaved, theme}: any) => {
+const UserPinnedPost = ({pinnedPost, isOwnProfile, currentUserId, isPostSaved, bg, border}: any) => {
 	return (
-		<div className={`relative w-full bg-main rounded-md border-2 border-${theme}-500 p-5 pt-10`}>
-			<div className={twMerge(`bg-${theme}-500 absolute left-3 -top-5 z-[100] p-3 rounded-xl flex items-center gap-2`)}>
+		<div className={`relative w-full bg-main rounded-md border-2 ${border} p-5 pt-10`}>
+			<div className={`bg-indigo-500 absolute left-3 -top-5 z-[100] p-3 rounded-xl flex items-center gap-2`}>
 				<Milestone
 					fill='black'
 					className='h-6 w-6 text-black'

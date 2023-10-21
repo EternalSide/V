@@ -1,21 +1,26 @@
-// @ts-nocheck
 "use client";
 import {useScroll} from "@/hooks/useScroll";
 import {useEffect, useRef} from "react";
 
 const CheckScroll = () => {
 	const {commentAction, setCommentAction} = useScroll();
-	const ref = useRef();
+	const ref = useRef<HTMLDivElement>(null);
+
 	useEffect(() => {
-		if (commentAction) {
-			ref.current.scrollIntoView();
+		if (commentAction && ref.current) {
+			ref.current.scrollIntoView({behavior: "smooth"});
 		}
 
 		return () => setCommentAction(false);
-	}, [commentAction, setCommentAction]);
+	}, [commentAction]);
 
 	if (!commentAction) return null;
 
-	return <div ref={ref} />;
+	return (
+		<div
+			className='-mt-14'
+			ref={ref}
+		/>
+	);
 };
 export default CheckScroll;

@@ -1,4 +1,4 @@
-import {Eye} from "lucide-react";
+import {Eye, MessageCircle} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {getTimestamp} from "@/lib/utils";
@@ -100,7 +100,10 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 										likes={post.likes}
 										likesLength={post.likes.length}
 									/>
-									<CommentAction number={post.comments.length} />
+									<CommentAction className='flex items-center gap-1.5'>
+										<MessageCircle className='text-neutral-300 hover:opacity-80 transition' />
+										<p className='text-sm text-neutral-300'>{post.comments.length}</p>
+									</CommentAction>
 								</div>
 								<Metric
 									icon={Eye}
@@ -140,9 +143,11 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 						))}
 				</div>
 				<div className='group ml-8 mt-4 w-fit rounded-xl px-3 py-2  hover:bg-zinc-800'>
-					<p className='text-sm font-semibold text-zinc-400 group-hover:text-white'>
-						Все комментарии ({post.comments.length})
-					</p>
+					<CommentAction>
+						<p className='text-sm font-semibold text-zinc-400 group-hover:text-white'>
+							Все комментарии ({post.comments.length})
+						</p>
+					</CommentAction>
 				</div>
 			</div>
 		</Link>

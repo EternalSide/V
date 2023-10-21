@@ -1,18 +1,20 @@
 "use client";
-
 import {useScroll} from "@/hooks/useScroll";
-import {MessageCircle} from "lucide-react";
 
-const CommentAction = ({number}: {number: number}) => {
+interface Props {
+	children: React.ReactNode;
+	className?: string;
+}
+
+const CommentAction = ({children, className}: Props) => {
 	const {setCommentAction} = useScroll();
 
 	return (
 		<button
 			onClick={() => setCommentAction(true)}
-			className='flex items-center gap-1.5'
+			className={className}
 		>
-			<MessageCircle className='text-neutral-300 hover:opacity-80 transition' />
-			<p className='text-sm text-neutral-300'>{number}</p>
+			{children}
 		</button>
 	);
 };

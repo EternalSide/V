@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {UserAvatar} from "../shared/UserAvatar";
+import {UserAvatar} from "../UserAvatar";
 import {ExternalLink, LucideIcon, Verified} from "lucide-react";
 import {formatedLink} from "@/lib/utils";
 

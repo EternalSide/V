@@ -84,6 +84,7 @@ export async function SearchInDatabase(data: SearchInDatabaseParams) {
 					title: item[searchField],
 					href: generateLink(type, item),
 					type,
+					picture: item?.picture ? item.picture : "/nouser.jfif",
 				}))
 			);
 		}

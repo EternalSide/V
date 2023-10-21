@@ -1,8 +1,8 @@
 import InfiniteScroll from "@/components/shared/InfiniteScroll";
 import ProfileNotFound from "@/components/shared/ProfileNotFound";
 import UserPinnedPost from "@/components/shared/UserPinnedPost";
-import UserHeader from "@/components/user/UserHeader";
-import UserLeftInfo from "@/components/user/UserLeftInfo";
+import UserHeader from "@/components/shared/user/UserHeader";
+import UserLeftInfo from "@/components/shared/user/UserLeftInfo";
 import {getUserById, getUserByUserName} from "@/lib/actions/user.action";
 import {formatDate} from "@/lib/utils";
 import {auth} from "@clerk/nextjs";
@@ -79,7 +79,8 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 							pinnedPost={user.userPinned}
 							currentUserId={currentUser?._id.toString() || null}
 							isPostSaved={currentUser?.savedPosts.includes(user?.userPinned?._id.toString())}
-							theme={user?.theme_color}
+							border={`border-${user?.theme_color}-500`}
+							bg={`bg-${user?.theme_color}-500`}
 						/>
 					)}
 					{user?.posts.length > 0 ? (

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import ParseHTML from "./shared/ParseHTML";
-import {UserAvatar} from "./shared/UserAvatar";
+import ParseHTML from "../ParseHTML";
+import {UserAvatar} from "../UserAvatar";
 import {IUser} from "@/database/models/user.model";
 
 interface Props {

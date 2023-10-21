@@ -10,7 +10,7 @@ import {SearchParamsProps} from "@/types";
 import {auth} from "@clerk/nextjs";
 import {Metadata} from "next";
 import Image from "next/image";
-import TagLeftInfo from "@/components/TagLeftInfo";
+import TagLeftInfo from "@/components/shared/Tag/TagLeftInfo";
 
 interface TagPageProps extends SearchParamsProps {
 	params: {

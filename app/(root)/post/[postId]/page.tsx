@@ -14,6 +14,7 @@ import UserCard from "@/components/cards/UserCard";
 import {ITag} from "@/database/models/tag.model";
 import TagLink from "@/components/shared/Tag/TagLink";
 import {BlockTitle} from "@/components/shared/Sidebar/RightSidebar";
+import CheckScroll from "@/components/shared/CheckScroll";
 
 interface ProfilePageProps {
 	params: {postId: string};
@@ -111,7 +112,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 						post={true}
 					/>
 				</div>
-
+				<CheckScroll />
 				<div className='w-full border-t border-neutral-800 p-12 pt-8 max-md:p-6'>
 					<h1 className='text-3xl font-semibold'>Все Комментарии ({post.comments.length})</h1>
 

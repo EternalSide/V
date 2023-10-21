@@ -180,7 +180,7 @@ const EditProfileForm = ({user}: any) => {
 
 				<div className='bg-main min-w-full space-y-8 rounded-md p-6'>
 					<div className='flex items-center gap-2'>
-						<h1 className='text-2xl font-bold'>Оформление</h1>
+						<h1 className='text-2xl font-bold'>Баннер</h1>
 					</div>
 					<FormField
 						control={form.control}

@@ -9,19 +9,18 @@ import {getTagInfo} from "@/lib/actions/tag.action";
 import {getUserByUserName} from "@/lib/actions/user.action";
 
 interface Props {
+	id?: "TagPage" | "ProfilePage" | "MainPage";
 	userId?: string;
 	username?: string;
 	tagName?: string;
 	filterValue?: string;
 	user: any;
 	posts: any;
-	id?: "TagPage" | "ProfilePage" | "MainPage";
 	mainId?: string;
 	isOwnProfile?: any;
 }
 
 const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username, mainId, isOwnProfile}: Props) => {
-	// const newPosts = JSON.parse(JSON.stringify(posts));
 	const path = usePathname();
 	const [initialPosts, setInitianPosts] = useState([...posts]);
 	const {ref, inView} = useInView();
@@ -65,16 +64,13 @@ const InfiniteScroll = ({posts, user, userId, id, tagName, filterValue, username
 
 			switch (id) {
 				case "TagPage": {
-					// @ts-ignore
-					const {tag} = await getTagInfo({page: nextPage, tagName});
+					const {tag} = await getTagInfo({page: nextPage, tagName: tagName!});
 					posts = tag.posts;
 					break;
 				}
 
 				case "ProfilePage": {
-					// @ts-ignore
-					const user = await getUserByUserName({page: nextPage, username});
-					console.log(user);
+					const user = await getUserByUserName({page: nextPage, username: username!});
 					posts = user.posts;
 
 					break;
