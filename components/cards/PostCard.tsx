@@ -52,7 +52,7 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 				</div>
 			)}
 
-			<div className='relative w-full py-4 pl-5 pr-7'>
+			<div className='relative w-full py-6 pl-5 pr-7'>
 				<div className='absolute right-7 top-4 flex items-center gap-x-2'>
 					<StarAction
 						authorName={author.name}
@@ -113,42 +113,46 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 						</div>
 					</div>
 				</div>
-				<div className='mt-6 flex flex-col gap-3'>
-					{post?.comments.length >= 2 &&
-						post.comments.slice(0, 2).map((item: any) => (
-							<article
-								key={item._id}
-								className='flex w-full items-start gap-2'
-							>
-								<div>
-									<UserAvatar
-										imgUrl={item.author.picture}
-										classNames='h-8 w-8'
-									/>
-								</div>
-								<div className='flex-1 rounded-lg bg-[#272727] p-5 pb-2.5'>
-									<div className='mb-5 flex items-center gap-1.5'>
-										<div className='flex items-center gap-1 font-semibold'>
-											<p>{item.author.name}</p>
-											<p className='text-sm text-zinc-400'>@{item.author.username}</p>
+				{post?.comments.length > 0 && (
+					<div>
+						<div className='mt-6 flex flex-col gap-3'>
+							{post?.comments.length >= 2 &&
+								post.comments.slice(0, 2).map((item: any) => (
+									<article
+										key={item._id}
+										className='flex w-full items-start gap-2'
+									>
+										<div>
+											<UserAvatar
+												imgUrl={item.author.picture}
+												classNames='h-8 w-8'
+											/>
 										</div>
-										<p className='mt-0.5 text-xs text-zinc-400'>{getTimestamp(item.createdAt)}</p>
-									</div>
-									<ParseHTML
-										data={item.text}
-										comment
-									/>
-								</div>
-							</article>
-						))}
-				</div>
-				<div className='group ml-8 mt-4 w-fit rounded-xl px-3 py-2  hover:bg-zinc-800'>
-					<CommentAction>
-						<p className='text-sm font-semibold text-zinc-400 group-hover:text-white'>
-							Все комментарии ({post.comments.length})
-						</p>
-					</CommentAction>
-				</div>
+										<div className='flex-1 rounded-lg bg-[#272727] p-5 pb-2.5'>
+											<div className='mb-5 flex items-center gap-1.5'>
+												<div className='flex items-center gap-1 font-semibold'>
+													<p>{item.author.name}</p>
+													<p className='text-sm text-zinc-400'>@{item.author.username}</p>
+												</div>
+												<p className='mt-0.5 text-xs text-zinc-400'>{getTimestamp(item.createdAt)}</p>
+											</div>
+											<ParseHTML
+												data={item.text}
+												comment
+											/>
+										</div>
+									</article>
+								))}
+						</div>
+						<div className='group ml-8 mt-4 w-fit rounded-xl px-3 py-2  hover:bg-zinc-800'>
+							<CommentAction>
+								<p className='text-sm font-semibold text-zinc-400 group-hover:text-white'>
+									Все комментарии ({post.comments.length})
+								</p>
+							</CommentAction>
+						</div>
+					</div>
+				)}
 			</div>
 		</Link>
 	);

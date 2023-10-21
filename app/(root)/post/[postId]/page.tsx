@@ -50,6 +50,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 				postId={post._id.toString()}
 				likesNumber={post.upvotes.length}
 				authorName={post.author.name}
+				commentsNumber={post.comments.length}
 			/>
 
 			<div className='bg-main ml-20 flex flex-1 flex-col rounded-md max-md:ml-0 '>
@@ -117,6 +118,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 					<h1 className='text-3xl font-semibold'>Все Комментарии ({post.comments.length})</h1>
 
 					<AllComents postId={params.postId} />
+
 					{user ? (
 						<CreateCommentForm
 							authorId={user?._id.toString()}

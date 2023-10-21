@@ -1,4 +1,5 @@
 import {FileEdit} from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const UserLeftInfo = ({about, postsLength, followingTags}: any) => {
@@ -8,6 +9,30 @@ const UserLeftInfo = ({about, postsLength, followingTags}: any) => {
 				<FileEdit className='h-5 w-5 text-zinc-400' />
 				<p className='text-neutral-200'>Публикаций: {postsLength}</p>
 			</div>
+			{true && (
+				<div className='bg-main rounded-md'>
+					<div className='flex gap-2 items-center p-4'>
+						<h3 className='text-lg font-semibold'>Награды</h3>
+					</div>
+					<div className='border-b border-zinc-800' />
+					<div className='p-4 flex items-center gap-3'>
+						<div className='relative h-[112px] w-[100px]'>
+							<Image
+								src='/one.png'
+								fill
+								alt='100'
+							/>
+						</div>
+						<div className='relative h-[112px] w-[100px]'>
+							<Image
+								src='/v.png'
+								fill
+								alt='100'
+							/>
+						</div>
+					</div>
+				</div>
+			)}
 			{about && about.length > 0 && (
 				<div className='bg-main rounded-md'>
 					<div className='flex gap-2 items-center p-4'>
@@ -19,6 +44,7 @@ const UserLeftInfo = ({about, postsLength, followingTags}: any) => {
 					</div>
 				</div>
 			)}
+
 			{followingTags.length > 0 && (
 				<div className='bg-main rounded-md'>
 					<div className='flex gap-2 items-center p-5 '>

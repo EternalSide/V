@@ -48,7 +48,6 @@ const GlobalSearch = () => {
 				!containerRef.current.contains(event.target)
 			) {
 				setIsOpen(false);
-				setValue("");
 			}
 		};
 		setIsOpen(false);
@@ -64,6 +63,11 @@ const GlobalSearch = () => {
 		>
 			<div className='rounded-lg z-50 flex min-h-[40px] items-center gap-1 border border-neutral-700 bg-black  shadow-md focus-within:border-indigo-500 '>
 				<Input
+					onFocus={(e) => {
+						if (result.length > 0) {
+							setIsOpen(true);
+						}
+					}}
 					onChange={(e) => {
 						setValue(e.target.value);
 						if (!isOpen) setIsOpen(true);
@@ -75,7 +79,7 @@ const GlobalSearch = () => {
 					placeholder='Введите запрос'
 					className='border-none bg-transparent shadow-none outline-none'
 				/>
-				<button className='button !rounded-r-none bg-transparent !p-2 hover:bg-indigo-700'>
+				<button className='button !cursor-default !rounded-r-none bg-transparent !p-2'>
 					<Search className='h-6 w-6' />
 				</button>
 			</div>

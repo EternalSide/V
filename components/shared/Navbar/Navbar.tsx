@@ -11,7 +11,7 @@ const Navbar = ({followingTags, username}: any) => {
 			<div className='mx-auto flex w-full max-w-7xl items-center justify-between'>
 				<div className='flex items-center gap-x-2'>
 					<Link
-						className='border-2 border-indigo-800 max-sm:hidden'
+						className='max-sm:hidden flex items-end gap-0.5'
 						href='/'
 					>
 						<Image
@@ -19,7 +19,7 @@ const Navbar = ({followingTags, username}: any) => {
 							src='/favicon.png'
 							width={40}
 							height={45}
-							className='object-cover'
+							className='object-cover border-2 border-indigo-800 '
 						/>
 					</Link>
 
@@ -29,8 +29,9 @@ const Navbar = ({followingTags, username}: any) => {
 							username={username}
 						/>
 					</div>
+					<GlobalSearch />
 				</div>
-				<GlobalSearch />
+
 				<div className='flex items-center gap-x-3'>
 					<SignedOut>
 						<Link href='/sign-in'>

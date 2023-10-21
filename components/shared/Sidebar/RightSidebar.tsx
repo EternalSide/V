@@ -78,7 +78,7 @@ const RightSidebar = async () => {
       </div> */}
 
 			<div className='bg-main mt-3 flex w-full flex-col rounded-md border border-neutral-800'>
-				<BlockTitle name='Теги' />
+				<BlockTitle name='Сообщества' />
 				{popularTags.map((tag: ITag & Nof) => (
 					<Link
 						href={`/tags/${tag.name}`}

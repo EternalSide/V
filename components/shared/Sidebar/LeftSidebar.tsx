@@ -23,9 +23,8 @@ export const BaseLink = ({route, label, icon: Icon}: any) => {
 };
 
 const LeftSidebar = async ({username, followingTags}: Props) => {
-	console.log(followingTags);
 	return (
-		<div className='sticky left-0 top-0 flex h-fit flex-col gap-8 overflow-y-auto border-neutral-700 pl-4 pt-[95px] max-lg:h-full max-lg:border-r max-lg:px-2 max-sm:hidden lg:w-[254px]'>
+		<div className='sticky left-0 top-0 flex h-fit flex-col gap-8 overflow-y-auto border-neutral-700 max-lg:pl-4 pt-[95px] max-lg:h-full max-lg:border-r max-lg:px-2 max-sm:hidden lg:w-[254px]'>
 			<div className='flex flex-col gap-3'>
 				{sidebarLinks.map((item) => {
 					const isProfileLink = item.label === "Профиль";
@@ -53,15 +52,14 @@ const LeftSidebar = async ({username, followingTags}: Props) => {
 						/>
 					))}
 				</div>
-				{!username ||
-					(followingTags?.length === 0 && (
-						<div
-							className='flex items-center
+				{(!username || followingTags?.length === 0) && (
+					<div
+						className='flex items-center
                     gap-x-2 rounded-md px-3 py-2'
-						>
-							<p className='text-[18px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden'>Не найдено.</p>
-						</div>
-					))}
+					>
+						<p className='text-[18px] text-neutral-200 group-hover:text-indigo-300 max-lg:hidden pl-1'>Не найдено.</p>
+					</div>
+				)}
 			</div>
 		</div>
 	);

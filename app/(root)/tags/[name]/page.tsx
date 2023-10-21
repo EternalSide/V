@@ -90,7 +90,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 									filterValue={searchParams?.q!}
 								/>
 							) : (
-								<div className='flex flex-col items-center gap-3'>
+								<div className='flex flex-col items-center gap-1.5'>
 									<div className='relative h-64 w-full'>
 										<Image
 											fill
@@ -100,7 +100,7 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 										/>
 									</div>
 									<h3 className='text-zinc-400'>Ничего не найдено...</h3>
-									<p className='text-zinc-400'>Станьте первым, кто напишет статью в разделе {params.name}</p>
+									<p className='text-zinc-400'>Станьте первым, кто напишет статью в сообществе {params.name}</p>
 								</div>
 							)}
 						</div>

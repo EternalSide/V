@@ -2,12 +2,13 @@
 import {viewQuestion} from "@/lib/actions/interaction.action";
 import {setLike} from "@/lib/actions/post.action";
 import {cn} from "@/lib/utils";
-import {Heart} from "lucide-react";
+import {Heart, MessageCircle} from "lucide-react";
 import {usePathname} from "next/navigation";
 import {toast} from "../ui/use-toast";
 import StarAction from "./StarAction";
 import {experimental_useOptimistic as useOptimistic, useEffect, useState} from "react";
 import {Button} from "../ui/button";
+import CommentAction from "./CommentAction";
 
 interface PostActionsProps {
 	userId: string | null;
@@ -15,10 +16,19 @@ interface PostActionsProps {
 	isLiked: boolean;
 	isPostSaved: boolean;
 	likesNumber: number;
+	commentsNumber: number;
 	authorName: string;
 }
 
-const PostActions = ({userId, postId, isLiked, likesNumber, authorName, isPostSaved}: PostActionsProps) => {
+const PostActions = ({
+	userId,
+	postId,
+	isLiked,
+	likesNumber,
+	authorName,
+	isPostSaved,
+	commentsNumber,
+}: PostActionsProps) => {
 	const path = usePathname();
 
 	const [isLikedOptimistic, setIsLikedOptimistic] = useState(isLiked || false);
@@ -78,7 +88,7 @@ const PostActions = ({userId, postId, isLiked, likesNumber, authorName, isPostSa
 	};
 
 	return (
-		<div className='fixed flex flex-col items-center justify-center gap-7 pl-9 pt-24 text-center max-lg:pl-7 max-md:hidden'>
+		<div className='fixed flex flex-col items-center justify-center gap-7 pl-9 pt-14 text-center max-lg:pl-7 max-md:hidden'>
 			<div>
 				<Button
 					className='p-0'
@@ -90,6 +100,12 @@ const PostActions = ({userId, postId, isLiked, likesNumber, authorName, isPostSa
 					/>
 				</Button>
 				<p className='text-sm '>{optimisticLikes}</p>
+			</div>
+			<div>
+				<CommentAction>
+					<MessageCircle className={cn(baseStyles)} />
+					<p className='text-sm mt-2'>{commentsNumber}</p>
+				</CommentAction>
 			</div>
 			<div>
 				<StarAction

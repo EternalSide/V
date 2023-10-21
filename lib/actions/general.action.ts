@@ -89,6 +89,14 @@ export async function SearchInDatabase(data: SearchInDatabaseParams) {
 			);
 		}
 
+		// type !== "Пост"
+		// 					? item?.author.picture
+		// 						? item.author.picture
+		// 						: "/nouser.jfif"
+		// 					: item?.picture
+		// 					? item.picture
+		// 					: "/nouser.jfif",
+
 		return JSON.parse(JSON.stringify(results));
 	} catch (e) {
 		console.log(e);

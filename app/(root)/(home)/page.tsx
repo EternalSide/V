@@ -31,7 +31,6 @@ export default async function Home({searchParams}: SearchParamsProps) {
 			data = await getRecommendedPosts({
 				page: 1,
 			});
-			console.log(data);
 		}
 	} else {
 		data = await getAllPosts({
@@ -39,9 +38,6 @@ export default async function Home({searchParams}: SearchParamsProps) {
 			page: 1,
 		});
 	}
-
-	// const isLoading = true;
-	// if (isLoading) return <Loading />;
 
 	return (
 		<div className='mx-auto flex w-full max-w-7xl gap-3 max-lg:gap-0'>

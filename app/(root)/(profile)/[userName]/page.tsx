@@ -90,7 +90,7 @@ const ProfilePage = async ({params}: ProfilePageProps) => {
 							posts={JSON.parse(JSON.stringify(user.posts))}
 							id='ProfilePage'
 							username={user.username}
-							mainId={currentUser._id.toString()}
+							mainId={currentUser?._id.toString()}
 							isOwnProfile={isOwnProfile}
 						/>
 					) : (

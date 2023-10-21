@@ -9,7 +9,7 @@ const RootLayout = async ({children}: ChildrenProps) => {
 	const {userId} = auth();
 	const user = await getUserById({clerkId: userId!});
 
-	const notificationsDisabled = !user.settings.notification_comment && !user.settings.notification_like;
+	const notificationsDisabled = !user?.settings.notification_comment && !user?.settings.notification_like;
 
 	return (
 		<main className='relative h-full'>

@@ -36,7 +36,6 @@ const EditProfileForm = ({user}: any) => {
 
 	const router = useRouter();
 	const onSubmit = async (values: z.infer<typeof editProfileSchema>) => {
-		console.log(values);
 		try {
 			setIsLoading(true);
 			await updateUser({
