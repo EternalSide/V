@@ -24,15 +24,15 @@ export const createPostSchema = z.object({
 });
 
 export const editProfileSchema = z.object({
-	portfolioWebsite: z
-		.string()
-		.min(4, {
-			message: VALID_URL,
-		})
-		.url({
-			message: VALID_URL,
-		})
-		.max(50, {message: "Максимальное количество символов: 50"}),
+	portfolioWebsite: asOptionalField(
+		z
+			.string()
+			.url({
+				message: VALID_URL,
+			})
+			.max(50, {message: "Максимальное количество символов: 50"})
+	),
+
 	location: z
 		.string()
 		.min(2, {
@@ -45,7 +45,13 @@ export const editProfileSchema = z.object({
 			message: "Минимальное количество символов: 5",
 		})
 		.max(50, {message: "Максимальное количество символов: 50"}),
+	about: asOptionalField(z.string().max(50, {message: "Максимальное количество символов: 50"})),
+
 	theme_color: z.string(),
+	settings: z.object({
+		notification_comment: z.boolean(),
+		notification_like: z.boolean(),
+	}),
 });
 
 export const tagSchema = z.object({

@@ -9,6 +9,7 @@ export interface IUser extends Document {
 	password?: string;
 	role?: string;
 	location?: string;
+	about?: string;
 	bio?: string;
 	portfolioWebsite?: string;
 	userPinned?: Schema.Types.ObjectId;
@@ -20,6 +21,11 @@ export interface IUser extends Document {
 		user: Schema.Types.ObjectId;
 		createdAt: Date;
 	};
+	settings: {
+		notification_like: boolean;
+		notification_comment: boolean;
+	};
+	theme_color: string;
 	posts: Schema.Types.ObjectId[];
 	savedPosts: Schema.Types.ObjectId[];
 	followingTags: Schema.Types.ObjectId[];
@@ -34,6 +40,7 @@ const UserSchema = new Schema<IUser>(
 		email: {type: String, required: true, unique: true},
 		password: {type: String},
 		bio: {type: String},
+		about: {type: String},
 		picture: {type: String, required: true},
 		location: {type: String},
 		portfolioWebsite: {type: String},
@@ -44,6 +51,18 @@ const UserSchema = new Schema<IUser>(
 		followingTags: [{type: Schema.Types.ObjectId, ref: "Tag", default: []}],
 		joinedAt: {type: Date, default: Date.now},
 		role: {type: String, default: "user"},
+		theme_color: {type: String, default: "ingido"},
+		settings: {
+			notification_like: {
+				type: Boolean,
+				default: true,
+			},
+
+			notification_comment: {
+				type: Boolean,
+				default: true,
+			},
+		},
 		notifications: [
 			{
 				event: {

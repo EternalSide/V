@@ -35,7 +35,7 @@ export const updateUser = async (params: UpdateUserParams) => {
 
 		const {clerkId, updatedData, path} = params;
 
-		await User.findOneAndUpdate({clerkId}, updatedData, {
+		const user = await User.findOneAndUpdate({clerkId}, updatedData, {
 			new: true,
 			upsert: true,
 		});

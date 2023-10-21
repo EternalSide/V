@@ -2,9 +2,7 @@ import InfiniteScroll from "@/components/shared/InfiniteScroll";
 import FilterComponents from "@/components/shared/FilterComponents";
 import HomeFilters from "@/components/shared/HomeFilters";
 import MobileTagLeft from "@/components/shared/Tag/MobileTagLeft";
-import ParseHTML from "@/components/shared/ParseHTML";
 import TagHeader from "@/components/shared/Tag/TagHeader";
-import {UserAvatar} from "@/components/shared/UserAvatar";
 import {homeFilters} from "@/constants";
 import {getTagInfo} from "@/lib/actions/tag.action";
 import {getUserById} from "@/lib/actions/user.action";
@@ -12,7 +10,7 @@ import {SearchParamsProps} from "@/types";
 import {auth} from "@clerk/nextjs";
 import {Metadata} from "next";
 import Image from "next/image";
-import Link from "next/link";
+import TagLeftInfo from "@/components/TagLeftInfo";
 
 interface TagPageProps extends SearchParamsProps {
 	params: {
@@ -62,58 +60,11 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 				/>
 
 				<section className='flex w-full justify-start gap-0 max-lg:mt-6 max-sm:mt-0'>
-					<div className='w-[285px]  pt-10 max-lg:hidden '>
-						<div className='flex items-center justify-between'>
-							<Link href='/create'>
-								<button className='button ml-3 bg-indigo-600 text-white'>Новый пост</button>
-							</Link>
-						</div>
-						<div className='mt-4 border-y border-neutral-800 p-5'>
-							<h3 className='font-semibold'>Информация</h3>
-							{tag?.info ? (
-								<ParseHTML
-									data={tag?.info}
-									info={true}
-								/>
-							) : (
-								<p className='mt-4 text-sm text-zinc-300'>Автор не указал информацию.</p>
-							)}
-						</div>
-						<div className='w-full border-neutral-800' />
-						<div className='border-b border-neutral-800 p-5'>
-							<h3 className='font-semibold'>Участники</h3>
-							{tag?.followers.length > 0 ? (
-								<div className='mt-4 grid grid-cols-4 gap-3 content-center'>
-									{tag.followers.map((item: any) => (
-										<Link
-											key={item._id}
-											href={`/${item.username}`}
-										>
-											<UserAvatar
-												imgUrl={item.picture}
-												classNames='h-12 w-12'
-											/>
-										</Link>
-									))}
-								</div>
-							) : (
-								<div className='mt-4 flex flex-col items-center gap-3'>
-									<div className='relative h-32 w-3/4'>
-										<Image
-											fill
-											src='https://i.pinimg.com/564x/50/d9/8a/50d98ab13eab211195c1ce2a41c49ef6.jpg'
-											alt='Лого Тега'
-											className='rounded-md object-cover'
-										/>
-									</div>
-									<h3 className='text-zinc-400'>Ничего не найдено...</h3>
-								</div>
-							)}
-						</div>
-						<div className='p-5 text-center'>
-							<p className='font-semibold text-zinc-400'>Опубликовано постов: {postsLength}</p>
-						</div>
-					</div>
+					<TagLeftInfo
+						tagInfo={tag?.info}
+						tagFollowers={tag?.followers}
+						postsLength={postsLength}
+					/>
 
 					<div className='flex flex-1 flex-col  pt-12 max-lg:border-l-transparent max-sm:pt-6'>
 						<div className='flex items-center gap-3 px-4 max-lg:px-0'>
@@ -139,35 +90,12 @@ const TagPage = async ({params, searchParams}: TagPageProps) => {
 									filterValue={searchParams?.q!}
 								/>
 							) : (
-								// tag.posts.map((post: any) => (
-								//   <PostCard
-								//     key={post._id}
-								//     banner={post?.banner}
-								//     isPostSaved={user?.savedPosts.includes(post._id)}
-								//     userId={user?._id.toString()}
-								//     author={{
-								//       name: post.author.name,
-								//       picture: post.author.picture,
-								//       username: post.author.username,
-								//       _id: post.author._id.toString(),
-								//     }}
-								//     post={{
-								//       title: post.title,
-								//       comments: post.comments,
-								//       likes: post.upvotes.length,
-								//       views: post.views,
-								//       createdAt: post.createdAt,
-								//       tags: post.tags,
-								//       id: post._id.toString(),
-								//     }}
-								//   />
-								// ))
 								<div className='flex flex-col items-center gap-3'>
 									<div className='relative h-64 w-full'>
 										<Image
 											fill
 											src='https://i.pinimg.com/736x/33/a5/fe/33a5fe463b06359c015cfa2ac6c21afd.jpg'
-											alt='Лого Тега'
+											alt='Ничего не найдено'
 											className='rounded-md object-cover'
 										/>
 									</div>

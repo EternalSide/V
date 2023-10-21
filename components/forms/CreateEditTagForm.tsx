@@ -15,6 +15,7 @@ import {useToast} from "@/components/ui/use-toast";
 import {editTag} from "@/lib/actions/tag.action";
 import {Textarea} from "@/components//ui/textarea";
 import {editorPlugins} from "@/constants";
+import MainEditor from "../shared/MainEditor";
 
 interface Props {
 	mongoUserId: string;
@@ -190,7 +191,11 @@ const CreateEditTagForm = ({type, tagDetails, mongoUserId}: Props) => {
 								Информация <span className='text-indigo-500'>*</span>
 							</FormLabel>
 							<FormControl>
-								<Editor
+								<MainEditor
+									editorRef={editorRef}
+									field={field}
+								/>
+								{/* <Editor
 									apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
 									value={field?.value || ""}
 									// @ts-ignore
@@ -209,7 +214,7 @@ const CreateEditTagForm = ({type, tagDetails, mongoUserId}: Props) => {
 										skin: "oxide-dark",
 										content_css: "dark",
 									}}
-								/>
+								/> */}
 							</FormControl>
 							<FormMessage className='text-indigo-500' />
 						</FormItem>

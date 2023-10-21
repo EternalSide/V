@@ -14,6 +14,7 @@ import {SingleImageDropzone} from "@/components/shared/SingleImageDropzone";
 import {useEdgeStore} from "@/lib/edgestore";
 import {useToast} from "../ui/use-toast";
 import {editorPlugins} from "@/constants";
+import MainEditor from "../shared/MainEditor";
 
 interface Props {
 	mongoUserId: string;
@@ -260,7 +261,11 @@ const CreateEditPostForm = ({type, postDetails, mongoUserId}: Props) => {
 								Текст <span className='text-indigo-500'>*</span>
 							</FormLabel>
 							<FormControl>
-								<Editor
+								<MainEditor
+									editorRef={editorRef}
+									field={field}
+								/>
+								{/* <Editor
 									apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
 									value={field?.value || ""}
 									// @ts-ignore
@@ -279,7 +284,7 @@ const CreateEditPostForm = ({type, postDetails, mongoUserId}: Props) => {
 										skin: "oxide-dark",
 										content_css: "dark",
 									}}
-								/>
+								/> */}
 							</FormControl>
 							<FormMessage className='text-indigo-500' />
 						</FormItem>

@@ -11,19 +11,9 @@ interface TagHeaderProps {
 	tagId: string;
 	userId: string;
 	isCreator?: boolean;
-	chat?: boolean;
 }
 
-const TagHeader = ({
-	tagTitle,
-	tagPicture,
-	tagDescription,
-	tagId,
-	isFollowing,
-	chat,
-	userId,
-	isCreator,
-}: TagHeaderProps) => {
+const TagHeader = ({tagTitle, tagPicture, tagDescription, tagId, isFollowing, userId, isCreator}: TagHeaderProps) => {
 	return (
 		<div className='bg-main w-full  p-2'>
 			<div className='flex items-start justify-between px-6 py-5 max-lg:flex-col max-lg:gap-10'>

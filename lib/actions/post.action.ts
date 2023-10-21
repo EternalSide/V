@@ -246,14 +246,15 @@ export async function setLike(params: setLikeParams) {
 
 		const post = await Post.findByIdAndUpdate(postId, updateQuery, {
 			new: true,
-		});
+		}).populate({path: "author", select: "settings"});
 
+		const {notification_like} = post.author.settings;
 		const user = await User.findById(userId);
 
 		// const isOwnPost;
 
-		if (!hasUpVoted) {
-			const zxcasd = `🐱‍💻 ${user.name} оценил ваш пост - ${post.title}`;
+		if (!hasUpVoted && notification_like !== false) {
+			const zxcasd = `🔔 ${user.name} оценил ваш пост - ${post.title}`;
 			await pusherServer.trigger(post.author._id.toString(), "like", zxcasd);
 		}
 

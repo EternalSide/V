@@ -11,6 +11,7 @@ import {createComment} from "@/lib/actions/comment.action";
 import {useRef} from "react";
 import {commentSchema} from "@/lib/validation";
 import {editorPlugins} from "@/constants";
+import MainEditor from "../shared/MainEditor";
 
 interface Props {
 	authorId: string;
@@ -38,10 +39,10 @@ const CreateCommentForm = ({postId, authorId}: Props) => {
 			path,
 		});
 
-		return toast({
-			duration: 2000,
-			title: "Комментарий добавлен ✅",
-		});
+		// return toast({
+		// 	duration: 2000,
+		// 	title: "Комментарий добавлен ✅",
+		// });
 	};
 
 	return (
@@ -59,26 +60,10 @@ const CreateCommentForm = ({postId, authorId}: Props) => {
 								Оставить комментарий <span className='text-indigo-500'>*</span>
 							</FormLabel>
 							<FormControl>
-								<Editor
-									apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
-									value={field?.value || ""}
-									// @ts-ignore
-									onInit={(evt, editor) => (editorRef.current = editor)}
-									onEditorChange={(content) => field.onChange(content)}
-									init={{
-										height: 250,
-										menubar: false,
-										plugins: editorPlugins,
-										toolbar:
-											"undo redo | " +
-											"codesample | bold italic forecolor | alignleft aligncenter |" +
-											"alignright alignjustify | bullist numlist",
-
-										skin: "oxide-dark",
-										content_css: "dark",
-
-										directionality: "ltr",
-									}}
+								<MainEditor
+									editorRef={editorRef}
+									field={field}
+									height={250}
 								/>
 							</FormControl>
 							<FormMessage className='text-indigo-500' />
