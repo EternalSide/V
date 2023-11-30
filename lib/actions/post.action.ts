@@ -153,13 +153,7 @@ export const getPopularPosts = async () => {
 
 		const posts = await Post.aggregate([
 			{
-				$match: {
-					createdAt: {
-						// @ts-ignore
-						$gte: new Date(new Date() - 30 * 24 * 60 * 60 * 1000), // Выбираем документы, созданные в последние две недели
-					},
-					// $or: minimalCriterias,
-				},
+				$match: {},
 			},
 			{
 				$project: {
@@ -195,7 +189,11 @@ export async function deletePost(params: DeletePostParams) {
 
 		await Post.findByIdAndDelete(postId);
 		await Tag.updateMany({posts: postId}, {$pull: {posts: postId}});
-		await User.findByIdAndUpdate(authorId, {$pull: {posts: postId}}, {new: true});
+		await User.findByIdAndUpdate(
+			authorId,
+			{$pull: {posts: postId}},
+			{new: true}
+		);
 		await Comment.deleteMany({post: postId});
 
 		revalidatePath(path);
@@ -269,7 +267,11 @@ export async function setLike(params: setLikeParams) {
 	}
 }
 
-export async function getRecommendedPosts(params: {userId?: string; pageSize?: number; page?: number}) {
+export async function getRecommendedPosts(params: {
+	userId?: string;
+	pageSize?: number;
+	page?: number;
+}) {
 	try {
 		connectToDatabase();
 
@@ -307,7 +309,9 @@ export async function getRecommendedPosts(params: {userId?: string; pageSize?: n
 				posts: JSON.parse(JSON.stringify(recommendedPosts)),
 			};
 		} else {
-			const userInteractions = await Interaction.find({user: user._id}).populate("tags").exec();
+			const userInteractions = await Interaction.find({user: user._id})
+				.populate("tags")
+				.exec();
 
 			const userTags = userInteractions.reduce((tags, interaction) => {
 				if (interaction.tags) {
@@ -330,7 +334,9 @@ export async function getRecommendedPosts(params: {userId?: string; pageSize?: n
 				return acc;
 			}, []);
 
-			const sortedTagCounts = tagCounts.sort((a: any, b: any) => b.count - a.count);
+			const sortedTagCounts = tagCounts.sort(
+				(a: any, b: any) => b.count - a.count
+			);
 			const tagIds = sortedTagCounts.map((item: any) => item.tag);
 
 			// Показываем только посты, из самых $TAG_COUNT популярных тегов пользователей

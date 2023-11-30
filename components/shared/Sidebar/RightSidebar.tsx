@@ -49,8 +49,12 @@ const RightSidebar = async () => {
 						key={post._id}
 						className='group border border-transparent px-5 py-4 hover:border-indigo-700'
 					>
-						<p className='text-neutral-200 transition group-hover:text-indigo-500'>{post.title}</p>
-						<p className='mt-2 text-sm text-zinc-400'>Комментариев: {post.numberOfComments}</p>
+						<p className='text-neutral-200 transition group-hover:text-indigo-500'>
+							{post.title}
+						</p>
+						<p className='mt-2 text-sm text-zinc-400'>
+							Комментариев: {post.numberOfComments}
+						</p>
 					</Link>
 				))}
 			</div>
@@ -88,7 +92,9 @@ const RightSidebar = async () => {
 						<p className='font-semibold text-neutral-200 transition first-letter:uppercase hover:text-indigo-500 group-hover:text-indigo-500'>
 							{tag.name}
 						</p>
-						<p className='mt-2 text-sm text-zinc-400'>Постов: {tag.numberOfPosts}</p>
+						<p className='mt-2 text-sm text-zinc-400'>
+							Постов: {tag.numberOfPosts}
+						</p>
 					</Link>
 				))}
 			</div>

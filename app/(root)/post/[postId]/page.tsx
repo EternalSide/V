@@ -20,7 +20,9 @@ interface ProfilePageProps {
 	params: {postId: string};
 }
 
-export async function generateMetadata({params}: ProfilePageProps): Promise<Metadata> {
+export async function generateMetadata({
+	params,
+}: ProfilePageProps): Promise<Metadata> {
 	const post = await getPostById({id: params.postId});
 
 	return {
@@ -77,8 +79,12 @@ const PostPage = async ({params}: ProfilePageProps) => {
 								imgUrl={post.author.picture}
 							/>
 							<div>
-								<h3 className='text-lg font-semibold first-letter:uppercase'>{post.author.name}</h3>
-								<p className='-mt-0.5 text-sm text-neutral-400'>@{post.author.username}</p>
+								<h3 className='text-lg font-semibold first-letter:uppercase'>
+									{post.author.name}
+								</h3>
+								<p className='-mt-0.5 text-sm text-neutral-400'>
+									@{post.author.username}
+								</p>
 							</div>
 						</Link>
 						{isOwnPost && (
@@ -90,7 +96,9 @@ const PostPage = async ({params}: ProfilePageProps) => {
 				</div>
 
 				<div className='mt-2.5 px-14 max-md:px-6'>
-					<p className='text-xs text-neutral-400'>{getTimestamp(post.createdAt)}</p>
+					<p className='text-xs text-neutral-400'>
+						{getTimestamp(post.createdAt)}
+					</p>
 					<div className='mt-2.5'>
 						{post.tags.map((tag: ITag) => (
 							<TagLink
@@ -103,11 +111,15 @@ const PostPage = async ({params}: ProfilePageProps) => {
 
 				<div className='mt-4 flex items-center gap-3 px-14 max-md:px-6'>
 					<p className='text-sm text-neutral-400'>Просмотров: {post.views}</p>
-					<p className='text-sm text-neutral-400'>Комментариев: {post.comments.length}</p>
+					<p className='text-sm text-neutral-400'>
+						Комментариев: {post.comments.length}
+					</p>
 				</div>
 
 				<div className=' mt-10 px-14 max-md:px-6'>
-					<h1 className='mb-10 text-5xl font-bold max-md:text-3xl'>{post.title}</h1>
+					<h1 className='mb-10 text-5xl font-bold max-md:text-3xl'>
+						{post.title}
+					</h1>
 					<ParseHTML
 						data={post.text}
 						post={true}
@@ -115,7 +127,9 @@ const PostPage = async ({params}: ProfilePageProps) => {
 				</div>
 				<CheckScroll />
 				<div className='w-full border-t border-neutral-800 p-12 pt-8 max-md:p-6'>
-					<h1 className='text-3xl font-semibold'>Все Комментарии ({post.comments.length})</h1>
+					<h1 className='text-3xl font-semibold'>
+						Все Комментарии ({post.comments.length})
+					</h1>
 
 					<AllComents postId={params.postId} />
 
@@ -126,7 +140,9 @@ const PostPage = async ({params}: ProfilePageProps) => {
 						/>
 					) : (
 						<Link href='/sign-in'>
-							<p className='mt-6 text-center'>Войдите, чтобы оставить комментарий.</p>
+							<p className='mt-6 text-center'>
+								Войдите, чтобы оставить комментарий.
+							</p>
 						</Link>
 					)}
 				</div>
@@ -135,7 +151,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 			<div className='sticky right-0 top-0 overflow-y-auto'>
 				<UserCard author={post.author} />
 
-				<div className='bg-main mt-3 flex h-fit w-[320px] flex-col rounded-md border border-neutral-800 max-lg:hidden'>
+				{/* <div className='bg-main mt-3 flex h-fit w-[320px] flex-col rounded-md border border-neutral-800 max-lg:hidden'>
 					<BlockTitle name='Похожее' />
 					{popularPosts.slice(0, 3).map((post: any) => (
 						<Link
@@ -147,7 +163,7 @@ const PostPage = async ({params}: ProfilePageProps) => {
 							<p className='mt-2 text-sm text-zinc-400'>Комментариев: {post.numberOfComments}</p>
 						</Link>
 					))}
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

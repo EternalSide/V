@@ -1,5 +1,4 @@
 "use client";
-
 import {toast} from "@/components/ui/use-toast";
 import {pusher} from "@/lib/pusher";
 import {useEffect} from "react";
@@ -10,11 +9,14 @@ interface Props {
 }
 
 const Notifications = ({userId, userSettings}: Props) => {
-	// const audioElement = new Audio("/iphone_ding.mp3");
 	const settings = JSON.parse(userSettings);
 
+	const sendNotification = () => {
+		const audioElement = new Audio("/iphone_ding.mp3");
+		return audioElement.play();
+	};
+
 	useEffect(() => {
-		// @ts-ignore
 		const channel = pusher.subscribe(userId);
 
 		// Комментарии
@@ -24,7 +26,10 @@ const Notifications = ({userId, userSettings}: Props) => {
 					duration: 2000,
 					title: data,
 				});
-				// audioElement.play();
+
+				if (true) {
+					sendNotification();
+				}
 			});
 		}
 
@@ -35,8 +40,9 @@ const Notifications = ({userId, userSettings}: Props) => {
 					duration: 2000,
 					title: data,
 				});
-
-				// audioElement.play();
+				if (true) {
+					sendNotification();
+				}
 			});
 		}
 
