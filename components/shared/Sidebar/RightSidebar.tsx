@@ -18,23 +18,14 @@ interface Nof {
 const RightSidebar = async () => {
 	const popularTags = await getPopularTags();
 	const popularPosts = await getPopularPosts();
-	// const topAuthors = [
-	// 	{
-	// 		name: "Lesha",
-	// 		username: "V",
-	// 		picture: "https://i.pinimg.com/736x/21/be/dc/21bedc5f6a6e9a957747901d8d27f40a.jpg",
-	// 	},
-	// 	{
-	// 		name: "Elon Musk",
-	// 		username: "elonmask",
-	// 		picture: "https://i.pinimg.com/736x/39/2b/84/392b84f739ed6fcbd109c106fcebd26f.jpg",
-	// 	},
-	// 	{
-	// 		name: "Autumn",
-	// 		username: "autumn",
-	// 		picture: "https://i.pinimg.com/564x/ee/5c/c0/ee5cc0f0333d510772ede311a3489c9d.jpg",
-	// 	},
-	// ];
+	const topAuthors = [
+		{
+			name: "Lesha",
+			username: "V",
+			picture:
+				"https://i.pinimg.com/736x/21/be/dc/21bedc5f6a6e9a957747901d8d27f40a.jpg",
+		},
+	];
 
 	return (
 		<div
