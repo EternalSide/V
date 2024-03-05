@@ -44,7 +44,7 @@ const RightSidebar = async () => {
 							{post.title}
 						</p>
 						<p className='mt-2 text-sm text-zinc-400'>
-							Комментариев: {post.numberOfComments}
+							Комментариев: {post?.numberOfComments || 0}
 						</p>
 					</Link>
 				))}
@@ -90,7 +90,7 @@ const RightSidebar = async () => {
 				))}
 			</div>
 			<div className='text-center mt-5'>
-				<p className='text-zinc-400'>V (c) 2023</p>
+				<p className='text-zinc-400'>V (c) {2024}</p>
 			</div>
 		</div>
 	);

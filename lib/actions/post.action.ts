@@ -151,29 +151,31 @@ export const getPopularPosts = async () => {
 		//   { upvotes: { $gte: 100 } }, // Минимум 100 голосов "вверх"
 		// ];
 
-		const posts = await Post.aggregate([
-			{
-				$match: {},
-			},
-			{
-				$project: {
-					title: true,
-					numberOfComments: {
-						$size: "$comments",
-					},
-					views: "$views",
-					upvotes: "$upvotes",
-				},
-			},
-			{
-				$sort: {
-					numberOfComments: -1,
-					views: -1,
-					upvotes: -1,
-				},
-			},
-			{$limit: 3},
-		]);
+		const posts = await Post.find().sort({createdAt: -1}).limit(3);
+
+		// const posts = await Post.aggregate([
+		// 	{
+		// 		$match: {},
+		// 	},
+		// 	{
+		// 		$project: {
+		// 			title: true,
+		// 			numberOfComments: {
+		// 				$size: "$comments",
+		// 			},
+		// 			views: "$views",
+		// 			upvotes: "$upvotes",
+		// 		},
+		// 	},
+		// 	{
+		// 		$sort: {
+		// 			// numberOfComments: -1,
+		// 			views: -1,
+		// 			upvotes: -1,
+		// 		},
+		// 	},
+		// 	{$limit: 3},
+		// ]);
 
 		return posts;
 	} catch (error) {

@@ -6,7 +6,7 @@ import {Heart, MessageCircle} from "lucide-react";
 import {usePathname} from "next/navigation";
 import {toast} from "../ui/use-toast";
 import StarAction from "./StarAction";
-import {experimental_useOptimistic as useOptimistic, useEffect, useState} from "react";
+import {useOptimistic, useEffect, useState} from "react";
 import {Button} from "../ui/button";
 import CommentAction from "./CommentAction";
 
@@ -96,7 +96,10 @@ const PostActions = ({
 				>
 					<Heart
 						fill={isLikedOptimistic ? "#6366f1" : ""}
-						className={cn(baseStyles, isLikedOptimistic && "text-[#6366f1] transition hover:opacity-90")}
+						className={cn(
+							baseStyles,
+							isLikedOptimistic && "text-[#6366f1] transition hover:opacity-90"
+						)}
 					/>
 				</Button>
 				<p className='text-sm '>{optimisticLikes}</p>
