@@ -5,11 +5,21 @@ interface UserAvatarProps {
 	imageClassNames?: string;
 	classNames?: string;
 	alt?: string;
+	onClick?: any;
 }
 
-export function UserAvatar({imgUrl, classNames, imageClassNames, alt}: UserAvatarProps) {
+export function UserAvatar({
+	imgUrl,
+	classNames,
+	imageClassNames,
+	alt,
+	onClick,
+}: UserAvatarProps) {
 	return (
-		<div className={`relative ${classNames}`}>
+		<div
+			onClick={onClick}
+			className={`relative ${classNames}`}
+		>
 			<Image
 				src={imgUrl}
 				fill

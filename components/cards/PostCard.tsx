@@ -1,3 +1,4 @@
+"use client";
 import {Eye, MessageCircle} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import Metric from "../shared/Metric";
 import ParseHTML from "../shared/ParseHTML";
 import LikeAction from "../actions/LikeAction";
 import CommentAction from "../actions/CommentAction";
+import {useRouter} from "next/navigation";
 
 interface Props {
 	userId: string | null;
@@ -35,7 +37,16 @@ interface Props {
 	};
 }
 
-const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner}: Props) => {
+const PostCard = ({
+	author,
+	post,
+	userId,
+	isOwnProfile,
+	isPostSaved,
+	page,
+	banner,
+}: Props) => {
+	const router = useRouter();
 	return (
 		<Link
 			href={`/post/${post.id}`}
@@ -72,18 +83,33 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 				<div>
 					<div className='flex gap-2'>
 						<UserAvatar
+							onClick={(e: React.TouchEvent<HTMLButtonElement>) => {
+								e.preventDefault();
+								router.push(`/${author.username}`);
+							}}
 							imgUrl={author.picture}
 							alt={author.name}
-							classNames='h-10 w-10'
+							classNames='h-10 min-w-[40px] w-10'
 						/>
 
 						<div className='flex flex-col'>
 							<div className='flex items-center gap-2'>
-								<h3 className='first-letter:uppercase'>{author.name}</h3>
-								<p className='mt-1 text-xs text-zinc-400'>{getTimestamp(post.createdAt)}</p>
+								<button
+									onClick={(e: any) => {
+										e.preventDefault();
+										router.push(`/${author.username}`);
+									}}
+								>
+									<h3 className='first-letter:uppercase'>{author.name}</h3>
+								</button>
+								<p className='mt-1 text-xs text-zinc-400'>
+									{getTimestamp(post.createdAt)}
+								</p>
 							</div>
 							<p className='-mt-1 text-sm text-zinc-400'>@{author.username}</p>
-							<h3 className='mt-3 text-2xl font-bold transition hover:text-indigo-400 max-sm:text-xl'>{post.title}</h3>
+							<h3 className='mt-3 text-2xl font-bold transition hover:text-indigo-400 max-sm:text-xl'>
+								{post.title}
+							</h3>
 							<div className='mt-1.5 flex items-center gap-0.5'>
 								{post.tags.map((tag: any) => (
 									<TagLink
@@ -102,7 +128,9 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 									/>
 									<CommentAction className='flex items-center gap-1.5'>
 										<MessageCircle className='text-neutral-300 hover:opacity-80 transition' />
-										<p className='text-sm text-neutral-300'>{post.comments.length}</p>
+										<p className='text-sm text-neutral-300'>
+											{post.comments.length}
+										</p>
 									</CommentAction>
 								</div>
 								<Metric
@@ -132,9 +160,13 @@ const PostCard = ({author, post, userId, isOwnProfile, isPostSaved, page, banner
 											<div className='mb-5 flex items-center gap-1.5'>
 												<div className='flex items-center gap-1 font-semibold'>
 													<p>{item.author.name}</p>
-													<p className='text-sm text-zinc-400'>@{item.author.username}</p>
+													<p className='text-sm text-zinc-400'>
+														@{item.author.username}
+													</p>
 												</div>
-												<p className='mt-0.5 text-xs text-zinc-400'>{getTimestamp(item.createdAt)}</p>
+												<p className='mt-0.5 text-xs text-zinc-400'>
+													{getTimestamp(item.createdAt)}
+												</p>
 											</div>
 											<ParseHTML
 												data={item.text}
