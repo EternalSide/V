@@ -18,6 +18,7 @@ interface Nof {
 const RightSidebar = async () => {
 	const popularTags = await getPopularTags();
 	const popularPosts = await getPopularPosts();
+
 	const topAuthors = [
 		{
 			name: "Lesha",
@@ -44,7 +45,7 @@ const RightSidebar = async () => {
 							{post.title}
 						</p>
 						<p className='mt-2 text-sm text-zinc-400'>
-							Комментариев: {post?.numberOfComments || 0}
+							Комментариев: {post?.comments.length || 0}
 						</p>
 					</Link>
 				))}

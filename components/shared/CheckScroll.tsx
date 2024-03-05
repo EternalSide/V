@@ -18,7 +18,7 @@ const CheckScroll = () => {
 
 	return (
 		<div
-			className='-mt-14'
+			className=''
 			ref={ref}
 		/>
 	);
