@@ -3,24 +3,19 @@ import {useScroll} from "@/hooks/useScroll";
 import {useEffect, useRef} from "react";
 
 const CheckScroll = () => {
-	const {commentAction, setCommentAction} = useScroll();
+	const {isCommentButtonPressed, setIsCommentButtonPressed} = useScroll();
 	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (commentAction && ref.current) {
+		if (isCommentButtonPressed && ref.current) {
 			ref.current.scrollIntoView({behavior: "smooth"});
 		}
 
-		return () => setCommentAction(false);
-	}, [commentAction]);
+		return () => setIsCommentButtonPressed(false);
+	}, [isCommentButtonPressed]);
 
-	if (!commentAction) return null;
+	if (!isCommentButtonPressed) return null;
 
-	return (
-		<div
-			className=''
-			ref={ref}
-		/>
-	);
+	return <div ref={ref} />;
 };
 export default CheckScroll;

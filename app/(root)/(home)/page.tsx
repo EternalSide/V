@@ -1,72 +1,41 @@
-import InfiniteScroll from "@/components/shared/InfiniteScroll";
-import FilterComponents from "@/components/shared/FilterComponents";
-import HomeFilters from "@/components/shared/HomeFilters";
+import PostCard from "@/components/cards/PostCard";
 import LeftSidebar from "@/components/shared/Sidebar/LeftSidebar";
 import RightSidebar from "@/components/shared/Sidebar/RightSidebar";
-import {homeFilters} from "@/constants";
-import {getAllPosts, getRecommendedPosts} from "@/lib/actions/post.action";
-import {getUserById} from "@/lib/actions/user.action";
-import {SearchParamsProps} from "@/types";
+import {IComment} from "@/server_actions/models/comment.model";
+import {IPost} from "@/server_actions/models/post.model";
+import {IUser} from "@/server_actions/models/user.model";
+import {getAllPosts} from "@/server_actions/post.action";
+import {getUserById} from "@/server_actions/user.action";
 import {auth} from "@clerk/nextjs";
 
-export const metadata = {
-	title: {
-		absolute: "Главная / V",
-	},
+export type PostWithAuthorAndComments = IPost & {
+	author: IUser;
+	comments: IComment & {
+		author: IUser;
+	};
 };
 
-export default async function Home({searchParams}: SearchParamsProps) {
+export default async function Home() {
 	const {userId} = auth();
 	const user = await getUserById({clerkId: userId!});
-
-	let data: any = [];
-
-	if (searchParams?.q === "recommended") {
-		if (userId) {
-			data = await getRecommendedPosts({
-				userId,
-				page: 1,
-			});
-		} else {
-			data = await getRecommendedPosts({
-				page: 1,
-			});
-		}
-	} else {
-		data = await getAllPosts({
-			filterValue: searchParams?.q!,
-			page: 1,
-		});
-	}
+	const posts = await getAllPosts();
 
 	return (
-		<div className='mx-auto flex w-full max-w-7xl gap-3 max-lg:gap-0'>
-			<LeftSidebar
-				username={user?.username}
-				followingTags={user?.followingTags}
-			/>
-			<section className='flex w-full flex-1 flex-col border-x border-neutral-700 pb-6 pt-[75px] max-lg:border-l-transparent  max-md:pb-14'>
-				<div>
-					<div className='mb-3 border-b border-neutral-700 pb-5'>
-						<h1 className='px-4 text-3xl font-bold'>Главная</h1>
-					</div>
-					<div className='px-4'>
-						<HomeFilters />
-						<FilterComponents
-							containerClasses='sm:hidden'
-							filters={homeFilters}
-						/>
-					</div>
+		<div className='mx-auto flex w-full max-w-7xl gap-3 max-lg:gap-0 h-full pt-[56px]'>
+			<LeftSidebar username={user?.username} />
+			<section className='flex flex-1 flex-col border-x border-neutral-700 pb-6 max-lg:border-l-transparent'>
+				<div className='border-b border-neutral-700 p-4'>
+					<h1 className='text-3xl font-bold'>Главная</h1>
 				</div>
-				<div className='mt-2.5 flex flex-col gap-1.5'>
-					<InfiniteScroll
-						filterValue={searchParams?.q!}
-						userId={userId?.toString()}
-						user={JSON.stringify(user)}
-						posts={data.posts}
-						id={"MainPage"}
-						mainId={user?._id.toString()}
-					/>
+				<div className='flex flex-col gap-1.5 flex-1'>
+					{posts.map((post: PostWithAuthorAndComments) => (
+						<PostCard
+							key={post._id.toString()}
+							userId={user?._id.toString() || null}
+							isPostSaved={user?.savedPosts.includes(post._id)}
+							post={post}
+						/>
+					))}
 				</div>
 			</section>
 			<RightSidebar />

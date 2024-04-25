@@ -1,57 +1,35 @@
-import {getPopularPosts, getPostById} from "@/lib/actions/post.action";
+import {getPostById} from "@/server_actions/post.action";
 import {getTimestamp} from "@/lib/utils";
 import ParseHTML from "@/components/shared/ParseHTML";
 import Link from "next/link";
-import {UserAvatar} from "@/components/shared/UserAvatar";
 import Image from "next/image";
 import {auth} from "@clerk/nextjs";
 import PostActions from "@/components/actions/PostActions";
-import {getUserById} from "@/lib/actions/user.action";
+import {getUserById} from "@/server_actions/user.action";
 import CreateCommentForm from "@/components/forms/CreateCommentForm";
-import AllComents from "@/components/shared/AllComents";
-import {Metadata} from "next";
+import AllComents from "@/app/(root)/post/[postId]/AllComents";
 import UserCard from "@/components/cards/UserCard";
-import {ITag} from "@/database/models/tag.model";
-import TagLink from "@/components/shared/Tag/TagLink";
-import {BlockTitle} from "@/components/shared/Sidebar/RightSidebar";
 import CheckScroll from "@/components/shared/CheckScroll";
 
 interface ProfilePageProps {
 	params: {postId: string};
 }
 
-export async function generateMetadata({
-	params,
-}: ProfilePageProps): Promise<Metadata> {
-	const post = await getPostById({id: params.postId});
-
-	return {
-		title: `${post.title} / V`,
-	};
-}
-
 const PostPage = async ({params}: ProfilePageProps) => {
 	const post = await getPostById({id: params.postId});
-	const {userId} = auth();
-	// Заменить на рекомендуемое
-	const popularPosts = await getPopularPosts();
-	let user;
+	const {userId: currentUserClerkId} = auth();
+	const isOwnPost = post?.author.clerkId === currentUserClerkId;
 
-	if (userId) {
-		user = await getUserById({clerkId: userId});
-	}
-
-	const isOwnPost = post?.author.clerkId === userId;
+	const currentUser = await getUserById({clerkId: currentUserClerkId!});
 
 	return (
 		<div className='mx-auto flex w-full max-w-7xl items-start gap-3 max-lg:gap-0 pt-[75px] max-[1400px]:px-3 max-lg:px-0 max-lg:pt-[55px] max-md:px-0'>
 			<PostActions
-				isLiked={post.upvotes.includes(user?._id.toString())}
-				isPostSaved={user?.savedPosts.includes(post._id)}
-				userId={user?._id.toString()}
+				isLiked={post.upvotes.includes(currentUser?._id.toString())}
+				isPostSaved={currentUser?.savedPosts.includes(post._id)}
+				userId={currentUser?._id.toString()}
 				postId={post._id.toString()}
-				likesNumber={post.upvotes.length}
-				authorName={post.author.name}
+				likesLength={post.upvotes.length}
 				commentsNumber={post.comments.length}
 			/>
 
@@ -66,18 +44,21 @@ const PostPage = async ({params}: ProfilePageProps) => {
 						/>
 					</div>
 				)}
-
 				<div className='mt-6 flex items-start gap-1.5 px-14 max-md:px-6'>
 					<div className='flex w-full items-start justify-between '>
 						<Link
 							href={`/${post.author.username}`}
 							className='flex items-center gap-1.5'
 						>
-							<UserAvatar
-								alt={post.author.name}
-								classNames='h-10 w-10'
-								imgUrl={post.author.picture}
-							/>
+							<div className='relative h-10 w-10'>
+								<Image
+									alt={`Изображение ${post.author?.picture}`}
+									fill
+									src={post.author?.picture}
+									className='rounded-full object-cover'
+								/>
+							</div>
+
 							<div>
 								<h3 className='text-lg font-semibold first-letter:uppercase'>
 									{post.author.name}
@@ -99,14 +80,6 @@ const PostPage = async ({params}: ProfilePageProps) => {
 					<p className='text-xs text-neutral-400'>
 						{getTimestamp(post.createdAt)}
 					</p>
-					<div className='mt-2.5'>
-						{post.tags.map((tag: ITag) => (
-							<TagLink
-								key={tag._id}
-								tagName={tag.name}
-							/>
-						))}
-					</div>
 				</div>
 
 				<div className='mt-4 flex items-center gap-3 px-14 max-md:px-6'>
@@ -130,12 +103,10 @@ const PostPage = async ({params}: ProfilePageProps) => {
 					<h1 className='text-3xl font-semibold'>
 						Все Комментарии ({post.comments.length})
 					</h1>
-
 					<AllComents postId={params.postId} />
-
-					{user ? (
+					{currentUser ? (
 						<CreateCommentForm
-							authorId={user?._id.toString()}
+							authorId={currentUser?._id.toString()}
 							postId={params.postId}
 						/>
 					) : (
@@ -147,23 +118,8 @@ const PostPage = async ({params}: ProfilePageProps) => {
 					)}
 				</div>
 			</div>
-
 			<div className='sticky right-0 top-0 overflow-y-auto'>
 				<UserCard author={post.author} />
-
-				{/* <div className='bg-main mt-3 flex h-fit w-[320px] flex-col rounded-md border border-neutral-800 max-lg:hidden'>
-					<BlockTitle name='Похожее' />
-					{popularPosts.slice(0, 3).map((post: any) => (
-						<Link
-							href={`/post/${post._id.toString()}`}
-							key={post._id}
-							className='group border border-transparent px-5 py-4 hover:border-indigo-700'
-						>
-							<p className='text-neutral-200 transition group-hover:text-indigo-500'>{post.title}</p>
-							<p className='mt-2 text-sm text-zinc-400'>Комментариев: {post.numberOfComments}</p>
-						</Link>
-					))}
-				</div> */}
 			</div>
 		</div>
 	);

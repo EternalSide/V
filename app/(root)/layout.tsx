@@ -1,32 +1,17 @@
-import Navbar from "@/components/shared/Navbar/Navbar";
+import Header from "@/components/shared/Header/Header";
 import {Toaster} from "@/components/ui/toaster";
-import {getUserById} from "@/lib/actions/user.action";
-import Notifications from "@/providers/Notifications";
-import {ChildrenProps} from "@/types";
+import {getUserById} from "@/server_actions/user.action";
 import {auth} from "@clerk/nextjs";
 
-const RootLayout = async ({children}: ChildrenProps) => {
+const RootLayout = async ({children}: {children: React.ReactNode}) => {
 	const {userId} = auth();
 	const user = await getUserById({clerkId: userId!});
 
-	const notificationsDisabled = !user?.settings.notification_comment && !user?.settings.notification_like;
-
 	return (
 		<main className='relative h-full'>
-			<Navbar
-				followingTags={user?.followingTags}
-				username={user?.username}
-			/>
-			<div className='relative mx-auto flex h-full w-full flex-col justify-between'>
-				{children}
-				{!notificationsDisabled && userId && (
-					<Notifications
-						userSettings={JSON.stringify(user.settings)}
-						userId={user?._id.toString()}
-					/>
-				)}
-				<Toaster />
-			</div>
+			<Header username={user?.username} />
+			{children}
+			<Toaster />
 		</main>
 	);
 };

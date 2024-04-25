@@ -1,11 +1,12 @@
 import {create} from "zustand";
 
 interface StateProps {
-	commentAction: boolean;
-	setCommentAction: (value: boolean) => void;
+	isCommentButtonPressed: boolean;
+	setIsCommentButtonPressed: (value: boolean) => void;
 }
 
 export const useScroll = create<StateProps>((set) => ({
-	commentAction: false,
-	setCommentAction: (value) => set(() => ({commentAction: value})),
+	isCommentButtonPressed: false,
+	setIsCommentButtonPressed: (value) =>
+		set(() => ({isCommentButtonPressed: value})),
 }));

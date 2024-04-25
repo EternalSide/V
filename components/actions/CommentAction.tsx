@@ -7,11 +7,11 @@ interface Props {
 }
 
 const CommentAction = ({children, className}: Props) => {
-	const {setCommentAction} = useScroll();
+	const {setIsCommentButtonPressed} = useScroll();
 
 	return (
 		<button
-			onClick={() => setCommentAction(true)}
+			onClick={() => setIsCommentButtonPressed(true)}
 			className={className}
 		>
 			{children}

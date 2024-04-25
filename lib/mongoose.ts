@@ -1,21 +1,21 @@
 import mongoose from "mongoose";
 
-let isConnected: boolean = false;
+let isConnected = false;
 
 export async function connectToDatabase() {
-  if (!process.env.DB_URL) return console.log("URL не найден.");
+	if (!process.env.DB_URL) return console.log("URL не найден.");
 
-  if (isConnected) return;
+	if (isConnected) return;
 
-  mongoose.set("strictQuery", true);
+	mongoose.set("strictQuery", true);
 
-  try {
-    await mongoose.connect(`${process.env.DB_URL}`, {
-      dbName: "Vendetta",
-    });
+	try {
+		await mongoose.connect(`${process.env.DB_URL}`, {
+			dbName: "blog",
+		});
 
-    isConnected = true;
-  } catch (e) {
-    console.log(e, "Ошибка - Проблемы с подключением к БД - Фул Инфо:", e);
-  }
+		isConnected = true;
+	} catch (e) {
+		console.log(e, "Проблемы с подключением к БД", e);
+	}
 }

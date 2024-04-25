@@ -1,25 +1,27 @@
 "use client";
 import {FileEdit, Trash} from "lucide-react";
 import {usePathname, useRouter} from "next/navigation";
-import {deletePost} from "@/lib/actions/post.action";
+import {deletePost} from "@/server_actions/post.action";
 import {useToast} from "../ui/use-toast";
 import React from "react";
 
 interface Props {
 	type?: string;
-	itemId: string;
-	authorId?: string;
+	postId: string;
+	authorId: string;
 }
 
-const EditDeletePost = ({type, itemId, authorId}: Props) => {
+const EditDeletePost = ({type, postId, authorId}: Props) => {
 	const path = usePathname();
 	const router = useRouter();
 	const {toast} = useToast();
 
-	async function handleDeletePost(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+	async function handleDeletePost(
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) {
 		e.preventDefault();
 		if (type === "Post") {
-			await deletePost({postId: itemId, authorId: authorId!, path});
+			await deletePost({postId, authorId, path});
 			return toast({
 				title: "Пост удален ✅",
 				duration: 2000,
@@ -27,9 +29,11 @@ const EditDeletePost = ({type, itemId, authorId}: Props) => {
 		}
 	}
 
-	async function handleEdit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+	async function handleEdit(
+		e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+	) {
 		e.preventDefault();
-		router.push(`/edit/${itemId}`);
+		router.push(`/edit/${postId}`);
 	}
 
 	return (
