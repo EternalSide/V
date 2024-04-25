@@ -1,5 +1,6 @@
 "use client";
-import {deletePostFromFavourites} from "@/server_actions/user.action";
+
+import {deletePostFromFavourites} from "@/lib/actions/user.action";
 import {DeleteIcon} from "lucide-react";
 import {useRouter} from "next/navigation";
 
@@ -13,6 +14,7 @@ const DeleteFromFavouritesAction = ({clerkId, postId}: Props) => {
 	const handleDelete = async () => {
 		try {
 			await deletePostFromFavourites({clerkId, postId});
+
 			router.refresh();
 		} catch (e) {
 			console.log(e);
@@ -20,8 +22,11 @@ const DeleteFromFavouritesAction = ({clerkId, postId}: Props) => {
 	};
 
 	return (
-		<button onClick={handleDelete}>
-			<DeleteIcon className='h-5 w-5 text-red-500 hover:opacity-90 transition' />
+		<button
+			onClick={handleDelete}
+			type='button'
+		>
+			<DeleteIcon className='h-5 w-5 text-red-500 cursor-pointer hover:opacity-90 transition' />
 		</button>
 	);
 };

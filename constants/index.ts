@@ -1,6 +1,7 @@
-import {Home, PlusSquare, Star, Smile} from "lucide-react";
+import {HomeFiltersTypes, SideBarLinksType} from "@/types";
+import {Home, PlusSquare, Star, Smile, Users} from "lucide-react";
 
-export const sidebarLinks = [
+export const sidebarLinks: SideBarLinksType[] = [
 	{
 		label: "Главная",
 		route: "/",
@@ -24,6 +25,28 @@ export const sidebarLinks = [
 		route: "/create",
 		icon: PlusSquare,
 		auth: true,
+	},
+
+	{
+		label: "Сообщества",
+		route: "/tags",
+		icon: Users,
+		auth: false,
+	},
+];
+
+export const homeFilters: HomeFiltersTypes[] = [
+	{
+		value: "new",
+		label: "Новое",
+	},
+	{
+		value: "recommended",
+		label: "Рекомендованное",
+	},
+	{
+		value: "popular",
+		label: "Популярное",
 	},
 ];
 

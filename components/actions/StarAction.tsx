@@ -2,17 +2,20 @@
 import {cn} from "@/lib/utils";
 import {Star} from "lucide-react";
 import {toast} from "../ui/use-toast";
-import {savePost} from "@/server_actions/user.action";
+import {savePost} from "@/lib/actions/user.action";
 import {usePathname} from "next/navigation";
-
+import {useState} from "react";
 interface StarActionProps {
 	isPostSaved: boolean;
-	userId: string | null;
+	userId: string;
 	postId: string;
+	authorName: string;
 }
 
-const StarAction = ({isPostSaved, userId, postId}: StarActionProps) => {
+const StarAction = ({isPostSaved, userId, postId, authorName}: StarActionProps) => {
 	const path = usePathname();
+
+	const [isSaved, setIsSaved] = useState(isPostSaved || false);
 
 	const handleAddPostToFavourites = async (e: any) => {
 		e.preventDefault();
@@ -24,13 +27,23 @@ const StarAction = ({isPostSaved, userId, postId}: StarActionProps) => {
 				description: `Войдите в аккаунт, чтобы добавить пост в избранное.`,
 			});
 		try {
-			toast({
-				duration: 1000,
-				title: !isPostSaved
-					? `Пост добавлен в избранное ⭐`
-					: "Пост удален из избранного ❌",
-			});
+			if (!isPostSaved) {
+				// setIsSaved(true);
 
+				toast({
+					duration: 1000,
+					title: `Пост добавлен в избранное ⭐`,
+					description: `Вы добавили пост пользователя ${authorName} в избранное.`,
+				});
+			} else {
+				// setIsSaved(false);
+
+				toast({
+					duration: 1000,
+					title: `Пост удален из избранного ❌`,
+					description: `Вы удалили пост пользователя ${authorName} из избранного.`,
+				});
+			}
 			await savePost({
 				userId,
 				postId,
@@ -41,17 +54,13 @@ const StarAction = ({isPostSaved, userId, postId}: StarActionProps) => {
 			console.log(e);
 		}
 	};
-
+	const baseStyles = "h-5 w-5 cursor-pointer text-neutral-300 transition hover:opacity-90 h-6 w-6";
 	return (
-		<button onClick={handleAddPostToFavourites}>
-			<Star
-				fill={isPostSaved ? "#6366f1" : ""}
-				className={cn(
-					"text-neutral-300 transition hover:opacity-90 h-6 w-6",
-					isPostSaved && "text-[#6366f1] transition hover:opacity-90"
-				)}
-			/>
-		</button>
+		<Star
+			onClick={handleAddPostToFavourites}
+			fill={isPostSaved ? "#6366f1" : ""}
+			className={cn(baseStyles, isPostSaved && "text-[#6366f1] transition hover:opacity-90")}
+		/>
 	);
 };
 export default StarAction;

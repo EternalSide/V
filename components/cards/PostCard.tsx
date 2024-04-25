@@ -3,47 +3,62 @@ import {Eye, MessageCircle} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {getTimestamp} from "@/lib/utils";
+import {UserAvatar} from "../shared/UserAvatar";
 import EditDeletePost from "../actions/EditDeletePost";
 import StarAction from "../actions/StarAction";
+import TagLink from "../shared/Tag/TagLink";
 import Metric from "../shared/Metric";
+import ParseHTML from "../shared/ParseHTML";
 import LikeAction from "../actions/LikeAction";
 import CommentAction from "../actions/CommentAction";
 import {useRouter} from "next/navigation";
-import {PostWithAuthorAndComments} from "@/app/(root)/(home)/page";
 
 interface Props {
 	userId: string | null;
 	isPostSaved: boolean;
-	isOwnProfile?: boolean;
-	page?: "Profile";
-	post: PostWithAuthorAndComments;
+	banner?: string;
+	isOwnProfile?: any;
+	page?: string;
+
+	author: {_id: string; name: string; picture: string; username: string};
+
+	post: {
+		id: string;
+		title: string;
+		comments: any;
+		tags: {
+			_id: string;
+			name: string;
+		}[];
+
+		likes: any;
+		views: number;
+		createdAt: Date;
+	};
 }
 
-const PostCard = ({post, userId, isOwnProfile, isPostSaved, page}: Props) => {
+const PostCard = ({
+	author,
+	post,
+	userId,
+	isOwnProfile,
+	isPostSaved,
+	page,
+	banner,
+}: Props) => {
 	const router = useRouter();
-
-	const goToProfile = (e: any) => {
-		e.preventDefault();
-		return router.push(`/${post.author.username}`);
-	};
-
-	const isLiked = Boolean(
-		userId &&
-			post.upvotes.some((upvote) => upvote.toString() === userId.toString())
-	);
-
 	return (
 		<Link
-			href={`/post/${post._id}`}
-			className='bg-main flex w-full flex-col items-start border border-transparent hover:border-indigo-700'
+			href={`/post/${post.id}`}
+			className='card-main'
 		>
-			{post?.banner && (
+			{banner && (
 				<div className='relative h-64 w-full'>
 					<Image
 						fill
 						className='object-cover object-top max-sm:p-4 max-sm:pb-0'
 						alt='Изображение к посту'
-						src={post.banner}
+						src={banner}
 					/>
 				</div>
 			)}
@@ -51,59 +66,71 @@ const PostCard = ({post, userId, isOwnProfile, isPostSaved, page}: Props) => {
 			<div className='relative w-full py-6 pl-5 pr-7'>
 				<div className='absolute right-7 top-4 flex items-center gap-x-2'>
 					<StarAction
+						authorName={author.name}
 						userId={userId!}
-						postId={post._id}
+						postId={post.id}
 						isPostSaved={isPostSaved}
 					/>
+
 					{isOwnProfile && page === "Profile" && (
 						<EditDeletePost
 							type='Post'
-							postId={post._id}
-							authorId={post.author._id.toString()}
+							itemId={post.id}
+							authorId={author._id}
 						/>
 					)}
 				</div>
 				<div>
 					<div className='flex gap-2'>
-						<button
-							onClick={goToProfile}
-							className='relative h-10 min-w-[40px] w-10'
-						>
-							<Image
-								src={post.author?.picture}
-								alt={`Изображение ${post.author?.picture}`}
-								fill
-								className='rounded-full object-cover'
-							/>
-						</button>
+						<UserAvatar
+							onClick={(e: React.TouchEvent<HTMLButtonElement>) => {
+								e.preventDefault();
+								router.push(`/${author.username}`);
+							}}
+							imgUrl={author.picture}
+							alt={author.name}
+							classNames='h-10 min-w-[40px] w-10'
+						/>
 
 						<div className='flex flex-col'>
 							<div className='flex items-center gap-2'>
-								<button onClick={goToProfile}>
-									<h3 className='first-letter:uppercase'>{post.author.name}</h3>
+								<button
+									onClick={(e: any) => {
+										e.preventDefault();
+										router.push(`/${author.username}`);
+									}}
+								>
+									<h3 className='first-letter:uppercase'>{author.name}</h3>
 								</button>
 								<p className='mt-1 text-xs text-zinc-400'>
 									{getTimestamp(post.createdAt)}
 								</p>
 							</div>
-							<p className='-mt-1 text-sm text-zinc-400'>
-								@{post.author.username}
-							</p>
+							<p className='-mt-1 text-sm text-zinc-400'>@{author.username}</p>
 							<h3 className='mt-3 text-2xl font-bold transition hover:text-indigo-400 max-sm:text-xl'>
 								{post.title}
 							</h3>
-
-							<div className='mt-5 flex items-center gap-6'>
+							<div className='mt-1.5 flex items-center gap-0.5'>
+								{post.tags.map((tag: any) => (
+									<TagLink
+										key={tag._id}
+										tagName={tag.name}
+									/>
+								))}
+							</div>
+							<div className='mt-3 flex items-center gap-6'>
 								<div className='flex items-center gap-6'>
 									<LikeAction
-										postId={post._id}
+										postId={post.id}
 										userId={userId}
-										likesLength={post.upvotes.length}
-										isLiked={isLiked}
+										likes={post.likes}
+										likesLength={post.likes.length}
 									/>
-									<CommentAction className='flex items-center gap-1.5 text-sm text-neutral-300'>
+									<CommentAction className='flex items-center gap-1.5'>
 										<MessageCircle className='text-neutral-300 hover:opacity-80 transition' />
-										{post?.comments.length}
+										<p className='text-sm text-neutral-300'>
+											{post.comments.length}
+										</p>
 									</CommentAction>
 								</div>
 								<Metric
@@ -114,6 +141,50 @@ const PostCard = ({post, userId, isOwnProfile, isPostSaved, page}: Props) => {
 						</div>
 					</div>
 				</div>
+				{post?.comments.length > 0 && (
+					<div>
+						<div className='mt-6 flex flex-col gap-3'>
+							{post?.comments.length >= 2 &&
+								post.comments.slice(0, 2).map((item: any) => (
+									<article
+										key={item._id}
+										className='flex w-full items-start gap-2'
+									>
+										<div>
+											<UserAvatar
+												imgUrl={item.author.picture}
+												classNames='h-8 w-8'
+											/>
+										</div>
+										<div className='flex-1 rounded-lg bg-[#272727] p-5 pb-2.5'>
+											<div className='mb-5 flex items-center gap-1.5'>
+												<div className='flex items-center gap-1 font-semibold'>
+													<p>{item.author.name}</p>
+													<p className='text-sm text-zinc-400'>
+														@{item.author.username}
+													</p>
+												</div>
+												<p className='mt-0.5 text-xs text-zinc-400'>
+													{getTimestamp(item.createdAt)}
+												</p>
+											</div>
+											<ParseHTML
+												data={item.text}
+												comment
+											/>
+										</div>
+									</article>
+								))}
+						</div>
+						<div className='group ml-8 mt-4 w-fit rounded-xl px-3 py-2  hover:bg-zinc-800'>
+							<CommentAction>
+								<p className='text-sm font-semibold text-zinc-400 group-hover:text-white'>
+									Все комментарии ({post.comments.length})
+								</p>
+							</CommentAction>
+						</div>
+					</div>
+				)}
 			</div>
 		</Link>
 	);

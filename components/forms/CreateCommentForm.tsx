@@ -2,19 +2,13 @@
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {z} from "zod";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@/components/ui/form";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {usePathname} from "next/navigation";
 import {useToast} from "../ui/use-toast";
-import {createComment} from "@/server_actions/comment.action";
+import {createComment} from "@/lib/actions/comment.action";
 import {useRef} from "react";
 import {commentSchema} from "@/lib/validation";
-import MainEditor from "../shared/PostEditor";
+import MainEditor from "../shared/MainEditor";
 
 interface Props {
 	authorId: string;
@@ -30,6 +24,7 @@ const CreateCommentForm = ({postId, authorId}: Props) => {
 	});
 
 	const path = usePathname();
+	const {isSubmitting, isValid} = form.formState;
 	const {toast} = useToast();
 	const editorRef = useRef(null);
 
@@ -42,6 +37,7 @@ const CreateCommentForm = ({postId, authorId}: Props) => {
 		});
 
 		form.reset();
+
 		return toast({
 			duration: 2000,
 			title: "Комментарий добавлен ✅",
@@ -52,7 +48,7 @@ const CreateCommentForm = ({postId, authorId}: Props) => {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className='mx-auto mt-7 flex w-full max-w-7xl flex-col gap-3 py-8 max-[1280px]:px-4 max-md:px-0'
+				className='mx-auto mt-7 flex w-full max-w-7xl flex-col gap-3 py-8 text-white max-[1280px]:px-4 max-md:px-0'
 			>
 				<FormField
 					control={form.control}
@@ -71,11 +67,11 @@ const CreateCommentForm = ({postId, authorId}: Props) => {
 					)}
 				/>
 				<button
+					disabled={isSubmitting || !isValid}
+					className='button  w-full bg-indigo-600 hover:bg-indigo-700'
 					type='submit'
-					disabled={form.formState.isSubmitting || !form.formState.isValid}
-					className='button w-full bg-indigo-600 hover:bg-indigo-700'
 				>
-					{form.formState.isSubmitting ? "Публикация.." : " Отправить"}
+					{isSubmitting ? "Публикация.." : " Отправить"}
 				</button>
 			</form>
 		</Form>

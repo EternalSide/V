@@ -1,55 +1,119 @@
 "use client";
-import {viewPost} from "@/server_actions/post.action";
+import {viewQuestion} from "@/lib/actions/interaction.action";
+import {setLike} from "@/lib/actions/post.action";
 import {cn} from "@/lib/utils";
-import {MessageCircle} from "lucide-react";
+import {Heart, MessageCircle} from "lucide-react";
 import {usePathname} from "next/navigation";
+import {toast} from "../ui/use-toast";
 import StarAction from "./StarAction";
-import {useEffect} from "react";
+import {useOptimistic, useEffect, useState} from "react";
+import {Button} from "../ui/button";
 import CommentAction from "./CommentAction";
-import LikeAction from "./LikeAction";
 
 interface PostActionsProps {
 	userId: string | null;
 	postId: string;
 	isLiked: boolean;
 	isPostSaved: boolean;
-	likesLength: number;
+	likesNumber: number;
 	commentsNumber: number;
+	authorName: string;
 }
 
 const PostActions = ({
 	userId,
 	postId,
 	isLiked,
-	likesLength,
+	likesNumber,
+	authorName,
 	isPostSaved,
 	commentsNumber,
 }: PostActionsProps) => {
 	const path = usePathname();
 
+	const [isLikedOptimistic, setIsLikedOptimistic] = useState(isLiked || false);
+	const [optimisticLikes, addOptimisticLikes] = useOptimistic(
+		likesNumber || 0,
+		(state, amount) => state + Number(amount)
+	);
+
 	useEffect(() => {
-		viewPost({
-			postId,
+		viewQuestion({
+			postId: postId!,
+			userId: userId || undefined,
+			path,
 		});
-	}, [postId, path]);
+	}, [postId, userId, path]);
+
+	const baseStyles = `hover:text-indigo-500 text-white transition cursor-pointer h-6 w-6`;
+
+	const handleLike = async () => {
+		if (!userId)
+			return toast({
+				duration: 2000,
+				title: "Вы не авторизованы ❌",
+				description: `Войдите в аккаунт, чтобы оценить пост.`,
+			});
+
+		try {
+			if (isLikedOptimistic) {
+				setIsLikedOptimistic(false);
+				addOptimisticLikes(-1);
+
+				toast({
+					duration: 2000,
+					title: "Оценка удалена ❌",
+					description: `Вы отменили оценку поста пользователя ${authorName}`,
+				});
+			} else {
+				setIsLikedOptimistic(true);
+				addOptimisticLikes(1);
+
+				toast({
+					duration: 2000,
+					title: `Оценка добавлена ✅`,
+					description: `Вам понравился пост пользователя ${authorName}`,
+				});
+			}
+
+			await setLike({
+				postId,
+				userId,
+				path,
+				hasUpVoted: isLiked,
+			});
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
 	return (
 		<div className='fixed flex flex-col items-center justify-center gap-7 pl-9 pt-14 text-center max-lg:pl-7 max-md:hidden'>
-			<LikeAction
-				postId={postId}
-				userId={userId}
-				likesLength={likesLength}
-				isLiked={isLiked}
-			/>
+			<div>
+				<Button
+					className='p-0'
+					onClick={handleLike}
+				>
+					<Heart
+						fill={isLikedOptimistic ? "#6366f1" : ""}
+						className={cn(
+							baseStyles,
+							isLikedOptimistic && "text-[#6366f1] transition hover:opacity-90"
+						)}
+					/>
+				</Button>
+				<p className='text-sm '>{optimisticLikes}</p>
+			</div>
 			<div>
 				<CommentAction>
-					<MessageCircle className='hover:text-indigo-500 text-white transition cursor-pointer h-6 w-6' />
+					<MessageCircle className={cn(baseStyles)} />
 					<p className='text-sm mt-2'>{commentsNumber}</p>
 				</CommentAction>
 			</div>
 			<div>
 				<StarAction
-					userId={userId}
+					authorName={authorName}
+					userId={userId!}
 					postId={postId}
 					isPostSaved={isPostSaved}
 				/>

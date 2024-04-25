@@ -1,11 +1,11 @@
 import "./globals.css";
 import "../styles/prism.css";
+import {ChildrenProps} from "@/types";
 import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import {EdgeStoreProvider} from "@/lib/edgestore";
-import {ClerkProvider} from "@clerk/nextjs";
-import {dark} from "@clerk/themes";
-import {ruRU} from "@clerk/localizations";
+
+import CustomClerkProvider from "@/providers/CustomClerkProvider";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -18,26 +18,13 @@ export const metadata: Metadata = {
 	},
 };
 
-export default async function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default async function RootLayout({children}: ChildrenProps) {
 	return (
 		<html lang='ru'>
 			<body className={inter.className}>
-				<ClerkProvider
-					appearance={{
-						baseTheme: dark,
-						elements: {
-							formButtonPrimary: "bg-indigo-700 hover:bg-indigo-800",
-							footerActionLink: "text-indigo-500 hover:text-indigo-400",
-						},
-					}}
-					localization={ruRU}
-				>
+				<CustomClerkProvider>
 					<EdgeStoreProvider>{children}</EdgeStoreProvider>
-				</ClerkProvider>
+				</CustomClerkProvider>
 			</body>
 		</html>
 	);
